@@ -20,21 +20,62 @@ namespace WIS.Billing.BusinessLogic
 
         public static void AddClient(DataContext context, Client client)
         {
-            context.Clients.Add(client);
-            context.SaveChanges();
+            using (context)
+            {
+                Client c = context.Clients.FirstOrDefault(x => x.Description == client.Description);
+                if(c == null) 
+                {
+                    if(string.IsNullOrEmpty(client.Description))
+                    {
+                        context.Clients.Add(client);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        //Mensaje de error "La descripcion del cliente no debe ser nula"
+                        throw new Exception("La descripcion del cliente no debe ser nula");
+                    }
+                }
+                else
+                {
+                    //Mensaje de error "Ya existe el cliente ingresado"
+                    throw new Exception("Ya existe el cliente ingresado");
+                }
+            }
+            
         }
 
         public static void DeleteClient(DataContext context, Guid clientId)
         {
             Client client = context.Clients.Find(clientId);
-            context.Clients.Remove(client);
-            context.SaveChanges();
+            if(client != null)
+            {
+                throw new Exception("Ya existe el cliente ingresado");
+            }
+            else
+            {
+                context.Clients.Remove(client);
+                context.SaveChanges();
+            }
+            
         }
 
         public static void UpdateClient(DataContext context, Client client)
         {
-            context.Entry(client).State = System.Data.Entity.EntityState.Modified;
-            context.SaveChanges();
+            using(context)
+            {
+                Client c = context.Clients.Find(client.Id);
+                if(c != null)
+                {
+                    context.Entry(client).State = System.Data.Entity.EntityState.Modified;
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("No se encontro el cliente seleccionado");
+                }
+            }
+            
         }
 
         public static Client GetClient(DataContext context, Guid clientId)

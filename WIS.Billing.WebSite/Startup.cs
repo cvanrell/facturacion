@@ -33,7 +33,7 @@ namespace WIS.Billing.WebSite
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddScoped<DataContext>(_ => new DataContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<DataContext>(_ => new DataContext(/*Configuration.GetConnectionString("WISBillingDB")*/));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

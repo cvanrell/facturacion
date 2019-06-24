@@ -11,6 +11,7 @@ import { FetchProject } from './components/FetchProject';
 import { AddProject } from './components/AddProject';
 import { FetchClient } from './components/FetchClient';
 import { AddClient } from './components/AddClient';
+import { AddHourRate } from './components/AddHourRate';
 
 export default class App extends Component {
     displayName = App.name
@@ -30,6 +31,7 @@ export default class App extends Component {
                 <Route path='/fetchclient' component={FetchClient} />
                 <Route path='/addclient' component={AddClient} />
                 <Route path='/client/edit/:clientId' component={AddClient} />
+                <Route path='/addHourRate/' component={AddHourRate} />
             </Layout>
         );
     }

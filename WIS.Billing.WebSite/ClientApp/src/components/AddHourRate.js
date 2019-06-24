@@ -35,7 +35,7 @@ export class AddHourRate extends Component {
         // This will set state for Add hourRate
         else {
             this.state = {
-                title: "Create", loading: false, hourRateData: {}
+                title: "Crear nueva tarifa", loading: false, currencyList: [], periodicityList: [], hourRateData: {}
             };
         }
 
@@ -79,7 +79,7 @@ export class AddHourRate extends Component {
     }
 
     // Returns the HTML Form to the render() method.  
-    renderCreateForm() {
+    renderCreateForm(currencyList, periodicityList) {
         return (
             <form onSubmit={this.handleSave} >
                 <div className="form-group row" >
@@ -124,12 +124,12 @@ export class AddHourRate extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderCreateForm();
+            : this.renderCreateForm(this.state.currencyList, this.state.periodicityList);
 
         return (
             <div>
                 <h1>{this.state.title}</h1>
-                <h3>HourRate</h3>
+                <h3></h3>
                 <hr />
                 {contents}
             </div>

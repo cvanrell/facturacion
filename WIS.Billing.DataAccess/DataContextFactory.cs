@@ -11,7 +11,7 @@ namespace WIS.Billing.DataAccess
     {
         public DataContext Create()
         {
-            return new DataContext("Server=.\\SQLEXPRESS;Database=WISBilling;Trusted_Connection=True;MultipleActiveResultSets=true");
+            return new DataContext(/*@"Server=(localdb)\MSSQLlocaldb;Database=WISBilling;Trusted_Connection=True;MultipleActiveResultSets=true"*/);
         }
     }
 }
