@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.Entity;
-using WIS.Billing.Entities;
-using WIS.Billing.DataAccess;
+using WIS.Billing.DataAccessCore;
+using WIS.Billing.EntitiesCore;
 
-namespace WIS.Billing.BusinessLogic
+namespace WIS.Billing.BusinessLogicCore
 {
     public static class ClientActions
     {
@@ -25,7 +25,7 @@ namespace WIS.Billing.BusinessLogic
                 Client c = context.Clients.FirstOrDefault(x => x.Description == client.Description);
                 if(c == null) 
                 {
-                    if(string.IsNullOrEmpty(client.Description))
+                    if(!string.IsNullOrEmpty(client.Description))
                     {
                         context.Clients.Add(client);
                         context.SaveChanges();
@@ -50,12 +50,13 @@ namespace WIS.Billing.BusinessLogic
             Client client = context.Clients.Find(clientId);
             if(client != null)
             {
-                throw new Exception("Ya existe el cliente ingresado");
+                context.Clients.Remove(client);
+                context.SaveChanges();
             }
             else
             {
-                context.Clients.Remove(client);
-                context.SaveChanges();
+                throw new Exception("Hubo un problema al intentar borrar el cliente");
+                
             }
             
         }
@@ -66,13 +67,12 @@ namespace WIS.Billing.BusinessLogic
             {
                 Client c = context.Clients.Find(client.Id);
                 if(c != null)
-                {
-                    context.Entry(client).State = System.Data.Entity.EntityState.Modified;
+                {                    
                     context.SaveChanges();
                 }
                 else
                 {
-                    throw new Exception("No se encontro el cliente seleccionado");
+                    throw new Exception("Hubo un problema al intentar actualizar el cliente");
                 }
             }
             
