@@ -8,7 +8,7 @@ using WIS.Billing.EntitiesCore;
 
 namespace WIS.Billing.BusinessLogicCore
 {
-    class HourRateActions
+    public class HourRateActions
     {
         public static List<HourRate> GetHourRates(DataContext context)
         {

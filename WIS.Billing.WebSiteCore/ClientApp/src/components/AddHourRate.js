@@ -5,7 +5,7 @@ export class AddHourRate extends Component {
         super(props);
 
         this.state = {
-            title: "", loading: true, hourRateData: {}, currencyList: [], periodicityList:[]
+            title: "", loading: true, hourRateData: {}, currencyList: [], periodicityList:[], clientId: null
         };
 
         fetch('api/Utils/GetCurrencyList')
@@ -82,6 +82,10 @@ export class AddHourRate extends Component {
     renderCreateForm(currencyList, periodicityList) {
         return (
             <form onSubmit={this.handleSave} >
+
+                <div className="form-group row" >
+                    <input type="hidden" name="clientId" value={this.state.hourRateData.id} />
+                </div>
                 <div className="form-group row" >
                     <input type="hidden" name="id" value={this.state.hourRateData.id} />
                 </div>

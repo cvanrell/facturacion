@@ -22,31 +22,31 @@ namespace WIS.Billing.WebSiteCore.Controllers
         [HttpGet("[action]")]
         public IEnumerable<HourRate> GetHourRates()
         {
-            return HourRatesActions.GetHourRates(_context);
+            return HourRateActions.GetHourRates(_context);
         }
 
         [HttpPost("[action]")]
         public void Create(HourRate hourRate)
         {
-            HourRatesActions.AddHourRate(_context, hourRate);
+            HourRateActions.AddHourRate(_context, hourRate);
         }
 
         [HttpGet("[action]/{id}")]
         public HourRate Details(Guid id)
         {
-            return HourRatesActions.GetHourRate(_context, id);
+            return HourRateActions.GetHourRate(_context, id);
         }
 
         [HttpPut("[action]")]
         public void Edit(HourRate hourRate)
         {
-            HourRatesActions.UpdateHourRate(_context, hourRate);
+            HourRateActions.UpdateHourRate(_context, hourRate);
         }
 
         [HttpDelete("[action]/{id}")]
         public void Delete(Guid id)
         {
-            HourRatesActions.DeleteHourRate(_context, id);
+            HourRateActions.DeleteHourRate(_context, id);
         }
     }
 }
