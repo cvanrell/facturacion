@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WIS.Billing.DataAccessCore;
+using WIS.CommonCore.WebApi;
 
 namespace WIS.Billing.WebSiteCore
 {
@@ -28,6 +29,8 @@ namespace WIS.Billing.WebSiteCore
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
+            services.AddHttpContextAccessor();
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -38,7 +41,20 @@ namespace WIS.Billing.WebSiteCore
 
             services.AddDbContext<DataContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("WISBillingDB"));
-        });
+            });
+
+            //services.AddSingleton<GridQuery>();
+            //services.AddSingleton<GridMutation>();
+            services.AddTransient<IWebApiClient, WebApiClient>();
+            services.AddTransient<ISessionManager, SessionManager>();
+
+            //Manejo de sesión
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            services.AddHttpClient();
+
+            var sp = services.BuildServiceProvider();
+            services.AddSingleton<ISchema>(new GridSchema(new FuncDependencyResolver(type => sp.GetService(type))));
 
         }
 

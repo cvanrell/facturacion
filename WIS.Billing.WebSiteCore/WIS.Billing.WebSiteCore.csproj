@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WIS.Billing.BusinessLogicCore\WIS.Billing.BusinessLogicCore.csproj" />
+    <ProjectReference Include="..\WIS.Billing.CommonCore\WIS.Billing.CommonCore\WIS.Billing.CommonCore.csproj" />
     <ProjectReference Include="..\WIS.Billing.DataAccessCore\WIS.Billing.DataAccessCore.csproj" />
   </ItemGroup>
 
