@@ -1,6 +1,6 @@
 {
-  "short_name": "WIS.Billing.WebSite",
-  "name": "WIS.Billing.WebSite",
+  "short_name": "WIS.Billing.WebSiteCore",
+  "name": "WIS.Billing.WebSiteCore",
   "icons": [
     {
       "src": "favicon.ico",
