@@ -1,10 +1,11 @@
 ﻿import React, { Component } from 'react';
 import { Grid } from '../../components/GridComponents/Grid';
 import { Page } from '../../components/Page';
+import Button from 'react-bootstrap/Button'
 import { Form, Field, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
-export default function Clients(props) {
+export class Clients extends Component {
 
     //initialValues = {
     //    name: "Exito",
@@ -34,40 +35,43 @@ export default function Clients(props) {
     //    nexus.getForm("form_1").reset();
     //}
 
-    return (
-        <Page {...this.props}>
-            <div className="row mb-4">
-                <div className="col">
-                    <Form
-                        id="form_1"
-                        initialValues={this.initialValues}
-                        validationSchema={this.validationSchema}
-                        onBeforeButtonAction={this.onBeforeButtonAction}
-                    >
-                        <div className="form-group">
-                            <Field name="description" />
-                            <StatusMessage for="description" />
-                        </div>
-                        <div className="form-group">
-                            <Field name="address" type="input" readOnly />
-                            <StatusMessage for="address" />
-                        </div>
-                        <div className="form-group">
-                            <Field name="rut" type="input" />
-                            <StatusMessage for="rut" />
-                        </div>
-                        
-                        <SubmitButton value="Submit" />
-                        <Button id="btnSubmit" value="Submit" className="btn btn-success" style={{ marginLeft: "10px" }} />
-                    </Form>
+    render() {
+        return (
+            <Page {...this.props}>
+                <div className="row mb-4">
+                    <div className="col">
+                        <Form
+                            id="form_1"
+                            initialValues={this.initialValues}
+                            validationSchema={this.validationSchema}
+                            onBeforeButtonAction={this.onBeforeButtonAction}
+                        >
+                            <div className="form-group">
+                                <Field name="description" />
+                                <StatusMessage for="description" />
+                            </div>
+                            <div className="form-group">
+                                <Field name="address" type="input" readOnly />
+                                <StatusMessage for="address" />
+                            </div>
+                            <div className="form-group">
+                                <Field name="rut" type="input" />
+                                <StatusMessage for="rut" />
+                            </div>
+
+                            <SubmitButton value="Submit" />
+                            <Button id="btnSubmit" value="Submit" className="btn btn-success" style={{ marginLeft: "10px" }} />
+                        </Form>
+                    </div>
                 </div>
-            </div>
-            <div className="row mb-4">
-                <div className="col">
-                    <Grid id="Clients_grid_1" rowsToFetch={30} rowsToDisplay={30} enableSelection />
+                <div className="row mb-4">
+                    <div className="col">
+                        <Grid id="Clients_grid_1" rowsToFetch={30} rowsToDisplay={30} enableSelection />
+                    </div>
                 </div>
-            </div>
-        </Page>
-    );
+            </Page>
+        );
+    }
+    
 
 }
