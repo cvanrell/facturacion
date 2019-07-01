@@ -26,6 +26,12 @@ namespace WIS.Billing.DataAccessCore.Database
             //var type = typeof(System.Data.Entity.SqlServer.SqlProviderServices);
         }
 
+        public WISDB(DbContextOptions options) : base(options)
+        {
+            //Database.SetInitializer(new DataContextDbInitializer());
+            //var type = typeof(System.Data.Entity.SqlServer.SqlProviderServices);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLlocaldb;Database=WISBilling;Trusted_Connection=True;");

@@ -6,33 +6,33 @@ import * as Yup from 'yup';
 
 export default function Clients(props) {
 
-    initialValues = {
-        name: "Exito",
-        lastname: "",
-        password: "Pass",
-        type: 2
-    };
+    //initialValues = {
+    //    name: "Exito",
+    //    lastname: "",
+    //    password: "Pass",
+    //    type: 2
+    //};
 
-    validationSchema = {
-        name: Yup.string()
-            .min(2)
-            .max(8)
-            .required(),
-        password: Yup.string()
-            .min(6)
-            .required(),
-        type: Yup.number()
-            .min(1)
-            .max(3)
-    };
+    //validationSchema = {
+    //    name: Yup.string()
+    //        .min(2)
+    //        .max(8)
+    //        .required(),
+    //    password: Yup.string()
+    //        .min(6)
+    //        .required(),
+    //    type: Yup.number()
+    //        .min(1)
+    //        .max(3)
+    //};
 
-    onBeforeButtonAction = (context, form, query, nexus) => {
-        context.abortServerCall = true;
+    //onBeforeButtonAction = (context, form, query, nexus) => {
+    //    context.abortServerCall = true;
 
-        //nexus.redirect("/stock/STO110");
+    //    //nexus.redirect("/stock/STO110");
 
-        nexus.getForm("form_1").reset();
-    }
+    //    nexus.getForm("form_1").reset();
+    //}
 
     return (
         <Page {...this.props}>

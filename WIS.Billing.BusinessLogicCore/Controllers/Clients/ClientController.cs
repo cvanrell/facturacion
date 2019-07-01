@@ -75,6 +75,8 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             return form;
         }
 
+
+        //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
             grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
