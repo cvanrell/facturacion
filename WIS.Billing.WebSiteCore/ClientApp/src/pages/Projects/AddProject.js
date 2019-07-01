@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { FetchFee } from './FetchFee';
+import { FetchFee } from '../Fees/FetchFee';
 
 export class AddProject extends Component {
     constructor(props) {

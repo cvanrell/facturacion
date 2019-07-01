@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { FetchHourRate } from './FetchHourRate';
+import { FetchHourRate } from '../HourRates/FetchHourRate';
 
 export class AddClient extends Component {
     constructor(props) {

@@ -10,7 +10,7 @@ export class FetchMaintenance extends Component {
         super(props);
         this.state = { maintenances: [], loading: true };
 
-        fetch('api/Maintenance/Index')
+        fetch('api/Maintenance/GetMaintenances')
             .then(response => response.json())
             .then(data => {
                 this.setState({ maintenances: data, loading: false });

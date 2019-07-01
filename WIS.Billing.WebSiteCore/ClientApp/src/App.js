@@ -8,15 +8,18 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
+
 import { Maintenances } from './components/Maintenances';
-import { FetchMaintenance } from './components/FetchMaintenance';
-import { AddMaintenance } from './components/AddMaintenance';
-import { FetchProject } from './components/FetchProject';
-import { AddProject } from './components/AddProject';
-import { FetchClient } from './components/FetchClient';
-import { AddClient } from './components/AddClient';
-import { AddHourRate } from './components/AddHourRate';
-import { FetchHourRate } from './components/FetchHourRate';
+
+import { FetchMaintenance } from './pages/Maintenances/FetchMaintenance';
+import { AddMaintenance } from './pages/Maintenances/AddMaintenance';
+import { FetchProject } from './pages/Projects/FetchProject';
+import { AddProject } from './pages/Projects/AddProject';
+
+import { FetchClient } from './pages/Clients/FetchClient';
+import { AddClient } from './pages/Clients/AddClient';
+import { AddHourRate } from './pages/HourRates/AddHourRate';
+import { FetchHourRate } from './pages/HourRates/FetchHourRate';
 
 //const Home = React.lazy(() => import('./components/Home'));
 

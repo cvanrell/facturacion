@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WIS.Billing.DataAccessCore;
+using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.WebSiteCore.Models;
 using WIS.Billing.WebSiteCore.Models.Managers;
 using WIS.CommonCore.WebApi;
@@ -43,7 +44,7 @@ namespace WIS.Billing.WebSiteCore
 
             //services.AddScoped<DataContext>(_ => new DataContext(/*Configuration.GetConnectionString("WISBillingDB")*/));
 
-            services.AddDbContext<DataContext>(options => {
+            services.AddDbContext<WISDB>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("WISBillingDB"));
             });
 

@@ -20,10 +20,11 @@ namespace WIS.Billing.WebSiteCore.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<Maintenance> Index()
+        public IEnumerable<Maintenance> GetMaintenances()
         {
             return MaintenanceActions.GetMaintenances(_context);
         }
+        
 
         [HttpPost("[action]")]
         public void Create(Maintenance maintenance)

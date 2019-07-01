@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WIS.Billing.CommonCore\WIS.Billing.CommonCore\WIS.Billing.CommonCore.csproj" />
     <ProjectReference Include="..\WIS.Billing.EntitiesCore\WIS.Billing.EntitiesCore.csproj" />
   </ItemGroup>
 

@@ -24,7 +24,7 @@ namespace WIS.Billing.BusinessLogicCore
             var client = context.Clients.SingleOrDefault(c => c.Id == maintenance.Client.Id);
             if (client == null)
             {
-                throw new Exception("El cliente no existe");
+                throw new Exception("El cliente al que le intenta asociar el soporte no existe");
             }
             else
             {
@@ -43,7 +43,17 @@ namespace WIS.Billing.BusinessLogicCore
 
         public static void UpdateMaintenance(DataContext context, Maintenance maintenance)
         {
-            //context.Entry(maintenance).State = System.Data.Entity.EntityState.Modified;
+            using(context)
+            {
+                Maintenance m = context.Maintenances.FirstOrDefault(x => x.Id == maintenance.Id);
+                if(m == null)
+                {
+                    throw new Exception("No se encuentra el registro de soporte que se intenta modificar, Id: " + maintenance.Id);
+                }
+                else{
+                    context.SaveChanges();                   
+                }
+            }
             context.SaveChanges();
         }
 
