@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.FormUtil.Coordinators;
-using WIS.Common.Enums;
-using WIS.Common.ServiceWrappers;
+using WIS.BusinessLogicCore.FormUtil.Coordinators;
+using WIS.CommonCore.Enums;
+using WIS.CommonCore.ServiceWrappers;
 
-namespace WIS.BusinessLogic.Controllers
+namespace WIS.BusinessLogicCore.Controllers
 {
     public class FormControllerEntrypoint
     {

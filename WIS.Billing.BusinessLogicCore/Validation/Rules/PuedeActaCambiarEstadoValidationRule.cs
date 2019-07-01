@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.ControlDocumental.Enums;
-using WIS.BusinessLogic.DataModel;
+using WIS.BusinessLogicCore.ControlDocumental.Enums;
+using WIS.BusinessLogicCore.DataModel;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class PuedeActaCambiarEstadoValidationRule : IValidationRule
     {

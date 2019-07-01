@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class PositiveDecimalValidationRule : IValidationRule
     {

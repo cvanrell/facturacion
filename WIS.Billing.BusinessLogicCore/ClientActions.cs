@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.Billing.DataAccessCore;
+using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 
 namespace WIS.Billing.BusinessLogicCore
 {
     public static class ClientActions
     {
-        public static List<Client> GetClients(DataContext context)
+        public static List<Client> GetClients(WISDB context)
         {
             List<Client> result = new List<Client>();
             result.AddRange(context.Clients.Include(c => c.HourRates).ToList());
             return result;
         }
 
-        public static void AddClient(DataContext context, Client client)
+        public static void AddClient(WISDB context, Client client)
         {
             using (context)
             {
@@ -45,7 +45,7 @@ namespace WIS.Billing.BusinessLogicCore
             
         }
 
-        public static void DeleteClient(DataContext context, Guid clientId)
+        public static void DeleteClient(WISDB context, Guid clientId)
         {
             Client client = context.Clients.Find(clientId);
             if(client != null)
@@ -61,7 +61,7 @@ namespace WIS.Billing.BusinessLogicCore
             
         }
 
-        public static void UpdateClient(DataContext context, Client client)
+        public static void UpdateClient(WISDB context, Client client)
         {
             using(context)
             {
@@ -78,7 +78,7 @@ namespace WIS.Billing.BusinessLogicCore
             
         }
 
-        public static Client GetClient(DataContext context, Guid clientId)
+        public static Client GetClient(WISDB context, Guid clientId)
         {
             return context.Clients.Include(c => c.HourRates).SingleOrDefault(c => c.Id == clientId);
         }

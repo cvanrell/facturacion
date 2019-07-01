@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.Persistance.Database;
+using WIS.Billing.DataAccessCore.Database;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class ExisteClienteProveedorEmpresaValidationRule : IValidationRule
     {
@@ -26,8 +26,8 @@ namespace WIS.BusinessLogic.Validation.Rules
 
             var errors = new List<IValidationError>();
 
-            if (!this._context.V_AGENTE.Any(d => d.CD_EMPRESA == cdEmpresa && d.CD_CLIENTE == this._valueCliente))
-                errors.Add(new ValidationError("Empresa no existe"));
+            //if (!this._context.V_AGENTE.Any(d => d.CD_EMPRESA == cdEmpresa && d.CD_CLIENTE == this._valueCliente))
+            //    errors.Add(new ValidationError("Empresa no existe"));
 
             return errors;
         }

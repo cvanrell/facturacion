@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.ControlDocumental;
-using WIS.BusinessLogic.ControlDocumental.Enums;
-using WIS.Persistance.Database;
+using WIS.BusinessLogicCore.ControlDocumental;
+using WIS.BusinessLogicCore.ControlDocumental.Enums;
+using WIS.Billing.DataAccessCore.Database;
 
-namespace WIS.BusinessLogic.DataModel.Mappers
+namespace WIS.BusinessLogicCore.DataModel.Mappers
 {
     public class DocumentoMapper : Mapper
     {

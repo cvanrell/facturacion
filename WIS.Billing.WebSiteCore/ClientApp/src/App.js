@@ -20,6 +20,7 @@ import { FetchClient } from './pages/Clients/FetchClient';
 import { AddClient } from './pages/Clients/AddClient';
 import { AddHourRate } from './pages/HourRates/AddHourRate';
 import { FetchHourRate } from './pages/HourRates/FetchHourRate';
+import { Clients } from './pages/Clients/Clients';
 
 //const Home = React.lazy(() => import('./components/Home'));
 
@@ -44,22 +45,24 @@ export default class App extends Component {
     render() {
         return (
             <Layout >
-                
-                        <Route exact path='/' component={Home} />
-                        <Route path='/counter' component={Counter} />
-                        <Route path='/fetchdata' component={FetchData} />
-                        <Route path='/fetchmaintenance' component={FetchMaintenance} />
-                        <Route path='/addMaintenance' component={AddMaintenance} />
-                        <Route path='/maintenance/edit/:maintenanceId' component={AddMaintenance} />
-                        <Route path='/fetchproject' component={FetchProject} />
-                        <Route path='/addproject' component={AddProject} />
-                        <Route path='/project/edit/:projectId' component={AddProject} />
-                        <Route path='/fetchclient' component={FetchClient} />
-                        <Route path='/addclient' component={AddClient} />
-                        <Route path='/client/edit/:clientId' component={AddClient} />
-                        <Route path='/addHourRate/' component={AddHourRate} />
-                        <Route path='/fetchHourRate' component={FetchHourRate} />
-                
+
+                <Route exact path='/' component={Home} />
+                <Route path='/counter' component={Counter} />
+                <Route path='/fetchdata' component={FetchData} />
+                <Route path='/fetchmaintenance' component={FetchMaintenance} />
+                <Route path='/addMaintenance' component={AddMaintenance} />
+                <Route path='/maintenance/edit/:maintenanceId' component={AddMaintenance} />
+                <Route path='/fetchproject' component={FetchProject} />
+                <Route path='/addproject' component={AddProject} />
+                <Route path='/project/edit/:projectId' component={AddProject} />
+                <Route path='/fetchclient' component={FetchClient} />
+                <Route path='/addclient' component={AddClient} />
+                <Route path='/client/edit/:clientId' component={AddClient} />
+                <Route path='/addHourRate/' component={AddHourRate} />
+                <Route path='/fetchHourRate' component={FetchHourRate} />
+
+                <Route path='/Clients' component={Clients} />
+
             </Layout>
         );
     }

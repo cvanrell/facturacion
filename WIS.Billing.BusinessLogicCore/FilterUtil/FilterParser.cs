@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.FilterUtil.Enums;
-using WIS.BusinessLogic.FilterUtil.Expressions;
-using WIS.BusinessLogic.FilterUtil.Tokens;
+using WIS.BusinessLogicCore.FilterUtil.Enums;
+using WIS.BusinessLogicCore.FilterUtil.Expressions;
+using WIS.BusinessLogicCore.FilterUtil.Tokens;
 
-namespace WIS.BusinessLogic.FilterUtil
+namespace WIS.BusinessLogicCore.FilterUtil
 {
     public class FilterParser
     {

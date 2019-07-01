@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WIS.BusinessLogicCore.SortUtil;
 using WIS.CommonCore.SortComponents;
 
-namespace WIS.BusinessLogic.SortUtil
+namespace WIS.BusinessLogicCore.SortUtil
 {
     public class Sorter : ISorter
     {

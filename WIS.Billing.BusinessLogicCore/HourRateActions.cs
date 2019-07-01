@@ -3,21 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WIS.Billing.DataAccessCore;
+using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 
 namespace WIS.Billing.BusinessLogicCore
 {
     public class HourRateActions
     {
-        public static List<HourRate> GetHourRates(DataContext context)
+        public static List<HourRate> GetHourRates(WISDB context)
         {
             List<HourRate> result = new List<HourRate>();
             result = context.HourRates.ToList();
             return result;
         }
 
-        public static void AddHourRate(DataContext context, HourRate hourRate)
+        public static void AddHourRate(WISDB context, HourRate hourRate)
         {
             using (context)
             {
@@ -42,7 +42,7 @@ namespace WIS.Billing.BusinessLogicCore
 
         }
 
-        public static void DeleteHourRate(DataContext context, Guid hourRatetId)
+        public static void DeleteHourRate(WISDB context, Guid hourRatetId)
         {
             HourRate hourRate = context.HourRates.Find(hourRatetId);
             if (hourRate != null)
@@ -58,7 +58,7 @@ namespace WIS.Billing.BusinessLogicCore
 
         }
 
-        public static void UpdateHourRate(DataContext context, HourRate hourRate)
+        public static void UpdateHourRate(WISDB context, HourRate hourRate)
         {
             using (context)
             {
@@ -83,7 +83,7 @@ namespace WIS.Billing.BusinessLogicCore
 
         }
 
-        public static HourRate GetHourRate(DataContext context, Guid hourRateId)
+        public static HourRate GetHourRate(WISDB context, Guid hourRateId)
         {
             return context.HourRates.SingleOrDefault(h => h.Id == hourRateId);
         }

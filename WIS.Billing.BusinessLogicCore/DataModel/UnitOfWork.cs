@@ -4,12 +4,12 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.DataModel.Queries;
-using WIS.BusinessLogic.DataModel.Repositories;
-using WIS.Persistance.Database;
-using WIS.Persistance.Extensions;
+using WIS.BusinessLogicCore.DataModel.Queries;
+using WIS.BusinessLogicCore.DataModel.Repositories;
+using WIS.Billing.DataAccessCore.Database;
+using WIS.Billing.DataAccessCore.Extensions;
 
-namespace WIS.BusinessLogic.DataModel
+namespace WIS.BusinessLogicCore.DataModel
 {
     public class UnitOfWork : IDisposable
     {        

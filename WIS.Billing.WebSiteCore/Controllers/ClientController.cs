@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WIS.Billing.BusinessLogicCore;
-using WIS.Billing.DataAccessCore;
+using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 
 namespace WIS.Billing.WebSiteCore.Controllers
@@ -12,9 +12,9 @@ namespace WIS.Billing.WebSiteCore.Controllers
     [Route("api/[controller]")]
     public class ClientController : Controller
     {
-        private readonly DataContext _context;
+        private readonly WISDB _context;
 
-        public ClientController(DataContext context)
+        public ClientController(WISDB context)
         {
             _context = context;
         }

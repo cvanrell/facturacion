@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.Persistance.Database;
+using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.BusinessLogic.DataModel.Queries
 {

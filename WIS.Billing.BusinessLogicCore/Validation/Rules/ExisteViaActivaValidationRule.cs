@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.Persistance.Database;
+using WIS.Billing.DataAccessCore.Database;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class ExisteViaActivaValidationRule : IValidationRule
     {
@@ -22,8 +22,8 @@ namespace WIS.BusinessLogic.Validation.Rules
         {
             var errors = new List<IValidationError>();
 
-            if (!this._context.T_VIA.Any(d => d.CD_VIA == this._valueVia))
-                errors.Add(new ValidationError("Via no existe"));
+            //if (!this._context.T_VIA.Any(d => d.CD_VIA == this._valueVia))
+            //    errors.Add(new ValidationError("Via no existe"));
 
             return errors;
         }

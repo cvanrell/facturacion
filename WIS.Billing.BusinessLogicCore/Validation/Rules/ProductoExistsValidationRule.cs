@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.Persistance.Database;
+using WIS.Billing.DataAccessCore.Database;
+using WIS.BusinessLogicCore.Validation;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class ProductoExistsValidationRule : IValidationRule
     {
@@ -26,8 +27,8 @@ namespace WIS.BusinessLogic.Validation.Rules
 
             var errors = new List<IValidationError>();
 
-            if (!this._context.T_PRODUTO.Any(d => d.CD_EMPRESA == cdEmpresa && d.CD_PRODUTO == this._valueProducto))
-                errors.Add(new ValidationError("Producto no existe"));
+            //if (!this._context.T_PRODUTO.Any(d => d.CD_EMPRESA == cdEmpresa && d.CD_PRODUTO == this._valueProducto))
+            //    errors.Add(new ValidationError("Producto no existe"));
 
             return errors;
         }

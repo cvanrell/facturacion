@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.GridUtil;
-using WIS.Common.GridComponents;
-using WIS.Common.ServiceWrappers;
-using WIS.Persistance.Database;
+using WIS.BusinessLogicCore.GridUtil;
+using WIS.CommonCore.GridComponents;
+using WIS.CommonCore.ServiceWrappers;
+using WIS.Billing.DataAccessCore.Database;
 
-namespace WIS.BusinessLogic.Controllers
+namespace WIS.BusinessLogicCore.Controllers
 {
     public class ConfigControllerEntrypoint
     {

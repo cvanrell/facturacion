@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIS.BusinessLogic.DataModel.Mappers
+namespace WIS.BusinessLogicCore.DataModel.Mappers
 {
     public abstract class Mapper
     {

@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.FilterUtil.Tokens;
+using WIS.BusinessLogicCore.FilterUtil.Tokens;
 
-namespace WIS.BusinessLogic.FilterUtil
+namespace WIS.BusinessLogicCore.FilterUtil
 {
     public class FilterTokenizer
     {

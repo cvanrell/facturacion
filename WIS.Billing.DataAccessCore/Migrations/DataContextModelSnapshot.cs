@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WIS.Billing.DataAccessCore;
+using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(WISDB))]
     partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

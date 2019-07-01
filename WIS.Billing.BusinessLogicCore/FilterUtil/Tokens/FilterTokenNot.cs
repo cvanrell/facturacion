@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.FilterUtil.Enums;
+using WIS.BusinessLogicCore.FilterUtil.Enums;
 
-namespace WIS.BusinessLogic.FilterUtil.Tokens
+namespace WIS.BusinessLogicCore.FilterUtil.Tokens
 {
     public class FilterTokenNot : IFilterToken
     {

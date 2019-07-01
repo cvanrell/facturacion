@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.ControlDocumental.Enums;
-using WIS.Persistance.Database;
+//using WIS.BusinessLogicCore.ControlDocumental.Enums;
+using WIS.Billing.DataAccessCore.Database;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class TipoDocumentoIngresoPermiteAltaManual : IValidationRule
     {
@@ -21,10 +21,10 @@ namespace WIS.BusinessLogic.Validation.Rules
         {
             var errors = new List<IValidationError>();
 
-            if(this._tipoValue != TipoDocumento.IngresoNacional.ToString() && this._tipoValue != TipoDocumento.Ingreso.ToString())
-            {
-                errors.Add(new ValidationError("Tipo de documento de ingreso no válido"));
-            }
+            //if(this._tipoValue != TipoDocumento.IngresoNacional.ToString() && this._tipoValue != TipoDocumento.Ingreso.ToString())
+            //{
+            //    errors.Add(new ValidationError("Tipo de documento de ingreso no válido"));
+            //}
 
             return errors;
         }

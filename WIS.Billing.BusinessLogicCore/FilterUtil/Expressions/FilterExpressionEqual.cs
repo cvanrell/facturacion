@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIS.BusinessLogic.FilterUtil.Expressions
+namespace WIS.BusinessLogicCore.FilterUtil.Expressions
 {
     public class FilterExpressionEqual : IFilterExpression
     {

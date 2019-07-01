@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIS.BusinessLogic.FilterUtil.Expressions
+namespace WIS.BusinessLogicCore.FilterUtil.Expressions
 {
     public class ExpressionExtension
     {

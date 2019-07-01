@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WIS.Billing.DataAccessCore;
+using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(WISDB))]
     [Migration("20190626122129_InitialMigration")]
     partial class InitialMigration
     {

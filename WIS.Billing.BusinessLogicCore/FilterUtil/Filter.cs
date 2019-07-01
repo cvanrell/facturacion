@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using WIS.BusinessLogicCore.FilterUtil;
+using WIS.BusinessLogicCore.FilterUtil.Expressions;
 using WIS.CommonCore.FilterComponents;
 
 namespace WIS.BusinessLogicCore.FilterUtil

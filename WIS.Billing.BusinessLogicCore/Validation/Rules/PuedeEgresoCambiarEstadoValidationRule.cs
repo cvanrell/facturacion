@@ -7,7 +7,7 @@ using WIS.BusinessLogic.ControlDocumental;
 using WIS.BusinessLogic.ControlDocumental.Enums;
 using WIS.BusinessLogic.DataModel;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class PuedeEgresoCambiarEstadoValidationRule : IValidationRule
     {

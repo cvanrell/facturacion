@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using WIS.BusinessLogic.DataModel;
 using WIS.BusinessLogic.ControlDocumental;
 using WIS.BusinessLogic.ControlDocumental.Enums;
-using WIS.Persistance.Database;
+using WIS.Billing.DataAccessCore.Database;
+using WIS.BusinessLogicCore.Validation;
 
-namespace WIS.BusinessLogic.Validation.Rules
+namespace WIS.BusinessLogicCore.Validation.Rules
 {
     public class PuedeIngresoCambiarEstadoValidationRule : IValidationRule
     {

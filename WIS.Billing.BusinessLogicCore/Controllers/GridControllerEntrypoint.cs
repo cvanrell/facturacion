@@ -1,19 +1,19 @@
-﻿using WIS.Common.Enums;
+﻿using WIS.CommonCore.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WIS.BusinessLogic.GridUtil.Coordinators;
-using WIS.Common.ServiceWrappers;
-using WIS.Common.Session;
-using WIS.BusinessLogic.GridUtil.Services;
+using WIS.BusinessLogicCore.GridUtil.Coordinators;
+using WIS.CommonCore.ServiceWrappers;
+using WIS.CommonCore.Session;
+using WIS.BusinessLogicCore.GridUtil.Services;
 using System.Data;
-using WIS.BusinessLogic.SortUtil;
-using WIS.BusinessLogic.FilterUtil;
+using WIS.BusinessLogicCore.SortUtil;
+using WIS.BusinessLogicCore.FilterUtil;
 
-namespace WIS.BusinessLogic.Controllers
+namespace WIS.BusinessLogicCore.Controllers
 {
     public class GridControllerEntrypoint
     {

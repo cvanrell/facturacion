@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WIS.BusinessLogic.Validation
+namespace WIS.BusinessLogicCore.Validation
 {
     public class FieldValidationResult : IFieldValidationResult
     {
