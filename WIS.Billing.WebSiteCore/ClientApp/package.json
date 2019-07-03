@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "bootstrap": "^4.3.0",
     "formik-custom": "file:src/vendor/formik_custom",
     "prop-types": "^15.7.2",
@@ -18,8 +21,8 @@
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.4.0-beta.6",
     "react-scripts": "1.0.17",
-    "react-table": "^6.8.6",
     "react-scrollbar-size": "^2.1.0",
+    "react-table": "^6.8.6",
     "rimraf": "^2.6.2",
     "yup": "^0.27.0"
   },

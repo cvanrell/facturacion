@@ -1,8 +1,10 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Glyphicon, Nav, Navbar, NavItem } from 'react-bootstrap';
+import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faWrench, faTasks, faCog } from '@fortawesome/free-solid-svg-icons';
 
 export class NavMenu extends Component {
     displayName = NavMenu.name
@@ -23,17 +25,17 @@ export class NavMenu extends Component {
                     <Nav>
                         <LinkContainer to={'/fetchclient'} exact>
                             <NavItem>
-                                <Glyphicon glyph='user' /> Clientes
+                                <FontAwesomeIcon icon='user' /> Clientes
                             </NavItem>
                         </LinkContainer>
                         <LinkContainer to={'/fetchmaintenance'} exact>
                             <NavItem>
-                                <Glyphicon glyph='wrench' /> Mantenimientos
+                                <FontAwesomeIcon icon='wrench' /> Mantenimientos
                             </NavItem>
                         </LinkContainer>
                         <LinkContainer to={'/fetchproject'}>
                             <NavItem>
-                                <Glyphicon glyph='tasks' /> Proyectos
+                                <FontAwesomeIcon icon='tasks' /> Proyectos
                             </NavItem>
                         </LinkContainer>
                     </Nav>
@@ -43,17 +45,17 @@ export class NavMenu extends Component {
                     <Nav>
                         <LinkContainer to={'/'} exact>
                             <NavItem>
-                                <Glyphicon glyph='wrench' /> Mantenimiento
+                                <FontAwesomeIcon icon='wrench' /> Mantenimiento
                             </NavItem>
                         </LinkContainer>
                         <LinkContainer to={'/counter'}>
                             <NavItem>
-                                <Glyphicon glyph='cog' /> Desarrollos
+                                <FontAwesomeIcon icon='cog' /> Desarrollos
                             </NavItem>
                         </LinkContainer>
                         <LinkContainer to={'/fetchdata'}>
                             <NavItem>
-                                <Glyphicon glyph='tasks' /> Proyectos
+                                <FontAwesomeIcon icon='tasks' /> Proyectos
                             </NavItem>
                         </LinkContainer>
                     </Nav>
