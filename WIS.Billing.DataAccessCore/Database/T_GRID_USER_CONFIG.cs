@@ -9,17 +9,17 @@ namespace WIS.Billing.DataAccessCore.Database
     [Table("T_GRID_USER_CONFIG")]
     public partial class T_GRID_USER_CONFIG
     {
-        [Key]
+        //[Key]
         [Column(Order = 0)]
         [StringLength(30)]
         public string CD_APLICACION { get; set; }
 
-        [Key]
+        //[Key]
         [Column(Order = 1)]
         [StringLength(30)]
         public string CD_BLOQUE { get; set; }
 
-        [Key]
+        //[Key]
         [Column(Order = 2)]
         [StringLength(30)]
         public string NM_DATAFIELD { get; set; }

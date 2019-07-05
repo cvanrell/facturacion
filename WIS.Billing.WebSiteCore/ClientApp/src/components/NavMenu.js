@@ -12,52 +12,52 @@ export class NavMenu extends Component {
     render() {
         return (
             <Navbar inverse fixedTop fluid collapseOnSelect>
-                <Navbar.Header>
+                
                     <Navbar.Brand>
                         <Link to={'/'}>WIS SISTEMA DE FACTURACIÓN</Link>
                     </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
+                    
+                
                 <Navbar.Collapse>
                     <Navbar.Text>
                         ADMINISTRACIÓN
                     </Navbar.Text>
                     <Nav>
-                        <LinkContainer to={'/fetchclient'} exact>
+                        <Link to={'/fetchclient'} exact>
                             <NavItem>
                                 <FontAwesomeIcon icon='user' /> Clientes
                             </NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={'/fetchmaintenance'} exact>
+                        </Link>
+                        <Link to={'/fetchmaintenance'} exact>
                             <NavItem>
                                 <FontAwesomeIcon icon='wrench' /> Mantenimientos
                             </NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={'/fetchproject'}>
+                        </Link>
+                        <Link to={'/fetchproject'}>
                             <NavItem>
                                 <FontAwesomeIcon icon='tasks' /> Proyectos
                             </NavItem>
-                        </LinkContainer>
+                        </Link>
                     </Nav>
                     <Navbar.Text>
                         FACTURACIÓN
                     </Navbar.Text>
                     <Nav>
-                        <LinkContainer to={'/'} exact>
+                        <Link to={'/'} exact>
                             <NavItem>
                                 <FontAwesomeIcon icon='wrench' /> Mantenimiento
                             </NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={'/counter'}>
+                        </Link>
+                        <Link to={'/counter'}>
                             <NavItem>
                                 <FontAwesomeIcon icon='cog' /> Desarrollos
                             </NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={'/fetchdata'}>
+                        </Link>
+                        <Link to={'/fetchdata'}>
                             <NavItem>
                                 <FontAwesomeIcon icon='tasks' /> Proyectos
                             </NavItem>
-                        </LinkContainer>
+                        </Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

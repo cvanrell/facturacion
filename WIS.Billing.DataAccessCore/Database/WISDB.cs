@@ -37,7 +37,15 @@ namespace WIS.Billing.DataAccessCore.Database
             //optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLlocaldb;Database=WISBilling;Trusted_Connection=True;");
             //optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["WISBillingDB"].ConnectionString);
         }
-            
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<T_GRID_DEFAULT_CONFIG>()
+                .HasKey(c => new { c.CD_APLICACION, c.CD_BLOQUE, c.NM_DATAFIELD });
+            modelBuilder.Entity<T_GRID_USER_CONFIG>()
+                .HasKey(d => new { d.CD_APLICACION, d.CD_BLOQUE, d.NM_DATAFIELD });
+        }
+
     }
 
     //public class CodeConfig : DbConfiguration
