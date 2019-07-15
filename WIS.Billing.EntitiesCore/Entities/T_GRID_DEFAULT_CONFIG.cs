@@ -1,13 +1,13 @@
-namespace WIS.Billing.DataAccessCore.Database
+namespace WIS.Billing.EntitiesCore
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    //using System.Data.Entity.Spatial;
+    
 
-    [Table("T_GRID_USER_CONFIG")]
-    public partial class T_GRID_USER_CONFIG
+    [Table("T_GRID_DEFAULT_CONFIG")]
+    public partial class T_GRID_DEFAULT_CONFIG
     {
         //[Key]
         [Column(Order = 0)]
@@ -22,12 +22,12 @@ namespace WIS.Billing.DataAccessCore.Database
         //[Key]
         [Column(Order = 2)]
         [StringLength(30)]
-        public string NM_DATAFIELD { get; set; }
+        public  string NM_DATAFIELD { get; set; }
 
         [StringLength(100)]
-        public string DS_COLUMNA { get; set; }
+        public  string DS_COLUMNA { get; set; }
 
-        public short? NU_ORDEN_VISUAL { get; set; }
+        public  short? NU_ORDEN_VISUAL { get; set; }
 
         [Required]
         [StringLength(1)]
@@ -52,10 +52,5 @@ namespace WIS.Billing.DataAccessCore.Database
         public string VL_LINK { get; set; }
 
         public short? VL_POSICION_FIJADO { get; set; }
-
-        [Key]
-        [Column(Order = 3)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int USERID { get; set; }
     }
 }

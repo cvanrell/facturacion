@@ -13,6 +13,7 @@ using WIS.BusinessLogicCore.SortUtil;
 using WIS.CommonCore.SortComponents;
 using WIS.BusinessLogicCore.FilterUtil;
 using WIS.BusinessLogicCore.DataModel.Queries;
+using WIS.Billing.EntitiesCore;
 
 namespace WIS.BusinessLogicCore.GridUtil.Services
 {

@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WIS.CommonCore.Enums;
 
-namespace WIS.Billing.DataAccessCore.Database
+
+namespace WIS.Billing.EntitiesCore
 {
     public abstract class GridColumnConfigPartial
     {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WIS.BusinessLogicCore.GridUtil.Factories;
 using WIS.CommonCore.GridComponents;
 using WIS.Billing.DataAccessCore.Database;
+using WIS.Billing.EntitiesCore;
 
 namespace WIS.BusinessLogicCore.GridUtil
 {
