@@ -83,6 +83,8 @@ namespace WIS.Billing.WebSiteCore
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

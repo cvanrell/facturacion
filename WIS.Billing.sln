@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WIS.Billing.WebSiteCore", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WIS.Billing.CommonCore", "WIS.Billing.CommonCore\WIS.Billing.CommonCore\WIS.Billing.CommonCore.csproj", "{5F317EBF-6213-479B-AD34-A2360288C889}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WIS.InternalServices", "WIS.Billing.ServicesCore\WIS.InternalServices\WIS.InternalServices.csproj", "{CE8BCF45-383E-4261-8050-BDCFE30F7787}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WIS.Billing.InternalServicesCore", "WIS.Billing.ServicesCore\WIS.Billing.InternalServicesCore\WIS.Billing.InternalServicesCore.csproj", "{9492F1B4-EA65-4AC6-BB01-F55FC032150E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{5F317EBF-6213-479B-AD34-A2360288C889}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F317EBF-6213-479B-AD34-A2360288C889}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F317EBF-6213-479B-AD34-A2360288C889}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE8BCF45-383E-4261-8050-BDCFE30F7787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE8BCF45-383E-4261-8050-BDCFE30F7787}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE8BCF45-383E-4261-8050-BDCFE30F7787}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE8BCF45-383E-4261-8050-BDCFE30F7787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9492F1B4-EA65-4AC6-BB01-F55FC032150E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9492F1B4-EA65-4AC6-BB01-F55FC032150E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9492F1B4-EA65-4AC6-BB01-F55FC032150E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9492F1B4-EA65-4AC6-BB01-F55FC032150E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

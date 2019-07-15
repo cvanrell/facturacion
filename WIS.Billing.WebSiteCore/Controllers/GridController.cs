@@ -143,31 +143,41 @@ namespace WIS.Billing.WebSiteCore.Controllers
 
         private async Task<IGridWrapper> CallGridServiceAsync(ServerRequest request, GridAction action, CancellationToken cancelToken)
         {
-            string controller = request.GetBaseApplication();
-            string application = request.Application;
+            GridWrapper result;
 
-            var session = _sessionManager.GetValue<string>("WIS_SESSION");
-
-            if (session == null)
-                session = JsonConvert.SerializeObject(new Dictionary<string, object>());
-
-            var transferData = new GridWrapper
+            try
             {
-                Application = application,
-                Action = action, //TODO: Ver si quitar
-                GridId = request.ComponentId,
-                User = 0,
-                Data = request.Data,
-                SessionData = session,
-                PageToken = ""
-            };
+                string controller = request.GetBaseApplication();
+                string application = request.Application;
 
-            var client = _httpClientFactory.CreateClient();
+                var session = _sessionManager.GetValue<string>("WIS_SESSION");
 
-            var result = await _apiClient.PostAsync(client, "http://localhost:51802/", controller, application + "_Grid", transferData, cancelToken);
+                if (session == null)
+                    session = JsonConvert.SerializeObject(new Dictionary<string, object>());
 
-            if (!string.IsNullOrEmpty(result.SessionData))
-                _sessionManager.SetValue("WIS_SESSION", result.SessionData);
+                var transferData = new GridWrapper
+                {
+                    Application = application,
+                    Action = action, //TODO: Ver si quitar
+                    GridId = request.ComponentId,
+                    User = 0,
+                    Data = request.Data,
+                    SessionData = session,
+                    PageToken = ""
+                };
+
+                var client = _httpClientFactory.CreateClient();
+
+                result = await _apiClient.PostAsync(client, "https://localhost:44340/", controller, application + "_Grid", transferData, cancelToken);
+
+                if (!string.IsNullOrEmpty(result.SessionData))
+                    _sessionManager.SetValue("WIS_SESSION", result.SessionData);
+
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
 
             return result;
         }

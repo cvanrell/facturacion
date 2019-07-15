@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
-//import { Loading } from './components/Loading';
-//import { ScrollContextProvider } from './components/GridComponents/ScrollContextProvider';
-//import HTML5Backend from 'react-dnd-html5-backend';
-//import { DragDropContext } from 'react-dnd';
+import { Loading } from './components/Loading';
+import { ScrollContextProvider } from './components/GridComponents/ScrollContextProvider';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 import { Home } from './components/Home';
 import { FetchData } from './components/FetchData';
 import { Counter } from './components/Counter';
@@ -20,7 +20,9 @@ import { FetchClient } from './pages/Clients/FetchClient';
 import { AddClient } from './pages/Clients/AddClient';
 import { AddHourRate } from './pages/HourRates/AddHourRate';
 import { FetchHourRate } from './pages/HourRates/FetchHourRate';
-import { Clients } from './pages/Clients/Clients';
+import { CLIENTS } from './pages/Clients/CLIENTS';
+
+//const Clients = React.lazy(() => import('./pages/Clients/Clients'));
 
 //const Home = React.lazy(() => import('./components/Home'));
 
@@ -44,25 +46,28 @@ export default class App extends Component {
 
     render() {
         return (
-            <Layout >
+            <Layout setMenuOpening={this.setMenuOpening}>
+                <ScrollContextProvider>
+                    <Suspense fallback={<Loading />}>
+                        <Route exact path='/' component={Home} />
+                        <Route path='/counter' component={Counter} />
+                        <Route path='/fetchdata' component={FetchData} />
+                        <Route path='/fetchmaintenance' component={FetchMaintenance} />
+                        <Route path='/addMaintenance' component={AddMaintenance} />
+                        <Route path='/maintenance/edit/:maintenanceId' component={AddMaintenance} />
+                        <Route path='/fetchproject' component={FetchProject} />
+                        <Route path='/addproject' component={AddProject} />
+                        <Route path='/project/edit/:projectId' component={AddProject} />
+                        <Route path='/fetchclient' component={FetchClient} />
+                        <Route path='/addclient' component={AddClient} />
+                        <Route path='/client/edit/:clientId' component={AddClient} />
+                        <Route path='/addHourRate/' component={AddHourRate} />
+                        <Route path='/fetchHourRate' component={FetchHourRate} />
 
-                <Route exact path='/' component={Home} />
-                <Route path='/counter' component={Counter} />
-                <Route path='/fetchdata' component={FetchData} />
-                <Route path='/fetchmaintenance' component={FetchMaintenance} />
-                <Route path='/addMaintenance' component={AddMaintenance} />
-                <Route path='/maintenance/edit/:maintenanceId' component={AddMaintenance} />
-                <Route path='/fetchproject' component={FetchProject} />
-                <Route path='/addproject' component={AddProject} />
-                <Route path='/project/edit/:projectId' component={AddProject} />
-                <Route path='/fetchclient' component={FetchClient} />
-                <Route path='/addclient' component={AddClient} />
-                <Route path='/client/edit/:clientId' component={AddClient} />
-                <Route path='/addHourRate/' component={AddHourRate} />
-                <Route path='/fetchHourRate' component={FetchHourRate} />
+                        <Route path='/Clients/CLIENTS' component={CLIENTS} />
 
-                <Route path='/Clients' component={Clients} />
-
+                    </Suspense>
+                </ScrollContextProvider>
             </Layout>
         );
     }

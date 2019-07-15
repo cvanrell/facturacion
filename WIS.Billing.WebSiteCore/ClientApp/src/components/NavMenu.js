@@ -25,7 +25,12 @@ export class NavMenu extends Component {
                     <Nav>
                         <Link to={'/fetchclient'} exact>
                             <NavItem>
-                                <FontAwesomeIcon icon='user' /> Clientes
+                                <FontAwesomeIcon icon='fas fa-user' /> Clientes
+                            </NavItem>
+                        </Link>
+                        <Link to={'/Clients/CLIENTS'} exact>
+                            <NavItem>
+                                <FontAwesomeIcon icon='fas fa-user' /> Clientes
                             </NavItem>
                         </Link>
                         <Link to={'/fetchmaintenance'} exact>

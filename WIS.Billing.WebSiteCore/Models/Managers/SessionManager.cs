@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WIS.Billing.WebSiteCore.Extensions;
 
+
 namespace WIS.Billing.WebSiteCore.Models.Managers
 {
     public class SessionManager : ISessionManager

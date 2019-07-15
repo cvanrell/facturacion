@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace WIS.InternalServices.Controllers
+namespace WIS.Billing.InternalServicesCore.Controllers
 {
     public class BaseController : ApiController
     {
