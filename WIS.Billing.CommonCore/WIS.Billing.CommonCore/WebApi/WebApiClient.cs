@@ -23,8 +23,7 @@ namespace WIS.CommonCore.WebApi
             request.Method = HttpMethod.Post;
             request.Content = new StringContent(JsonConvert.SerializeObject(transferObject), Encoding.UTF8, "application/json");
 
-            var response = await client.SendAsync(request, cancelToken);
-            //var response = await client.SendAsync(request, cancelToken).ConfigureAwait(false);
+            var response = await client.SendAsync(request, cancelToken);            
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception("Error, status: " + response.StatusCode + " - " + response.ReasonPhrase + "-" + await response.Content.ReadAsStringAsync());

@@ -20,32 +20,32 @@ namespace WIS.Billing.InternalServicesCore.Controllers
     //[ApiController]
     public class CLIController : BaseController
     {
-        //[System.Web.Http.HttpPost]
-        //public async Task<System.Web.Http.IHttpActionResult> Clients_Page(PageWrapper data, CancellationToken cancelToken)
-        //{
-        //    IPageWrapper response = new PageWrapper();
+        [System.Web.Http.HttpPost]
+        public async Task<System.Web.Http.IHttpActionResult> Clients_Page(PageWrapper data, CancellationToken cancelToken)
+        {
+            IPageWrapper response = new PageWrapper();
 
-        //    try
-        //    {
-        //        var entryPoint = new PageEntrypoint();
+            try
+            {
+                var entryPoint = new PageEntrypoint();
 
-        //        ISessionAccessor session = new SessionAccessor(data.GetSessionData());
+                ISessionAccessor session = new SessionAccessor(data.GetSessionData());
 
-        //        IController controller = new ClientController(session, null); //Ver si resolver con inyección de dependencias
+                IController controller = new ClientController(session, null); //Ver si resolver con inyección de dependencias
 
-        //        response = await entryPoint.InvokeAction(controller, data, null, cancelToken);
+                response = await entryPoint.InvokeAction(controller, data, null, cancelToken);
 
-        //        response.SetSessionData(session.GetInnerDictionary());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.SetError(ex.Message);
-        //    }
+                response.SetSessionData(session.GetInnerDictionary());
+            }
+            catch (Exception ex)
+            {
+                response.SetError(ex.Message);
+            }
 
-        //    return Ok(response);
-        //}
-        
-        
+            return Ok(response);
+        }
+
+
         [HttpPost]
         public async Task<System.Web.Http.IHttpActionResult> CLIENTS_Grid([FromBody]GridWrapper data, CancellationToken cancelToken)
         {
@@ -77,29 +77,29 @@ namespace WIS.Billing.InternalServicesCore.Controllers
             //Prueba p = value;
             //Prueba p = new Prueba(value);
         }
-        //[System.Web.Http.HttpPost]
-        //public async Task<System.Web.Http.IHttpActionResult> Clients_Form(FormWrapper data, CancellationToken cancelToken)
-        //{
-        //    IFormWrapper response = new FormWrapper();
+        [System.Web.Http.HttpPost]
+        public async Task<System.Web.Http.IHttpActionResult> Clients_Form(FormWrapper data, CancellationToken cancelToken)
+        {
+            IFormWrapper response = new FormWrapper();
 
-        //    try
-        //    {
-        //        var entryPoint = new FormControllerEntrypoint();
+            try
+            {
+                var entryPoint = new FormControllerEntrypoint();
 
-        //        ISessionAccessor session = new SessionAccessor(data.GetSessionData());
+                ISessionAccessor session = new SessionAccessor(data.GetSessionData());
 
-        //        IFormController controller = new ClientController(session, null); //Ver si resolver con inyección de dependencias
+                IFormController controller = new ClientController(session, null); //Ver si resolver con inyección de dependencias
 
-        //        response = await entryPoint.InvokeAction(controller, data, null, cancelToken);
+                response = await entryPoint.InvokeAction(controller, data, null, cancelToken);
 
-        //        response.SetSessionData(session.GetInnerDictionary());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.SetError(ex.Message);
-        //    }
+                response.SetSessionData(session.GetInnerDictionary());
+            }
+            catch (Exception ex)
+            {
+                response.SetError(ex.Message);
+            }
 
-        //    return Ok(response);
-        //}        
+            return Ok(response);
+        }
     }    
 }
