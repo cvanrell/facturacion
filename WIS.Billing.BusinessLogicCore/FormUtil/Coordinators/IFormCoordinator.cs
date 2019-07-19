@@ -13,5 +13,6 @@ namespace WIS.BusinessLogicCore.FormUtil.Coordinators
         IFormWrapper ValidateField(IFormWrapper wrapper);
         IFormWrapper ButtonAction(IFormWrapper wrapper);
         IFormWrapper Submit(IFormWrapper wrapper);
+        IFormWrapper SelectSearch(IFormWrapper wrapper);
     }
 }

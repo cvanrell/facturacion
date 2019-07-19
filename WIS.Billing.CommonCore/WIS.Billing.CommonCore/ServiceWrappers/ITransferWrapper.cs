@@ -12,7 +12,7 @@ namespace WIS.CommonCore.ServiceWrappers
     {
         string Application { get; set; }
         int User { get; set; }
-        string Data { get; set; }        
+        string Data { get; set; }
         string PageToken { get; set; }
         TransferWrapperStatus Status { get; set; }
         string Message { get; set; }

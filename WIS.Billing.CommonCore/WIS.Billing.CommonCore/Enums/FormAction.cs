@@ -12,6 +12,7 @@ namespace WIS.CommonCore.Enums
         Initialize,
         ValidateField,
         ButtonAction,
-        Submit
+        Submit,
+        SelectSearch
     }
 }

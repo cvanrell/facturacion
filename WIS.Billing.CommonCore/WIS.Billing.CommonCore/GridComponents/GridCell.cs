@@ -26,9 +26,11 @@ namespace WIS.CommonCore.GridComponents
         public GridStatus Status { get; set; }
         public string Message { get; set; }
         public bool Modified { get; set; }
-        public string Old {
+        public string Old
+        {
             get { return this.OldValue; }
-            set {
+            set
+            {
                 if (this.IsOldSet) throw new Exception("Valor ya seteado");
 
                 this.IsOldSet = true;
@@ -74,5 +76,5 @@ namespace WIS.CommonCore.GridComponents
         {
             return this.Status == GridStatus.Ok;
         }
-    }    
+    }
 }

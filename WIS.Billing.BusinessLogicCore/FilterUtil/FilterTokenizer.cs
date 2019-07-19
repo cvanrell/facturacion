@@ -26,7 +26,7 @@ namespace WIS.BusinessLogicCore.FilterUtil
         };
 
         public FilterTokenizer(string text)
-        {            
+        {
             this._string = text;
             this.Tokens = new List<IFilterToken>();
         }
@@ -71,7 +71,7 @@ namespace WIS.BusinessLogicCore.FilterUtil
                             else
                             {
                                 this.Tokens.Add(new FilterTokenLessThan());
-                            }                            
+                            }
                             break;
                         case '>':
                             reader.Read();
@@ -82,8 +82,8 @@ namespace WIS.BusinessLogicCore.FilterUtil
                             }
                             else
                             {
-                                this.Tokens.Add(new FilterTokenGreaterThan());                                
-                            }                            
+                                this.Tokens.Add(new FilterTokenGreaterThan());
+                            }
                             break;
                         case '=':
                             this.Tokens.Add(new FilterTokenEqual());
@@ -130,7 +130,7 @@ namespace WIS.BusinessLogicCore.FilterUtil
 
             tokens.Reverse();
 
-            while(index < tokens.Count)
+            while (index < tokens.Count)
             {
                 IFilterToken token = tokens[index];
                 IFilterToken topToken;
@@ -145,14 +145,14 @@ namespace WIS.BusinessLogicCore.FilterUtil
                         break;
                     case Enums.FilterTokenType.PARENTHESIS_CLOSE:
                         topToken = stack.Pop();
-                        while(topToken.TokenType != Enums.FilterTokenType.PARENTHESIS_OPEN)
+                        while (topToken.TokenType != Enums.FilterTokenType.PARENTHESIS_OPEN)
                         {
                             outputQueue.Enqueue(topToken);
                             topToken = stack.Pop();
                         }
                         break;
                     default:
-                        while(stack.Count > 0 && this.OperatorPrecedence[stack.Peek().TokenType] >= this.OperatorPrecedence[token.TokenType])
+                        while (stack.Count > 0 && this.OperatorPrecedence[stack.Peek().TokenType] >= this.OperatorPrecedence[token.TokenType])
                         {
                             outputQueue.Enqueue(stack.Pop());
                         }
@@ -164,7 +164,7 @@ namespace WIS.BusinessLogicCore.FilterUtil
                 index++;
             }
 
-            while(stack.Count > 0)
+            while (stack.Count > 0)
             {
                 outputQueue.Enqueue(stack.Pop());
             }
@@ -175,7 +175,7 @@ namespace WIS.BusinessLogicCore.FilterUtil
         {
             var pivotedList = new List<IFilterToken>();
 
-            foreach(var token in this.Tokens)
+            foreach (var token in this.Tokens)
             {
                 if (token.TokenType == Enums.FilterTokenType.PARENTHESIS_OPEN)
                     pivotedList.Add(new FilterTokenParenthesisClose());
@@ -190,7 +190,7 @@ namespace WIS.BusinessLogicCore.FilterUtil
 
         private bool IsValidContentChar(char c)
         {
-            return char.IsLetterOrDigit(c) || c == '/' || c == ':' || c == ';' 
+            return char.IsLetterOrDigit(c) || c == '/' || c == ':' || c == ';'
                 || c == '\'' || c == '.' || c == ',' || c == '_' || c == '-'
                 || c == '%';
         }

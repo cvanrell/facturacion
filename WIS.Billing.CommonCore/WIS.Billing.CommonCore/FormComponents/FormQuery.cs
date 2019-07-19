@@ -15,5 +15,10 @@ namespace WIS.CommonCore.FormComponents
         {
             this.Parameters = new List<ComponentParameter>();
         }
+
+        public string GetParameter(string parameterId)
+        {
+            return this.Parameters.Where(d => d.Id == parameterId).FirstOrDefault()?.Value;
+        }
     }
 }

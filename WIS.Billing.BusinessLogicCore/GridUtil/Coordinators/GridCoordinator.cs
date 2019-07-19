@@ -69,10 +69,10 @@ namespace WIS.BusinessLogicCore.GridUtil.Coordinators
         public IGridWrapper FetchRows(IGridWrapper wrapper)
         {
             var query = wrapper.GetData<GridFetchRequest>();
-            
+
             IGridWrapper response = new GridWrapper(wrapper);
 
-            var grid = new Grid(query.GridId);            
+            var grid = new Grid(query.GridId);
 
             using (var context = new WISDB())
             {
@@ -144,7 +144,7 @@ namespace WIS.BusinessLogicCore.GridUtil.Coordinators
 
             using (var context = new WISDB())
             {
-                grid.Columns = this._service.GetColumns(context, wrapper.Application, wrapper.GridId, wrapper.User);                
+                grid.Columns = this._service.GetColumns(context, wrapper.Application, wrapper.GridId, wrapper.User);
             }
 
             grid.Rows = data.Rows;
@@ -157,7 +157,7 @@ namespace WIS.BusinessLogicCore.GridUtil.Coordinators
 
                     validatedRow.SetCellColumn(grid.Columns);
 
-                    foreach(var cell in validatedRow.Cells)
+                    foreach (var cell in validatedRow.Cells)
                     {
                         cell.Modified = true;
                     }
@@ -191,7 +191,7 @@ namespace WIS.BusinessLogicCore.GridUtil.Coordinators
         public IGridWrapper ButtonAction(IGridWrapper wrapper)
         {
             var data = wrapper.GetData<GridButtonAction>();
-            
+
             IGridWrapper response = new GridWrapper(wrapper);
 
             var columns = new List<IGridColumn>();

@@ -46,7 +46,7 @@ namespace WIS.BusinessLogicCore.Validation
                     validationGroup.AddErrors(result);
                     break;
                 }
-            }            
+            }
 
             return validationGroup;
         }

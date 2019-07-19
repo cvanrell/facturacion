@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WIS.CommonCore.App;
 using WIS.CommonCore.Enums;
 
 namespace WIS.CommonCore.FormComponents
@@ -19,7 +20,7 @@ namespace WIS.CommonCore.FormComponents
         public string ErrorMessage { get; set; }
         public List<string> Dependencies { get; set; }
         public string Value { get; set; }
-        public List<FormSelectOptions> options { get; set; }
+        public List<SelectOption> options { get; set; }
 
         [JsonIgnore]
         public bool IsValidated { get; set; }

@@ -9,6 +9,7 @@ namespace WIS.CommonCore.Page
 {
     public class PageQueryData
     {
+        public string Redirect { get; set; }
         public List<ComponentParameter> Parameters { get; set; }
     }
 }

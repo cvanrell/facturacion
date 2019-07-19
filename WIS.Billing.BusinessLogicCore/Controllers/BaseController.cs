@@ -72,6 +72,10 @@ namespace WIS.BusinessLogicCore.Controllers
         {
             throw new NotImplementedException();
         }
+        public virtual List<SelectOption> FormSelectSearch(Form form, FormSelectSearchQuery query, int userId)
+        {
+            throw new NotImplementedException();
+        }
 
         protected virtual FormValidationSchema GetValidationSchema(Form form, List<ComponentParameter> parameters, int userId, WISDB context)
         {
@@ -83,7 +87,7 @@ namespace WIS.BusinessLogicCore.Controllers
         public virtual Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest query, int userId)
         {
             return this.GridFetchRows(service, grid, query, userId);
-        }        
+        }
         public virtual Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest query, int userId)
         {
             throw new NotImplementedException();

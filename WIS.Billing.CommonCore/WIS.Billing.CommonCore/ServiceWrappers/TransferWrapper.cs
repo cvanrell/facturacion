@@ -14,7 +14,7 @@ namespace WIS.CommonCore.ServiceWrappers
     {
         public string Application { get; set; }
         public int User { get; set; }
-        public string Data { get; set; }      
+        public string Data { get; set; }
         public string PageToken { get; set; }
         public TransferWrapperStatus Status { get; set; }
         public string Message { get; set; }
@@ -125,5 +125,5 @@ namespace WIS.CommonCore.ServiceWrappers
             //Esto se define por seguridad, no se permite pasar tipos no esperados
             throw new NotImplementedException();
         }
-    }    
+    }
 }

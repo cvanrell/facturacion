@@ -36,9 +36,12 @@ namespace WIS.CommonCore.ServiceWrappers
                 typeof(WIS.CommonCore.FormComponents.FormValidationQuery),
                 typeof(WIS.CommonCore.FormComponents.FormSubmitQuery),
                 typeof(WIS.CommonCore.FormComponents.FormButtonActionQuery),
-                typeof(WIS.CommonCore.FormComponents.FormSelectOptions),
+                typeof(WIS.CommonCore.FormComponents.FormSelectSearchRequest),
+                typeof(WIS.CommonCore.FormComponents.FormSelectSearchResponse),
+                typeof(WIS.CommonCore.FormComponents.FormSelectSearchQuery),
 
-                typeof(WIS.CommonCore.App.ComponentParameter)
+                typeof(WIS.CommonCore.App.ComponentParameter),
+                typeof(WIS.CommonCore.App.SelectOption)
             });
         }
     }

@@ -23,5 +23,28 @@ namespace WIS.CommonCore.Extensions
 
             return realValue.ToString(format);
         }
+        /// <summary>
+        /// Convierte fecha a formato ISO 8601
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToIsoString(this DateTime value)
+        {
+            return value.ToString("O");
+        }
+        /// <summary>
+        /// Convierte fecha a formato ISO 8601
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToIsoString(this DateTime? value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            DateTime realValue = value ?? DateTime.Now; //Nunca entra en else
+
+            return realValue.ToString("O");
+        }
     }
 }

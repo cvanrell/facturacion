@@ -11,7 +11,7 @@ using WIS.CommonCore.Page;
 using WIS.CommonCore.ServiceWrappers;
 using WIS.CommonCore.Session;
 
-namespace WIS.BusinessLogic.Page.Coordinators
+namespace WIS.BusinessLogicCore.Page.Coordinators
 {
     public class PageCoordinator : IPageCoordinator
     {
