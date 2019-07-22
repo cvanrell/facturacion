@@ -26,7 +26,7 @@ import { CLIENTS } from './pages/Clients/CLIENTS';
 
 //const Home = React.lazy(() => import('./components/Home'));
 
-export default class App extends Component {
+export class App extends Component {
     displayName = App.name
 
 
@@ -72,4 +72,4 @@ export default class App extends Component {
         );
     }
 }
-//export default DragDropContext(HTML5Backend)(App); //Si se necesita touch, hay que usar el backend de touch
+export default DragDropContext(HTML5Backend)(App); //Si se necesita touch, hay que usar el backend de touch

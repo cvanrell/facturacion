@@ -18,10 +18,11 @@ namespace WIS.Billing.InternalServicesCore.Controllers
 {
     [System.Web.Http.Route("api/[controller]")]
     //[ApiController]
-    public class CLIController : BaseController
+    //[Produces("application/json")]
+    public class CLIController : Controller
     {
-        [System.Web.Http.HttpPost]
-        public async Task<System.Web.Http.IHttpActionResult> Clients_Page(PageWrapper data, CancellationToken cancelToken)
+        [HttpPost]
+        public async Task<IActionResult> Clients_Page(PageWrapper data, CancellationToken cancelToken)
         {
             IPageWrapper response = new PageWrapper();
 
@@ -47,7 +48,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
 
 
         [HttpPost]
-        public async Task<System.Web.Http.IHttpActionResult> CLIENTS_Grid([FromBody]GridWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> CLIENTS_Grid([FromBody]GridWrapper data, CancellationToken cancelToken)
         {
             IGridWrapper response = new GridWrapper();
 
@@ -68,17 +69,12 @@ namespace WIS.Billing.InternalServicesCore.Controllers
                 response.SetError(ex.Message);
             }
 
+
             return Ok(response);
         }
 
-        
-        public void Post([FromBody]Object value)
-        {
-            //Prueba p = value;
-            //Prueba p = new Prueba(value);
-        }
-        [System.Web.Http.HttpPost]
-        public async Task<System.Web.Http.IHttpActionResult> Clients_Form(FormWrapper data, CancellationToken cancelToken)
+        [HttpPost]
+        public async Task<IActionResult> Clients_Form(FormWrapper data, CancellationToken cancelToken)
         {
             IFormWrapper response = new FormWrapper();
 

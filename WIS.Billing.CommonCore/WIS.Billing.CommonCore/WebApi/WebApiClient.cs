@@ -27,8 +27,9 @@ namespace WIS.CommonCore.WebApi
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception("Error, status: " + response.StatusCode + " - " + response.ReasonPhrase + "-" + await response.Content.ReadAsStringAsync());
+            var cont = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<T>(cont);
         }
         public async Task<T> PostAsync<T>(HttpClient client, string uri, string application, T transferObject, CancellationToken cancelToken)
         {
