@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using WIS.Billing.DataAccessCore.Database;
+using WIS.Billing.EntitiesCore;
 using WIS.BusinessLogicCore.Controllers;
 using WIS.BusinessLogicCore.GridUtil.Services;
 using WIS.CommonCore.Enums;
@@ -102,6 +103,66 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             }
 
             return grid;
+        }
+
+        public override Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId)
+        {            
+            using (WISDB context = new WISDB())
+            {
+                foreach (GridRow row in grid.Rows)
+                {
+                    string[] dataList = new string[] { "" };
+                    Client currentClient = GridHelper.RowToEntity<Client>(row, dataList.ToList());
+                    //Chequeo si el cliente existe buscando por RUT
+                    //Client clientExists = CheckIfClientExists(currentClient);
+                    Client clientExists = context.Clients.FirstOrDefault(x => x.RUT == currentClient.RUT);
+
+
+                    if (clientExists != null)
+                    {
+                        //El cliente existe y la row es nueva, significa que quiere ingresar un cliente existente
+                        if (row.IsNew)
+                        {
+                            throw new Exception("El cliente que intenta ingresar ya existe");
+                        }
+                        //El cliente existe y quiere modificar sus datos
+                        else
+                        {
+                            clientExists.Address = currentClient.Address;
+                            clientExists.Description = currentClient.Description;
+                            //context.SaveChanges();
+                        }
+                    }
+                    //Si no existe es porque quiere guardar. Compruebo igualmente estado de la row
+                    else if(clientExists == null && row.IsNew)
+                    {
+                        context.Clients.Add(currentClient);
+                    }
+                    else if(row.IsDeleted)
+                    {
+                        context.Clients.Remove(currentClient);
+                    }
+                    context.SaveChanges();
+                }
+
+            }
+            return grid;
+        }
+
+        public Client CheckIfClientExists(Client client)
+        {            
+            using (WISDB context = new WISDB())
+            {
+                Client c = context.Clients.FirstOrDefault(x => x.RUT == client.RUT);
+                if (c != null)
+                {
+                    return c;
+                }
+                else
+                {
+                    return null;
+                }
+            }            
         }
     }
 }
