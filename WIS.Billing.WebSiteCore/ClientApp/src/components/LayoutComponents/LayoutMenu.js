@@ -6,7 +6,7 @@ export function LayoutMenu(props) {
     const sectionsPrueba = [
         {
             id: "LSTO000_Section_Access_Stock",
-            label: "Stock",
+            label: "Clientes",
             icon: "fa fa-cubes",
             items: [
                 {

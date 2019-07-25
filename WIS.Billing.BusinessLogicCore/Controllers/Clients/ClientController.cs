@@ -202,7 +202,13 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             Client client = CheckIfClientExists(context, c);
             if (client != null)
             {
-                throw new Exception("Ya existe un cliente con el RUT especificado");
+                if (client.FL_DELETED == "S")
+                {
+                    client.FL_DELETED = "N";
+                }
+                else {
+                    throw new Exception("Ya existe un cliente con el RUT especificado");
+                }
             }
             else
             {
