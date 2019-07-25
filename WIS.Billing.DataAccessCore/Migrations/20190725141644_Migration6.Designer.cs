@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190725141644_Migration6")]
+    partial class Migration6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,6 +30,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired();
+
+                    b.Property<string>("FL_DELETED")
+                        .HasMaxLength(1);
 
                     b.Property<string>("RUT");
 

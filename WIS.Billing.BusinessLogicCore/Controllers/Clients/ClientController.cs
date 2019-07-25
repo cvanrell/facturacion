@@ -29,7 +29,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
             this.GridKeys = new List<string>
             {
-                "Id"                
+                "Id"
             };
         }
 
@@ -53,7 +53,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
             fieldAddress.Value = "Staccato";
 
-            var fieldRut= form.GetField("rut");
+            var fieldRut = form.GetField("rut");
 
             fieldRut.Value = "Staccato";
             return form;
@@ -106,7 +106,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         }
 
         public override Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId)
-        {            
+        {
             using (WISDB context = new WISDB())
             {
                 foreach (GridRow row in grid.Rows)
@@ -115,33 +115,24 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                     Client currentClient = GridHelper.RowToEntity<Client>(row, dataList.ToList());
                     //Chequeo si el cliente existe buscando por RUT
                     //Client clientExists = CheckIfClientExists(currentClient);
-                    Client clientExists = context.Clients.FirstOrDefault(x => x.RUT == currentClient.RUT);
+                    //Client clientExists = context.Clients.FirstOrDefault(x => x.RUT == currentClient.RUT);
 
 
-                    if (clientExists != null)
+
+                    if (row.IsNew)
                     {
-                        //El cliente existe y la row es nueva, significa que quiere ingresar un cliente existente
-                        if (row.IsNew)
-                        {
-                            throw new Exception("El cliente que intenta ingresar ya existe");
-                        }
-                        //El cliente existe y quiere modificar sus datos
-                        else
-                        {
-                            clientExists.Address = currentClient.Address;
-                            clientExists.Description = currentClient.Description;
-                            //context.SaveChanges();
-                        }
+                        AddClient(context, currentClient);
                     }
-                    //Si no existe es porque quiere guardar. Compruebo igualmente estado de la row
-                    else if(clientExists == null && row.IsNew)
+                    else if (row.IsDeleted)
                     {
-                        context.Clients.Add(currentClient);
+                        DeleteClient(context, currentClient);
                     }
-                    else if(row.IsDeleted)
+                    else
                     {
-                        context.Clients.Remove(currentClient);
+                        UpdateClient(context, currentClient);
                     }
+
+
                     context.SaveChanges();
                 }
 
@@ -149,20 +140,69 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             return grid;
         }
 
-        public Client CheckIfClientExists(Client client)
-        {            
-            using (WISDB context = new WISDB())
+        public Client CheckIfClientExists(WISDB context, Client client)
+        {
+            Client c = context.Clients.FirstOrDefault(x => x.RUT == client.RUT);
+            if (c != null)
             {
-                Client c = context.Clients.FirstOrDefault(x => x.RUT == client.RUT);
-                if (c != null)
+                return c;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+        public void AddClient(WISDB context, Client c)
+        {
+            //Client client = context.Clients.FirstOrDefault(x => x.RUT == c.RUT);
+            Client client = CheckIfClientExists(context, c);
+            if (client != null)
+            {
+                throw new Exception("Ya existe un cliente con el RUT especificado");
+            }
+            else
+            {
+                client = new Client()
                 {
-                    return c;
-                }
-                else
-                {
-                    return null;
-                }
-            }            
+                    Address = c.Address,
+                    Description = c.Description,
+                    RUT = c.RUT,
+                    FL_DELETED = "N",
+                };
+                context.Clients.Add(client);
+                context.SaveChanges();
+            }
+        }
+
+        public void UpdateClient(WISDB context, Client c)
+        {
+            Client client = CheckIfClientExists(context, c);
+            if (client == null)
+            {
+                throw new Exception("No se encuentra el cliente especificado");
+            }
+            else
+            {
+                client.Address = c.Address;
+                client.Description = c.Description;
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteClient(WISDB context, Client c)
+        {
+            Client client = CheckIfClientExists(context, c);
+            if (client == null)
+            {
+                throw new Exception("No se encuentra el cliente que desea eliminar");
+            }
+            else
+            {
+                client.FL_DELETED = "S";
+                context.SaveChanges();
+            }
         }
     }
 }

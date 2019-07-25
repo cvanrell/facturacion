@@ -12,6 +12,8 @@ namespace WIS.Billing.EntitiesCore
         public string Description { get; set; }
         public string RUT { get; set; }
         public string Address { get; set; }
+        [MaxLength(1)]
+        public string FL_DELETED { get; set; }
         public List<HourRate> HourRates { get; set; }
         //public List<Project> Projects { get; set; }
     }
