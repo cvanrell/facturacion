@@ -190,7 +190,7 @@ namespace WIS.BusinessLogicCore.GridUtil.Coordinators
         }
         public IGridWrapper ButtonAction(IGridWrapper wrapper)
         {
-            var data = wrapper.GetData<GridButtonAction>();
+            var data = wrapper.GetData<GridButtonActionQuery>();
 
             IGridWrapper response = new GridWrapper(wrapper);
 

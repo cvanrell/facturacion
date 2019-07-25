@@ -19,6 +19,6 @@ namespace WIS.BusinessLogicCore.Controllers
         Grid GridValidateRow(IGridService service, GridRow row, Grid grid, List<ComponentParameter> parameters, int userId);
         Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId);
         GridMenuItemAction GridMenuItemAction(IGridService service, GridMenuItemAction selection, int userId);
-        GridButtonAction GridButtonAction(IGridService service, GridButtonAction data, int userId);
+        GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId);
     }
 }

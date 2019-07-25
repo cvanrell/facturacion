@@ -9,7 +9,7 @@ using WIS.CommonCore.Serialization.Converters;
 
 namespace WIS.CommonCore.GridComponents
 {
-    public class GridButtonAction
+    public class GridButtonActionQuery
     {
         public string GridId { get; set; }
         public string ButtonId { get; set; }
@@ -21,5 +21,9 @@ namespace WIS.CommonCore.GridComponents
         public List<ComponentParameter> Parameters { get; set; }
 
         public string Redirect { get; set; }
+
+        public GridButtonActionQuery() : base()
+        {
+        }
     }
 }

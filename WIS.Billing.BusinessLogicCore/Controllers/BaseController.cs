@@ -133,7 +133,7 @@ namespace WIS.BusinessLogicCore.Controllers
         {
             throw new NotImplementedException();
         }
-        public virtual GridButtonAction GridButtonAction(IGridService service, GridButtonAction data, int userId)
+        public virtual GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId)
         {
             throw new NotImplementedException();
         }

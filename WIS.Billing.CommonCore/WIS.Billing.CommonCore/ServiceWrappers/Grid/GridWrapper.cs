@@ -47,7 +47,7 @@ namespace WIS.CommonCore.ServiceWrappers
                 typeof(WIS.CommonCore.GridComponents.GridFetchResponse),                
                 typeof(WIS.CommonCore.GridComponents.GridValidationRequest),
                 typeof(WIS.CommonCore.GridComponents.GridValidationResponse),
-                typeof(WIS.CommonCore.GridComponents.GridButtonAction),
+                typeof(WIS.CommonCore.GridComponents.GridButtonActionQuery),
                 typeof(WIS.CommonCore.GridComponents.GridMenuItemAction),
 
                 typeof(WIS.CommonCore.FilterComponents.FilterCommand),

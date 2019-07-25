@@ -7,6 +7,7 @@ using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.BusinessLogicCore.Controllers;
 using WIS.BusinessLogicCore.GridUtil.Services;
+using WIS.CommonCore.App;
 using WIS.CommonCore.Enums;
 using WIS.CommonCore.FormComponents;
 using WIS.CommonCore.GridComponents;
@@ -82,7 +83,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         {
             grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
                 new GridItemHeader("Cosas 1"),
-                new GridButton("btnDormitar", "Dormitar", "fas fa-wrench"),
+                new GridButton("btnTarifasHoras", "Tarifas de horas", "fas fa-wrench"),
                 new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
                 new GridItemDivider(),
                 new GridItemHeader("Cosas 2"),
@@ -95,7 +96,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         {
             using (WISDB context = new WISDB())
             {
-                var query = context.Clients;
+                var query = context.Clients.Where(x => x.FL_DELETED == "N" );
 
                 var defaultSort = new SortCommand("Description", SortDirection.Ascending);
 
@@ -138,6 +139,47 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
             }
             return grid;
+        }
+
+
+        public override GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId)
+        {
+            if (data.ButtonId == "btnEditar")
+            {
+                //JavaScriptSerializer JSONConverter = new JavaScriptSerializer();
+
+                data.Parameters.Add(new ComponentParameter
+                {
+                    Id = "EDITAR",
+                    Value = "true"
+                });
+                _session.SetValue("Clients_EDITAR", true);
+
+                data.Redirect = "/Clients/Det_Clients";
+
+                this._session.SetValue("Id", data.Row.GetCell("Id").Value);                
+
+            }
+            //else if (data.ButtonId == "btnSaldo")
+            //{
+            //    data.Redirect = "/documento/DOC020";
+
+            //    this._session.SetValue("DOC020_NU_DOCUMENTO", data.Row.GetCell("NU_DOCUMENTO").Value);
+            //    this._session.SetValue("DOC020_TP_DOCUMENTO", data.Row.GetCell("TP_DOCUMENTO").Value);
+            //    this._session.SetValue("DOC020_CD_EMPRESA", data.Row.GetCell("CD_EMPRESA").Value);
+            //}
+            //else
+            //{
+            //    data.Redirect = "/documento/DOC081";
+
+            //    this._session.SetValue("DOC080_NU_DOCUMENTO", data.Row.GetCell("NU_DOCUMENTO").Value);
+            //    this._session.SetValue("DOC080_TP_DOCUMENTO", data.Row.GetCell("TP_DOCUMENTO").Value);
+            //    this._session.SetValue("DOC080_CD_EMPRESA", data.Row.GetCell("CD_EMPRESA").Value);
+            //}
+
+
+
+            return data;
         }
 
         public Client CheckIfClientExists(WISDB context, Client client)

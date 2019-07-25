@@ -101,7 +101,7 @@ namespace WIS.Billing.WebSiteCore.Controllers
             //TODO: Comprobar permisos de usuario antes de realizar llamada, para comprobar que puede acceder a la aplicación provista
             var responseData = await this.CallGridServiceAsync(serverRequest, GridAction.ButtonAction, cancelToken);
 
-            var content = responseData.GetResolvedData<GridButtonAction>();
+            var content = responseData.GetResolvedData<GridButtonActionQuery>();
 
             var response = new ServerResponse(content);
 
