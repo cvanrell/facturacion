@@ -12,12 +12,15 @@ import withGridDataProvider from './WithGridDataProvider';
 import { withPageContext } from '../WithPageContext';
 import ColumnResizeMarker from './GridColumnResizeMarker';
 import { GridDropdown } from './GridDropdown'
-import { columnFixed, gridStatus, filterStatus, componentType } from '../Enums';
+import { columnFixed, gridStatus, filterStatus, componentType, notificationType } from '../Enums';
+import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 export class InternalGrid extends Component {
     static propTypes = {
+        editable: PropTypes.bool,
         enableSelection: PropTypes.bool,
+        enableExcelExport: PropTypes.bool,
         onBeforeInitialize: PropTypes.func,
         onAfterInitialize: PropTypes.func,
         onBeforeFetch: PropTypes.func,
@@ -34,6 +37,10 @@ export class InternalGrid extends Component {
         onAfterApplyFilter: PropTypes.func,
         onBeforeApplySort: PropTypes.func,
         onAfterApplySort: PropTypes.func,
+        onBeforeExportExcel: PropTypes.func,
+        onAfterExportExcel: PropTypes.func,
+        onBeforeUpdateConfig: PropTypes.func,
+        onAfterUpdateConfig: PropTypes.func,
         rowFetchOverscan: PropTypes.number,
         rowOverscan: PropTypes.number,
         rowsToDisplay: PropTypes.number,
@@ -42,6 +49,8 @@ export class InternalGrid extends Component {
 
     static defaultProps = {
         enableSelection: false,
+        enableExcelExport: false,
+        editable: false,
         rowFetchOverscan: 30,
         rowOverscan: 30,
         rowsToDisplay: 20,
@@ -86,12 +95,15 @@ export class InternalGrid extends Component {
             resizeCurrentPosition: 0,
 
             highlightLast: null,
-            
+
             isSelectionInverted: false,
             isFetching: false,
             isResizing: false,
             isInitializing: true
         };
+
+        this.highlight = [];
+        this.highlightLast = false;
 
         this.toolbarHeight = 29;
         this.headerHeight = 30;
@@ -101,6 +113,7 @@ export class InternalGrid extends Component {
         this.lastOffset = 0;
         this.scrollWatcher = null;
 
+        this.scrollPaneRef = React.createRef();
         this.containerRef = React.createRef();
         this.bodyRef = React.createRef();
     }
@@ -109,7 +122,7 @@ export class InternalGrid extends Component {
         this.mounted = true;
 
         this.initialize(this.props.id, this.props.rowsToFetch);
-        
+
         this.watchScroll();
 
         this.props.nexus.registerComponent(this.props.id, componentType.grid, this.getApi());
@@ -131,8 +144,11 @@ export class InternalGrid extends Component {
     hasFixedColumnsRight = () => {
         return this.state.columns.some(col => col.fixed === columnFixed.right);
     }
-    
+
     addRow = () => {
+        if (!this.props.editable)
+            return;
+
         const rowId = this.state.rowLastNewId + 1;
 
         const newRow = {
@@ -158,26 +174,32 @@ export class InternalGrid extends Component {
         console.log(this.state.rows.filter(row => row.new));
     }
     deleteRow = () => {
-        const rowIds = this.state.highlight.map(s => s.rowId);
+        if (!this.props.editable)
+            return;
 
-        let rows = this.state.rows.filter(r => !r.isNew || rowIds.indexOf(r.id) < 0);
+        const rowIds = this.highlight.map(s => s.rowId);
+
+        let rows = [...this.state.rows];
+        let result = [];
 
         //TODO: < O(N^2) ver si es posible otimizar mas
-        for (let i = 0; i < rowIds.length; i++) {
-            for (let j = 0; j < rows.length; j++) {
-                if (rows[j].id === rowIds[i]) {
-                    rows[j].isDeleted = true;
-                    break;
+        for (let i = 0; i < rows.length; i++) {
+            for (let j = 0; j < rowIds.length; j++) {
+                if (rows[i].id === rowIds[j]) {
+                    rows[i].isDeleted = true;
                 }
             }
+
+            if (!rows[i].isNew || !rows[i].isDeleted)
+                result.push(rows[i]);
         }
 
         this.setState({
-            rows: rows
+            rows: result
         });
-    }    
+    }
 
-    addCellHighlight = (highlight, clearPrevious) => {
+    /*addCellHighlight = (highlight, clearPrevious) => {
         const cellHighlight = clearPrevious ? [] : [...this.state.highlight];
 
         var rowIndex = cellHighlight.findIndex(d => d.rowId === highlight.rowId);
@@ -283,29 +305,149 @@ export class InternalGrid extends Component {
         }, "");
 
         navigator.clipboard.writeText(output);
+    }*/
+
+    getRowHighlights = (rowId) => {
+        var rowIndex = this.highlight.findIndex(d => d.rowId === rowId);
+
+        if (rowIndex > -1)
+            return this.highlight[rowIndex];
+
+        return null;
     }
-    
+    toggleHighlight = (highlight, clearPrevious) => {
+        this.highlightLast = highlight;
+
+        const cellHighlight = clearPrevious ? [] : [...this.highlight];
+
+        /*for (var i = 0; i < this.highlight.length; i++) {
+            if (this.highlight[i].rowId === highlight.rowId) {
+                for (var j = 0; j < this.highlight[i].columns.length; j++) {
+                    if (this.highlight[i].columns[j] === highlight.columnId) {
+                        
+                    }
+                }
+            }
+        }*/
+
+        var rowIndex = cellHighlight.findIndex(d => d.rowId === highlight.rowId);
+
+        if (rowIndex >= 0) {
+            var colIndex = cellHighlight[rowIndex].columns.indexOf(highlight.columnId);
+
+            if (colIndex >= 0) {
+                this.highlight = [
+                    ...cellHighlight.slice(0, rowIndex),
+                    {
+                        ...cellHighlight[rowIndex],
+                        columns: cellHighlight[rowIndex].columns.filter(d => d !== highlight.columnId)
+                    },
+                    ...cellHighlight.slice(rowIndex + 1)
+                ];
+            }
+            else {
+                this.highlight = [
+                    ...cellHighlight.slice(0, rowIndex),
+                    {
+                        ...cellHighlight[rowIndex],
+                        columns: [
+                            ...cellHighlight[rowIndex].columns,
+                            highlight.columnId
+                        ]
+                    },
+                    ...cellHighlight.slice(rowIndex + 1)
+                ];
+            }
+        }
+        else {
+            this.highlight = [
+                ...cellHighlight,
+                {
+                    rowId: highlight.rowId,
+                    index: highlight.index,
+                    columns: [highlight.columnId]
+                }
+            ];
+        }
+    }
+    clearHighlighted = () => {
+        const cells = document.querySelectorAll("#" + this.props.id + ".gr-grid .gr-cell.selected");
+
+        if (cells) {
+            for (var i = 0; i < cells.length; i++) {
+                cells[i].classList.toggle("selected", false);
+            }
+        }
+    }
+    isHighlighted = (rowId, columnId) => {
+        var rowIndex = this.highlight.findIndex(d => d.rowId === rowId);
+
+        return this.highlight[rowIndex].columns.findIndex(d => d === columnId) > -1;
+    }
+    sortCellHighlight(a, b) {
+        if ((a.fixed === 2 && b.fixed === 1) || (a.fixed === 1 && b.fixed === 3) || (a.fixed === 2 && b.fixed === 3)) {
+            return -1;
+        }
+
+        if ((a.fixed === 3 && b.fixed === 1) || (a.fixed === 1 && b.fixed === 2) || (a.fixed === 3 && b.fixed === 2)) {
+            return 1;
+        }
+
+        return 0;
+    }
+    getCellHighlight = (evt) => {
+        evt.preventDefault();
+
+        const highlight = [...this.highlight].sort((prev, next) => prev.index - next.index);
+        const columns = [...this.state.columns].sort((a, b) => this.sortCellHighlight(a, b)).map(d => d.id);
+
+        const columnList = columns.filter(col => highlight.some(sel => sel.columns.indexOf(col) >= 0));
+
+        let rowIndex;
+        let colOutput;
+
+        const output = highlight.reduce((rowOutput, high) => {
+            rowIndex = this.state.rows.findIndex(d => d.id === high.rowId);
+
+            colOutput = columnList.reduce((output, col) => {
+                return output + (high.columns.indexOf(col) >= 0 ? this.state.rows[rowIndex].cells.find(c => c.column === col).value : "") + "\t";
+            }, "");
+
+            return rowOutput + colOutput + "\n";
+        }, "");
+
+        navigator.clipboard.writeText(output);
+    }
+
     initialize = () => {
-        const data = {
-            gridId: this.props.id,
-            rowsToFetch: this.props.rowsToFetch,
-            parameters: []
-        };
+        try {
+            const data = {
+                gridId: this.props.id,
+                rowsToFetch: this.props.rowsToFetch,
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeInitialize)
-            this.props.onBeforeInitialize(context, data);
+            if (this.props.onBeforeInitialize)
+                this.props.onBeforeInitialize(context, data, this.props.nexus);
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (!this.mounted || context.abortServerCall)
+                return false;
 
-        this.props.gridInitialize(data).then(this.initializeProcessResponse);
+            this.props.gridInitialize(data).then(this.initializeProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     initializeProcessResponse = (response) => {
         try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
+
             const data = JSON.parse(response.Data);
 
             let index = 0;
@@ -316,10 +458,12 @@ export class InternalGrid extends Component {
             };
 
             if (this.props.onAfterInitialize)
-                this.props.onAfterInitialize(context, data.grid, data.parameters);
+                this.props.onAfterInitialize(context, data.grid, data.parameters, this.props.nexus);
 
             if (!this.mounted || context.abortUpdate)
                 return false;
+
+            this.props.nexus.toastNotifications(data.notifications);
 
             if (data.grid.rows.length > 0) {
                 rows = this.appendRowData(data.grid.rows, true);
@@ -336,8 +480,7 @@ export class InternalGrid extends Component {
             });
         }
         catch (ex) {
-            //TODO: Mostrar mensaje error
-            console.log(ex);
+            this.props.nexus.toastException(ex);
         }
     }
 
@@ -364,15 +507,16 @@ export class InternalGrid extends Component {
             };
 
             if (this.props.onBeforeFetch)
-                this.props.onBeforeFetch(evt, context, data);
+                this.props.onBeforeFetch(context, data, this.props.nexus);
 
             if (!this.mounted || context.abortServerCall)
                 return false;
 
             return this.props.gridFetchRows(data).then(this.fetchDataProcessResponse.bind(this, clearPrevious));
         }
-        catch(ex) {
-            //TODO: Mostrar mensaje error
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+
             this.setState({
                 isFetching: false
             });
@@ -380,6 +524,9 @@ export class InternalGrid extends Component {
     }
     fetchDataProcessResponse = (clearPrevious, response) => {
         try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
+
             const data = JSON.parse(response.Data);
 
             let newRows = data.rows;
@@ -389,16 +536,18 @@ export class InternalGrid extends Component {
             };
 
             if (this.props.onAfterFetch)
-                this.props.onAfterFetch(context, newRows, data.parameters);
+                this.props.onAfterFetch(context, newRows, data.parameters, this.props.nexus);
 
             if (!this.mounted)
                 return false;
 
+            this.props.nexus.toastNotifications(data.notifications);
+
             if (!context.abortUpdate && newRows) {
-                if(!clearPrevious)
+                if (!clearPrevious)
                     newRows = this.removeDuplicates(newRows);
 
-                newRows = this.appendRowData(newRows, clearPrevious);                
+                newRows = this.appendRowData(newRows, clearPrevious);
 
                 if (clearPrevious) {
                     this.setState(prevState => ({
@@ -424,7 +573,8 @@ export class InternalGrid extends Component {
             }
         }
         catch (ex) {
-            //TODO: Mostrar mensaje error
+            this.props.nexus.toastException(ex);
+
             this.setState({
                 isFetching: false
             });
@@ -447,211 +597,267 @@ export class InternalGrid extends Component {
     }
 
     validateRow = (row) => {
-        const data = {
-            gridId: this.props.id,
-            row: row,
-            parameters: []
-        };
+        if (!this.props.editable)
+            return;
 
-        const context = {
-            abortServerCall: false
-        };
+        try {
+            const data = {
+                gridId: this.props.id,
+                row: row,
+                parameters: []
+            };
 
-        if (this.props.onBeforeValidateRow)
-            this.props.onBeforeValidateRow(context, data);
+            const context = {
+                abortServerCall: false
+            };
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (this.props.onBeforeValidateRow)
+                this.props.onBeforeValidateRow(context, data, this.props.nexus);
 
-        this.props.gridValidateRow(data).then(this.validateRowProcessResponse);
+            if (!this.mounted || context.abortServerCall)
+                return false;
+
+            this.props.gridValidateRow(data).then(this.validateRowProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     validateRowProcessResponse = (response) => {
-        const data = JSON.parse(response.Data);
+        try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
 
-        const context = {
-            abortUpdate: false
-        };
+            const data = JSON.parse(response.Data);
 
-        if (this.props.onAfterValidateRow)
-            this.props.onAfterValidateRow(context, data.row, data.parameters);
+            const context = {
+                abortUpdate: false
+            };
 
-        if (!this.mounted || context.abortUpdate)
-            return false;
+            if (this.props.onAfterValidateRow)
+                this.props.onAfterValidateRow(context, data.row, data.parameters, this.props.nexus);
 
-        const rowIndex = this.state.rows.findIndex(r => r.id === data.row.id);
+            if (!this.mounted || context.abortUpdate)
+                return false;
 
-        const updatedRows = [
-            ...this.state.rows.slice(0, rowIndex),
-            {
-                ...data.row,
-                index: this.state.rows[rowIndex].index
-            },
-            ...this.state.rows.slice(rowIndex + 1)
-        ];
+            this.props.nexus.toastNotifications(data.notifications);
 
-        this.setState({
-            rows: updatedRows
-        });
+            const rowIndex = this.state.rows.findIndex(r => r.id === data.row.id);
+
+            const updatedRows = [
+                ...this.state.rows.slice(0, rowIndex),
+                {
+                    ...data.row,
+                    index: this.state.rows[rowIndex].index
+                },
+                ...this.state.rows.slice(rowIndex + 1)
+            ];
+
+            this.setState({
+                rows: updatedRows
+            });
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
 
     commit = () => {
-        const data = {
-            gridId: this.props.id,
-            rows: this.state.rows.filter(row => row.isNew || row.isDeleted || row.cells.some(cell => cell.editable && cell.old !== cell.value)),
-            filters: this.state.filters,
-            sorts: this.state.sorts,
-            rowsToFetch: this.props.rowsToFetch,
-            parameters: []
-        };
+        if (!this.props.editable)
+            return;
 
-        const context = {
-            abortServerCall: false
-        };
+        try {
+            const data = {
+                gridId: this.props.id,
+                rows: this.state.rows.filter(row => row.isNew || row.isDeleted || row.cells.some(cell => cell.editable && cell.old !== cell.value)),
+                filters: this.state.filters,
+                sorts: this.state.sorts,
+                rowsToFetch: this.props.rowsToFetch,
+                parameters: []
+            };
 
-        if (this.props.onBeforeCommit)
-            this.props.onBeforeCommit(context, data);
+            const context = {
+                abortServerCall: false
+            };
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (this.props.onBeforeCommit)
+                this.props.onBeforeCommit(context, data, this.props.nexus);
 
-        this.props.gridCommit(data).then(this.commitProcessResponse);
+            if (!this.mounted || context.abortServerCall)
+                return false;
+
+            this.props.gridCommit(data).then(this.commitProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     commitProcessResponse = (response) => {
-        const data = JSON.parse(response.Data);
+        try {
+            const data = JSON.parse(response.Data);
 
-        let rows = data.rows;
+            if (response.Status === "ERROR" && data === null)
+                throw new Error(response.Message);
 
-        const context = {
-            abortUpdate: false
-        };
+            let rows = data.rows;
 
-        if (this.props.onAfterCommit)
-            this.props.onAfterCommit(context, rows, data.parameters);
+            const context = {
+                abortUpdate: false
+            };
 
-        if (!this.mounted || context.abortUpdate)
-            return false;
+            if (this.props.onAfterCommit)
+                this.props.onAfterCommit(context, rows, data.parameters, this.props.nexus);
 
-        if (response.Status === "OK") {
-            this.setState({
-                rows: rows
-            });
-        }
-        else if (response.Status === "ERROR") {
-            //Usa mutaciones por performance ¯\_(ツ)_/¯ 
-            const stateRows = [...this.state.rows];
+            if (!this.mounted || context.abortUpdate)
+                return false;
 
-            const indexes = rows.map(r => ({ index: stateRows.findIndex(row => row.id === r.id), row: r }))
-                .sort((a, b) => a.index - b.index);
+            this.props.nexus.toastNotifications(data.notifications);
 
-            let updatedRows = [];
-
-            let prevIndex = 0;
-
-            for (var i = 0; i < indexes.length; i++) {
-                updatedRows = [...updatedRows, ...stateRows.slice(prevIndex, indexes[i].index), indexes[i].row];
-                console.log(updatedRows);
-                prevIndex = indexes[i].index + 1;
+            if (response.Status === "OK") {
+                this.setState({
+                    rows: rows
+                });
             }
+            else if (response.Status === "ERROR") {
+                this.props.nexus.toast(notificationType.error, response.Message);
 
-            updatedRows = [...updatedRows, ...stateRows.slice(prevIndex)];
+                //Usa mutaciones por performance ¯\_(ツ)_/¯ 
+                const stateRows = [...this.state.rows];
 
-            this.setState({
-                rows: updatedRows,
-                lookup: this.getUpdatedLookup(updatedRows),
-            });
+                const indexes = rows.map(r => ({ index: stateRows.findIndex(row => row.id === r.id), row: r }))
+                    .sort((a, b) => a.index - b.index);
+
+                let updatedRows = [];
+
+                let prevIndex = 0;
+
+                for (var i = 0; i < indexes.length; i++) {
+                    updatedRows = [...updatedRows, ...stateRows.slice(prevIndex, indexes[i].index), indexes[i].row];
+                    console.log(updatedRows);
+                    prevIndex = indexes[i].index + 1;
+                }
+
+                updatedRows = [...updatedRows, ...stateRows.slice(prevIndex)];
+
+                this.setState({
+                    rows: updatedRows,
+                    lookup: this.getUpdatedLookup(updatedRows),
+                });
+            }
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
         }
     }
 
     performButtonAction = (rowId, columnId, btnId) => {
-        const rowIndex = this.state.rows.findIndex(row => row.id === rowId);
+        try {
+            const rowIndex = this.state.rows.findIndex(row => row.id === rowId);
 
-        const data = {
-            gridId: this.props.id,
-            buttonId: btnId,
-            columnId: columnId,
-            row: this.state.rows[rowIndex],
-            parameters: []
-        };
+            const data = {
+                gridId: this.props.id,
+                buttonId: btnId,
+                columnId: columnId,
+                row: this.state.rows[rowIndex],
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeButtonAction)
-            this.props.onBeforeButtonAction(context, data, this.props.nexus);
+            if (this.props.onBeforeButtonAction)
+                this.props.onBeforeButtonAction(context, data, this.props.nexus);
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (!this.mounted || context.abortServerCall)
+                return false;
 
-        this.props.gridButtonAction(data).then(this.performButtonActionProcessResponse);
+            this.props.gridButtonAction(data).then(this.performButtonActionProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     performButtonActionProcessResponse = (response) => {
-        if (response.Status === "OK") {
+        try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
+
             const data = JSON.parse(response.Data);
 
             if (data.redirect)
                 this.props.nexus.redirect(data.redirect);
 
             if (this.props.onAfterButtonAction)
-                this.props.onAfterButtonAction(data);
+                this.props.onAfterButtonAction(data, this.props.nexus);
+
+            this.props.nexus.toastNotifications(data.notifications);
         }
-        else {
-            //TODO: Mostrar error
+        catch (ex) {
+            this.props.nexus.toastException(ex);
         }
     }
 
     performMenuItemAction = (btnId) => {
-        const selection = {
-            isInverted: this.state.isSelectionInverted,
-            keys: this.state.selection
-        };
+        try {
+            const selection = {
+                isInverted: this.state.isSelectionInverted,
+                keys: this.state.selection
+            };
 
-        const data = {
-            gridId: this.props.id,
-            buttonId: btnId,
-            filters: this.state.filters,
-            selection: selection,
-            parameters: []
-        };
+            const data = {
+                gridId: this.props.id,
+                buttonId: btnId,
+                filters: this.state.filters,
+                selection: selection,
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeMenuItemAction)
-            this.props.onBeforeMenuItemAction(context, data);
+            if (this.props.onBeforeMenuItemAction)
+                this.props.onBeforeMenuItemAction(context, data, this.props.nexus);
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (!this.mounted || context.abortServerCall)
+                return false;
 
-        this.props.gridMenuItemAction(data).then(this.performMenuItemActionProcessResponse);
+            this.props.gridMenuItemAction(data).then(this.performMenuItemActionProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     performMenuItemActionProcessResponse = (response) => {
-        if (response.Status === "OK") {
-            const data = JSON.parse(response.Data);
+        try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
 
-            if (data.redirect)
-                this.props.nexus.redirect(data.redirect);
+            const data = JSON.parse(response.Data);
 
             const context = {
                 abortUpdate: false
             };
 
             if (this.props.onAfterMenuItemAction)
-                this.props.onAfterMenuItemAction(context, data);
+                this.props.onAfterMenuItemAction(context, data, this.props.nexus);
 
             if (!this.mounted || context.abortUpdate)
                 return false;
+
+            this.props.nexus.toastNotifications(data.notifications);
+
+            if (data.redirect)
+                this.props.nexus.redirect(data.redirect);
 
             this.setState({
                 isSelectionInverted: false,
                 selection: []
             });
-
-            //TODO: Mostrar mensaje OK
         }
-        else {
-            //TODO: Mostrar error
+        catch (ex) {
+            this.props.nexus.toastException(ex);
         }
     }
 
@@ -692,36 +898,48 @@ export class InternalGrid extends Component {
         }
     }
     applyFilter = () => {
-        if (this.state.isFetching)
-            return false;
+        try {
+            if (this.state.isFetching)
+                return false;
 
-        this.setState({
-            isFetching: true
-        });
+            this.setState({
+                isFetching: true
+            });
 
-        const data = {
-            gridId: this.props.id,
-            filters: this.state.filters,
-            sorts: this.state.sorts,
-            rowsToSkip: 0,
-            rowsToFetch: this.props.rowsToFetch,            
-            parameters: []
-        };
+            const data = {
+                gridId: this.props.id,
+                filters: this.state.filters,
+                sorts: this.state.sorts,
+                rowsToSkip: 0,
+                rowsToFetch: this.props.rowsToFetch,
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeApplyFilter)
-            this.props.onBeforeApplyFilter(context, data);
+            if (this.props.onBeforeApplyFilter)
+                this.props.onBeforeApplyFilter(context, data, this.props.nexus);
 
-        if (!this.mounted && context.abortServerCall)
-            return false;
+            if (!this.mounted && context.abortServerCall)
+                return false;
 
-        this.props.gridFetchRows(data).then(this.applyFilterProcessResponse).catch((err) => console.log(err));
+            this.props.gridFetchRows(data).then(this.applyFilterProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+
+            this.setState({
+                isFetching: false
+            });
+        }
     }
     applyFilterProcessResponse = (response) => {
         try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
+
             const data = JSON.parse(response.Data);
 
             let newRows = data.rows;
@@ -731,10 +949,12 @@ export class InternalGrid extends Component {
             };
 
             if (this.props.onAfterApplyFilter)
-                this.props.onAfterApplyFilter(context, newRows, data.parameters);
-            
+                this.props.onAfterApplyFilter(context, newRows, data, this.props.nexus);
+
             if (!this.mounted)
                 return false;
+
+            this.props.nexus.toastNotifications(data.notifications);
 
             if (!context.abortUpdate && newRows !== undefined && newRows !== null) {
                 this.updateRowsFilter(newRows);
@@ -746,8 +966,7 @@ export class InternalGrid extends Component {
             }
         }
         catch (ex) {
-            //TODO: Mostrar mensaje error
-            console.log(ex);
+            this.props.nexus.toastException(ex);
 
             this.setState({
                 isFetching: false
@@ -756,38 +975,50 @@ export class InternalGrid extends Component {
     }
 
     applySort = (columnId) => {
-        if (this.state.isFetching)
-            return false;
+        try {
+            if (this.state.isFetching)
+                return false;
 
-        this.setState({
-            isFetching: true
-        });
+            this.setState({
+                isFetching: true
+            });
 
-        const sorts = this.getNewSorts(columnId);
+            const sorts = this.getNewSorts(columnId);
 
-        const data = {
-            gridId: this.props.id,
-            filters: this.state.filters,
-            sorts: sorts,
-            rowsToSkip: 0,
-            rowsToFetch: this.props.rowsToFetch,
-            parameters: []
-        };
+            const data = {
+                gridId: this.props.id,
+                filters: this.state.filters,
+                sorts: sorts,
+                rowsToSkip: 0,
+                rowsToFetch: this.props.rowsToFetch,
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeApplySort)
-            this.props.onBeforeApplySort(context, data);
+            if (this.props.onBeforeApplySort)
+                this.props.onBeforeApplySort(context, data, this.props.nexus);
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (!this.mounted || context.abortServerCall)
+                return false;
 
-        this.props.gridFetchRows(data).then(this.applySortProcessResponse.bind(this, sorts));
+            this.props.gridFetchRows(data).then(this.applySortProcessResponse.bind(this, sorts));
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+
+            this.setState({
+                isFetching: false
+            });
+        }
     }
     applySortProcessResponse = (sorts, response) => {
         try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
+
             const data = JSON.parse(response.Data);
 
             let rows = data.rows;
@@ -802,6 +1033,8 @@ export class InternalGrid extends Component {
             if (!this.mounted)
                 return false;
 
+            this.props.nexus.toastNotifications(data.notifications);
+
             if (!context.abortUpdate && rows !== undefined && rows !== null) {
                 this.updateRowsSort(rows, sorts);
             }
@@ -812,6 +1045,8 @@ export class InternalGrid extends Component {
             }
         }
         catch (ex) {
+            this.props.nexus.toastException(ex);
+
             this.setState({
                 isFetching: false
             });
@@ -851,33 +1086,102 @@ export class InternalGrid extends Component {
     }
 
     updateGridConfig = () => {
-        const data = {
-            gridId: this.props.id,
-            columns: this.state.columns,
-            parameters: []
-        };
+        try {
+            const data = {
+                gridId: this.props.id,
+                columns: this.state.columns,
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeUpdateGridConfig)
-            this.props.onBeforeUpdateGridConfig(context, data);
+            if (this.props.onBeforeUpdateGridConfig)
+                this.props.onBeforeUpdateGridConfig(context, data, this.props.nexus);
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (!this.mounted || context.abortServerCall)
+                return false;
 
-        this.props.gridUpdateConfig(data).then(this.updateGridConfigResponse);
+            this.props.gridUpdateConfig(data).then(this.updateGridConfigResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     updateGridConfigResponse = (response) => {
-        const data = JSON.parse(response.Data);
+        try {
+            const context = {
+            };
 
-        const context = {
-            abortUpdate: false
-        };
+            if (this.props.onAfterUpdateGridConfig)
+                this.props.onAfterUpdateGridConfig(context, this.props.nexus);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
+    }
 
-        if (this.props.onAfterUpdateGridConfig)
-            this.props.onAfterUpdateGridConfig(context, data.row, data.parameters);
+    exportExcel = (fileName, type) => {
+        if (this.state.isFetching)
+            return false;
+
+        this.setState({
+            isFetching: true
+        });
+
+        try {
+            const data = {
+                gridId: this.props.id,
+                fileName: fileName,
+                type: type,
+                filters: [...this.state.filters],
+                sorts: [...this.state.sorts],
+                parameters: []
+            };
+
+            const context = {
+                abortServerCall: false
+            };
+
+            if (this.props.onBeforeExportExcel)
+                this.props.onBeforeExportExcel(context, data, this.props.nexus);
+
+            if (!this.mounted || context.abortServerCall)
+                return false;
+
+            return this.props.gridExportExcel(data).then(this.exportExcelProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+
+            this.setState({
+                isFetching: false
+            });
+        }
+    }
+    exportExcelProcessResponse = (response) => {
+        try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
+
+            const context = {
+                abortDownload: false
+            };
+
+            if (this.props.onAfterExportExcel)
+                this.props.onAfterExportExcel(context, this.props.nexus);
+
+            if (!context.abortDownload)
+                window.location = "/api/Grid/DownloadExcel";
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
+
+        this.setState({
+            isFetching: false
+        });
     }
 
     updateRowsFilter = (rows) => {
@@ -894,6 +1198,12 @@ export class InternalGrid extends Component {
             rowDisplayEnd: this.props.rowsToDisplay,
             rowCurrentIndex: index,
             isFetching: false
+        }, () => {
+            const body = document.querySelector("#" + this.props.id + " .gr-body-scroll");
+
+            if (body) {
+                body.scrollLeft = this.scrollPaneRef.scrollLeft;
+            }
         });
     }
     updateRowsSort = (rows, sorts) => {
@@ -915,6 +1225,9 @@ export class InternalGrid extends Component {
     }
 
     rollback = () => {
+        if (!this.props.editable)
+            return;
+
         const rows = this.state.rows.filter(row => !row.isNew);
 
         const updatedRows = rows.map(row => ({
@@ -929,13 +1242,16 @@ export class InternalGrid extends Component {
 
         this.setState({
             rows: updatedRows
-        });        
+        });
     }
     refresh = () => {
         this.fetchData(null, true, true);
     }
 
     updateCellValue = (rowId, columnId, value) => {
+        if (!this.props.editable)
+            return;
+
         const rows = [...this.state.rows];
 
         const rowIndex = rows.findIndex(row => row.id === rowId);
@@ -1028,7 +1344,7 @@ export class InternalGrid extends Component {
                     if (column.id === columnId) {
                         target = this.state.columns[targetIndex];
 
-                        return { ...column, order: nextIndex, fixed: target ? target.fixed : column.fixed  };
+                        return { ...column, order: nextIndex, fixed: target ? target.fixed : column.fixed };
                     }
 
                     if (column.order > previousIndex && column.order <= nextIndex) {
@@ -1065,10 +1381,51 @@ export class InternalGrid extends Component {
         });
 
         columns.sort((a, b) => a.order - b.order);
-        
+
         this.setState({
             columns: columns
         });
+    }
+    fixColumn = (columnId, position) => {
+        const count = this.state.columns.reduce((prev, col) => !col.hidden && col.fixed === columnFixed.none ? prev + 1 : prev, 0);
+
+        if (count < 2) {
+            this.props.nexus.toast(notificationType.warning, this.props.t("No es posible fijar esta columna. Intente soltar alguna de las columnas fijadas"));
+            return;
+        }
+
+        const columnIndex = this.state.columns.findIndex(col => col.id === columnId);
+
+        const columns = this.state.columns.map((column, index) => index === columnIndex ? { ...column, fixed: position } : { ...column });
+
+        this.setState({
+            columns: columns
+        }, () => this.updateGridConfig());
+    }
+    hideColumn = (columnId) => {
+        const visibleNonFixedColumns = this.state.columns.reduce((prev, col) => (!col.hidden && col.fixed === columnFixed.none) ? prev + 1 : prev, 0);
+
+        if (visibleNonFixedColumns < 2) {
+            this.props.nexus.toast(notificationType.warning, this.props.t("No es posible ocultar esta columna. Debe haber al menos una columna visible y no fijada"));
+            return;
+        }
+
+        const columnIndex = this.state.columns.findIndex(col => col.id === columnId);
+
+        const columns = this.state.columns.map((column, index) => index === columnIndex ? { ...column, hidden: true, fixed: columnFixed.none } : { ...column });
+
+        this.setState({
+            columns: columns
+        }, () => this.updateGridConfig());
+    }
+    showColumn = (columnId) => {
+        const columnIndex = this.state.columns.findIndex(col => col.id === columnId);
+
+        const columns = this.state.columns.map((column, index) => index === columnIndex ? { ...column, hidden: false } : { ...column });
+
+        this.setState({
+            columns: columns
+        }, () => this.updateGridConfig());
     }
 
     removeDuplicates = (rows) => {
@@ -1086,7 +1443,7 @@ export class InternalGrid extends Component {
 
     getResizeMarkerPosition() {
         return this.state.resizeInverted ? this.state.resizeParentOffset + (this.state.resizeWidthBase - this.state.resizeWidth)
-                                         : this.state.resizeParentOffset + this.state.resizeWidth;
+            : this.state.resizeParentOffset + this.state.resizeWidth;
     }
     getResizeMarkerHeight(scrollbarHeight) {
         if (this.containerRef.current) {
@@ -1124,7 +1481,7 @@ export class InternalGrid extends Component {
             }));
         }
     }
-        
+
     openFilterBar = () => {
         this.setState({
             filterStatus: filterStatus.open
@@ -1162,8 +1519,6 @@ export class InternalGrid extends Component {
         if (!column)
             return;
 
-        console.log(this.bodyRef);
-
         const offsetTopBody = this.bodyRef.current.getBoundingClientRect().top;
         const offsetLeftBody = this.bodyRef.current.getBoundingClientRect().left;
 
@@ -1183,6 +1538,11 @@ export class InternalGrid extends Component {
         this.setState({
             dropdownShow: false
         });
+    }
+    dropdownClick = (evt) => {
+        evt.preventDefault();
+
+        this.performButtonAction(this.state.dropdownRowId, this.state.dropdownColumnId, evt.target.id);
     }
 
     updateScrollPosition = (rawOffset) => {
@@ -1235,19 +1595,15 @@ export class InternalGrid extends Component {
     getMaxHeight = () => {
         return this.props.rowsToDisplay * this.state.rowHeight;
     }
-    getEstimatedHeight = () => {        
+    getEstimatedHeight = () => {
         return this.getMaxHeight() + this.toolbarHeight + this.props.scrollContext.scrollbarHeight + this.headerHeight;
     }
     getTotalHeight = () => {
         return this.state.rows.length * this.state.rowHeight;
     }
 
-    moveHighlight = (direction) => {
-
-    }
-
     getMeasures = () => {
-        return this.state.columns.reduce((measures, col) => {
+        return this.state.columns.filter(d => !d.hidden).reduce((measures, col) => {
             if (col.fixed === columnFixed.left) {
                 measures.widthLeft = measures.widthLeft + col.width;
             }
@@ -1260,10 +1616,17 @@ export class InternalGrid extends Component {
 
             return measures;
         }, {
-            widthLeft: 0,
-            widthRight: 0,
-            widthCenter: 0
-        });
+                widthLeft: 0,
+                widthRight: 0,
+                widthCenter: 0
+            });
+    }
+
+    isVScrollActive = () => {
+        //Por performance
+        const pane = document.querySelector("#" + this.props.id + ".gr-grid");
+
+        return pane ? pane.clientHeight < this.getTotalHeight() : false;
     }
 
     getApi() {
@@ -1274,13 +1637,6 @@ export class InternalGrid extends Component {
         };
     }
 
-    isVScrollActive = () => {
-        //Por performance
-        const pane = document.querySelector("#" + this.id + " .gr-body-pane");
-
-        return pane ? pane.clientHeight < this.getTotalHeight() : false;
-    }
-    
     render() {
         const columns = this.getColumns();
         const measures = this.getMeasures();
@@ -1295,13 +1651,21 @@ export class InternalGrid extends Component {
                     ref={this.bodyRef}
                 >
                     <Toolbar
+                        columns={this.state.columns}
+                        gridIsEditable={this.props.editable}
                         menuItems={this.state.menuItems}
                         refresh={this.refresh}
                         commit={this.commit}
                         rollback={this.rollback}
                         deleteRow={this.deleteRow}
                         addRow={this.addRow}
+                        enableExcelExport={this.props.enableExcelExport}
                         performMenuItemAction={this.performMenuItemAction}
+                        exportExcel={this.exportExcel}
+                        showColumn={this.showColumn}
+                        hideColumn={this.hideColumn}
+                        toggleFilterBar={this.toggleFilterBar}
+                        applyFilter={this.applyFilter}
                     />
                     <GridContentContainer
                         ref={this.containerRef}
@@ -1309,8 +1673,9 @@ export class InternalGrid extends Component {
                         columnResizeEnd={this.columnResizeEnd}
                         columnResizeChange={this.columnResizeChange}
                         toggleFilterBar={this.toggleFilterBar}
+                        closeFilterBar={this.closeFilterBar}
                         getCellHighlight={this.getCellHighlight}
-                    >                    
+                    >
                         <HeaderPane
                             columns={columns}
                             rows={this.state.rows}
@@ -1330,12 +1695,15 @@ export class InternalGrid extends Component {
                             updateFilter={this.updateFilter}
                             updateColumnOrder={this.updateColumnOrder}
                             invertSelection={this.invertSelection}
+                            fixColumn={this.fixColumn}
+                            hideColumn={this.hideColumn}
                             totalHeight={totalHeight}
                             isSelectionInverted={this.state.isSelectionInverted}
                             isResizing={this.state.isResizing}
                             isVScrollActive={this.isVScrollActive}
                         />
                         <BodyPane
+                            gridIsEditable={this.props.editable}
                             columns={columns}
                             rows={this.state.rows}
                             selection={this.state.selection}
@@ -1345,23 +1713,28 @@ export class InternalGrid extends Component {
                             hasFixedColumnsRight={this.hasFixedColumnsRight}
                             widthLeft={measures.widthLeft}
                             widthRight={measures.widthRight}
-                            addCellHighlight={this.addCellHighlight}
-                            addCellHighlightGroup={this.addCellHighlightGroup}
-                            rowHeight={this.state.rowHeight}                            
+
+                            getRowHighlights={this.getRowHighlights}
+                            toggleHighlight={this.toggleHighlight}
+                            clearHighlighted={this.clearHighlighted}
+                            isHighlighted={this.isHighlighted}
+
+                            rowHeight={this.state.rowHeight}
                             rowDisplayStart={this.state.rowDisplayStart}
                             rowDisplayEnd={this.state.rowDisplayEnd}
                             rowTotalRows={this.state.rows.length}
-                            maxHeight={this.getMaxHeight()}                            
+                            maxHeight={this.getMaxHeight()}
                             performButtonAction={this.performButtonAction}
                             updateScrollPosition={this.updateScrollPosition}
-                            updateCellValue={this.updateCellValue}                            
+                            updateCellValue={this.updateCellValue}
                             updateSelection={this.updateSelection}
                             openDropdown={this.openDropdown}
                             isSelectionInverted={this.state.isSelectionInverted}
                             isFetching={this.state.isFetching}
-                            isResizing={this.state.isResizing}                            
+                            isResizing={this.state.isResizing}
                         />
                         <GridScrollPane
+                            ref={this.scrollPaneRef}
                             widthLeft={measures.widthLeft}
                             widthRight={measures.widthRight}
                             widthCenter={measures.widthCenter}
@@ -1371,7 +1744,7 @@ export class InternalGrid extends Component {
                             left={this.getResizeMarkerPosition()}
                             height={this.getResizeMarkerHeight(this.props.scrollContext.scrollbarHeight)}
                             isResizing={this.state.isResizing}
-                        />                        
+                        />
                     </GridContentContainer>
                     <LoadingSkeleton
                         height={this.getEstimatedHeight()}
@@ -1385,7 +1758,7 @@ export class InternalGrid extends Component {
                         left={this.state.dropdownLeft}
                         top={this.state.dropdownTop}
                         closeDropdown={this.closeDropdown}
-                        performButtonAction={this.performButtonAction}
+                        onClick={this.dropdownClick}
                     />
                 </GridContainer>
             </ScrollSync>
@@ -1393,4 +1766,5 @@ export class InternalGrid extends Component {
     }
 }
 
-export const Grid = withPageContext(withGridDataProvider(withScrollContext(InternalGrid)));
+//export const Grid = withPageContext(withGridDataProvider(withScrollContext(InternalGrid)));
+export const Grid = withTranslation()(withPageContext(withGridDataProvider(withScrollContext(InternalGrid))));
