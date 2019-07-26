@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190726155901_Migration8")]
+    partial class Migration8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,34 +165,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.SupportRate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AdjustmentPeriodicity");
-
-                    b.Property<int>("Amount");
-
-                    b.Property<Guid?>("ClientId");
-
-                    b.Property<string>("Currency");
-
-                    b.Property<string>("Description");
-
-                    b.Property<int>("IVA");
-
-                    b.Property<string>("Periodicity");
-
-                    b.Property<decimal>("SpecialDiscount");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("SupportRates");
-                });
-
             modelBuilder.Entity("WIS.Billing.EntitiesCore.T_GRID_DEFAULT_CONFIG", b =>
                 {
                     b.Property<string>("CD_APLICACION")
@@ -318,13 +292,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Project", b =>
-                {
-                    b.HasOne("WIS.Billing.EntitiesCore.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-                });
-
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.SupportRate", b =>
                 {
                     b.HasOne("WIS.Billing.EntitiesCore.Client", "Client")
                         .WithMany()

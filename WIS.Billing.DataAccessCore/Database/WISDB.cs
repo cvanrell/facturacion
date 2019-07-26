@@ -12,6 +12,7 @@ namespace WIS.Billing.DataAccessCore.Database
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<HourRate> HourRates { get; set; }
+        public DbSet<SupportRate> SupportRates { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Development> Developments { get; set; }
         public DbSet<Maintenance> Maintenances { get; set; }

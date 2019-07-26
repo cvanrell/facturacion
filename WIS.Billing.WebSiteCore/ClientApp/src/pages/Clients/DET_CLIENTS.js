@@ -70,10 +70,20 @@ export default function DET_CLIENTS(props) {
             </Form>
             <div className="row mb-4">
                 <div className="col-12">
-                    <Grid id="DET_CLIENTS_grid_1" rowsToFetch={30} rowsToDisplay={15}
+                    <Grid id="DET_CLIENTS_grid_T" rowsToFetch={30} rowsToDisplay={15}
                         onAfterApplyFilter={onAfterApplyFilter}
                         onAfterInitialize={onAfterInitialize}
-                        enableExcelExport
+                        //enableExcelExport
+                    />
+                </div>
+            </div>
+
+            <div className="row mb-4">
+                <div className="col-12">
+                    <Grid id="DET_CLIENTS_grid_S" rowsToFetch={30} rowsToDisplay={15}
+                        onAfterApplyFilter={onAfterApplyFilter}
+                        onAfterInitialize={onAfterInitialize}
+                    //enableExcelExport
                     />
                 </div>
             </div>
