@@ -49,11 +49,16 @@ namespace WIS.CommonCore.ServiceWrappers
                 typeof(WIS.CommonCore.GridComponents.GridValidationResponse),
                 typeof(WIS.CommonCore.GridComponents.GridButtonActionQuery),
                 typeof(WIS.CommonCore.GridComponents.GridMenuItemAction),
+                typeof(WIS.CommonCore.GridComponents.GridExportExcelRequest),
+                typeof(WIS.CommonCore.GridComponents.GridExportExcelResponse),
 
                 typeof(WIS.CommonCore.FilterComponents.FilterCommand),
                 typeof(WIS.CommonCore.SortComponents.SortCommand),
 
-                typeof(WIS.CommonCore.App.ComponentParameter)
+                typeof(WIS.CommonCore.App.Notification),
+                typeof(WIS.CommonCore.App.ComponentParameter),
+                typeof(WIS.CommonCore.App.ComponentQuery),
+                typeof(WIS.CommonCore.App.SelectOption)
             });
         }
     }
