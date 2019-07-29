@@ -10,11 +10,6 @@ export function GridDropdown(props) {
         top: props.top - 2
     };
 
-    const handleItemClick = (evt) => {
-        evt.preventDefault();
-
-        props.performButtonAction(props.rowId, props.columnId, evt.target.value);
-    };
     const handleMenuLeave = () => {
         if (props.show) {
             timeout.current = setTimeout(() => {
@@ -22,6 +17,7 @@ export function GridDropdown(props) {
             }, 300);
         }
     };
+
     const handleMouseEnter = () => {
         if (timeout.current) {
             clearTimeout(timeout.current);
@@ -36,7 +32,7 @@ export function GridDropdown(props) {
             index={index}
             label={d.label}
             className={d.cssClass}
-            onClick={handleItemClick}
+            onClick={props.onClick}
         />
     ));
 

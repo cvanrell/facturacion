@@ -129,7 +129,7 @@ namespace WIS.BusinessLogicCore.Controllers
             //}
             //return grid;
         }
-        public virtual GridMenuItemAction GridMenuItemAction(IGridService service, GridMenuItemAction selection, int userId)
+        public virtual GridMenuItemActionQuery GridMenuItemAction(IGridService service, GridMenuItemActionQuery selection, int userId)
         {
             throw new NotImplementedException();
         }

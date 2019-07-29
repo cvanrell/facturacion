@@ -218,7 +218,7 @@ namespace WIS.BusinessLogicCore.GridUtil.Coordinators
         }
         public IGridWrapper MenuItemAction(IGridWrapper wrapper)
         {
-            var data = wrapper.GetData<GridMenuItemAction>();
+            var data = wrapper.GetData<GridMenuItemActionQuery>();
 
             IGridWrapper response = new GridWrapper(wrapper);
 

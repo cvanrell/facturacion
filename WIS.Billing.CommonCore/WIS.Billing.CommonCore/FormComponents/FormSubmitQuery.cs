@@ -7,10 +7,15 @@ using WIS.CommonCore.App;
 
 namespace WIS.CommonCore.FormComponents
 {
-    public class FormSubmitQuery
+    public class FormSubmitQuery : ComponentQuery
     {
-        public List<ComponentParameter> Parameters { get; set; }
+        public string ButtonId { get; set; }
+        
         public string Redirect { get; set; }
         public bool ResetForm { get; set; }
+
+        public FormSubmitQuery() : base()
+        {
+        }
     }
 }

@@ -563,27 +563,32 @@ export class InternalGrid extends Component {
     }
 
     performButtonAction = (rowId, columnId, btnId) => {
-        const rowIndex = this.state.rows.findIndex(row => row.id === rowId);
+        try {
+            const rowIndex = this.state.rows.findIndex(row => row.id === rowId);
 
-        const data = {
-            gridId: this.props.id,
-            buttonId: btnId,
-            columnId: columnId,
-            row: this.state.rows[rowIndex],
-            parameters: []
-        };
+            const data = {
+                gridId: this.props.id,
+                buttonId: btnId,
+                columnId: columnId,
+                row: this.state.rows[rowIndex],
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeButtonAction)
-            this.props.onBeforeButtonAction(context, data, this.props.nexus);
+            if (this.props.onBeforeButtonAction)
+                this.props.onBeforeButtonAction(context, data, this.props.nexus);
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (!this.mounted || context.abortServerCall)
+                return false;
 
-        this.props.gridButtonAction(data).then(this.performButtonActionProcessResponse);
+            this.props.gridButtonAction(data).then(this.performButtonActionProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     performButtonActionProcessResponse = (response) => {
         if (response.Status === "OK") {
@@ -601,57 +606,65 @@ export class InternalGrid extends Component {
     }
 
     performMenuItemAction = (btnId) => {
-        const selection = {
-            isInverted: this.state.isSelectionInverted,
-            keys: this.state.selection
-        };
+        try {
+            const selection = {
+                isInverted: this.state.isSelectionInverted,
+                keys: this.state.selection
+            };
 
-        const data = {
-            gridId: this.props.id,
-            buttonId: btnId,
-            filters: this.state.filters,
-            selection: selection,
-            parameters: []
-        };
+            const data = {
+                gridId: this.props.id,
+                buttonId: btnId,
+                filters: this.state.filters,
+                selection: selection,
+                parameters: []
+            };
 
-        const context = {
-            abortServerCall: false
-        };
+            const context = {
+                abortServerCall: false
+            };
 
-        if (this.props.onBeforeMenuItemAction)
-            this.props.onBeforeMenuItemAction(context, data);
+            if (this.props.onBeforeMenuItemAction)
+                this.props.onBeforeMenuItemAction(context, data, this.props.nexus);
 
-        if (!this.mounted || context.abortServerCall)
-            return false;
+            if (!this.mounted || context.abortServerCall)
+                return false;
 
-        this.props.gridMenuItemAction(data).then(this.performMenuItemActionProcessResponse);
+            this.props.gridMenuItemAction(data).then(this.performMenuItemActionProcessResponse);
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
     }
     performMenuItemActionProcessResponse = (response) => {
-        if (response.Status === "OK") {
-            const data = JSON.parse(response.Data);
+        try {
+            if (response.Status === "ERROR")
+                throw new Error(response.Message);
 
-            if (data.redirect)
-                this.props.nexus.redirect(data.redirect);
+            const data = JSON.parse(response.Data);
 
             const context = {
                 abortUpdate: false
             };
 
             if (this.props.onAfterMenuItemAction)
-                this.props.onAfterMenuItemAction(context, data);
+                this.props.onAfterMenuItemAction(context, data, this.props.nexus);
 
             if (!this.mounted || context.abortUpdate)
                 return false;
+
+            this.props.nexus.toastNotifications(data.notifications);
+
+            if (data.redirect)
+                this.props.nexus.redirect(data.redirect);
 
             this.setState({
                 isSelectionInverted: false,
                 selection: []
             });
-
-            //TODO: Mostrar mensaje OK
         }
-        else {
-            //TODO: Mostrar error
+        catch (ex) {
+            this.props.nexus.toastException(ex);
         }
     }
 
@@ -1185,6 +1198,12 @@ export class InternalGrid extends Component {
         });
     }
 
+    dropdownClick = (evt) => {
+        evt.preventDefault();
+
+        this.performButtonAction(this.state.dropdownRowId, this.state.dropdownColumnId, evt.target.id);
+    }
+
     updateScrollPosition = (rawOffset) => {
         window.requestAnimationFrame(() => {
             this.props.scrollContext.onScrollBegin();
@@ -1385,7 +1404,8 @@ export class InternalGrid extends Component {
                         left={this.state.dropdownLeft}
                         top={this.state.dropdownTop}
                         closeDropdown={this.closeDropdown}
-                        performButtonAction={this.performButtonAction}
+                        
+                        onClick={this.dropdownClick}
                     />
                 </GridContainer>
             </ScrollSync>

@@ -8,15 +8,20 @@ using WIS.CommonCore.FilterComponents;
 
 namespace WIS.CommonCore.GridComponents
 {
-    public class GridMenuItemAction
+    public class GridMenuItemActionQuery : ComponentQuery
     {
         public string GridId { get; set; }
         public string ButtonId { get; set; }
 
         public GridSelection Selection { get; set; }
         public List<FilterCommand> Filters { get; set; }
-        public List<ComponentParameter> Parameters { get; set; }
+        
 
         public string Redirect { get; set; }
+
+        public GridMenuItemActionQuery() : base()
+        {
+            this.Filters = new List<FilterCommand>();
+        }
     }
 }

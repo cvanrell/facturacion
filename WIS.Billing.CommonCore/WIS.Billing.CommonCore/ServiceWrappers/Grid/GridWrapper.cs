@@ -48,7 +48,7 @@ namespace WIS.CommonCore.ServiceWrappers
                 typeof(WIS.CommonCore.GridComponents.GridValidationRequest),
                 typeof(WIS.CommonCore.GridComponents.GridValidationResponse),
                 typeof(WIS.CommonCore.GridComponents.GridButtonActionQuery),
-                typeof(WIS.CommonCore.GridComponents.GridMenuItemAction),
+                typeof(WIS.CommonCore.GridComponents.GridMenuItemActionQuery),
                 typeof(WIS.CommonCore.GridComponents.GridExportExcelRequest),
                 typeof(WIS.CommonCore.GridComponents.GridExportExcelResponse),
 
