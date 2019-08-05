@@ -60,19 +60,4 @@ export const componentType = {
     unknown: 0,
     grid: 1,
     form: 2
-};
-
-export const notificationType = {
-    unknown: 0,
-    error: 1,
-    success: 2,
-    info: 3,
-    warning: 4
-};
-
-export const exportExcelType = {
-    unknown: 0,
-    highlighten: 1,
-    filtered: 2,
-    all: 3
-};
+}

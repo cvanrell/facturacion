@@ -1,9 +1,7 @@
 ﻿import React, { Component } from 'react';
 import withPageDataProvider from './WithPageDataProvider';
 import { PageContextProvider } from './WithPageContext';
-import { componentType, notificationType } from './Enums';
-import { withTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+import { componentType } from './Enums';
 
 class InternalPage extends Component {
     constructor(props) {
@@ -44,7 +42,7 @@ class InternalPage extends Component {
                     this.setState({ isLoadComplete: true });
                 }
                 catch (ex) {
-                    this.toastException(ex)
+                    console.log(ex);
                 }
             });
     }
@@ -69,7 +67,7 @@ class InternalPage extends Component {
                     this.setState({ isLoadComplete: true });
                 }
                 catch (ex) {
-                    this.toastException(ex);
+                    console.log(ex);
                 }
             });
     }
@@ -87,9 +85,9 @@ class InternalPage extends Component {
             }
         ];
     }
-    unregisterComponent = (componentId) => {
+    unregisterComponent = (componentId) =>  {
         const index = this.components.findIndex(c => c.id === componentId);
-
+        
         this.components = [
             ...this.components.slice(0, index),
             ...this.components.slice(index + 1)
@@ -144,34 +142,6 @@ class InternalPage extends Component {
         this.props.history.push(url);
     }
 
-    toast(type, message, options) {
-        switch (type) {
-            case notificationType.error:
-                toast.error(message, options);
-                break;
-            case notificationType.info:
-                toast.info(message, options);
-                break;
-            case notificationType.warning:
-                toast.warn(message, options);
-                break;
-            case notificationType.success:
-                toast.success(message, options);
-                break;
-            default:
-                toast(message, options);
-        }
-    }
-    toastException(exception) {
-        this.toast(notificationType.error, exception.name + ": " + exception.message);
-    }
-    toastNotifications(notifications) {
-        if (!notifications)
-            return;
-
-        notifications.forEach(d => this.toast(d.type, d.message), this);
-    }
-
     getNexus() {
         return {
             registerComponent: this.registerComponent,
@@ -180,23 +150,18 @@ class InternalPage extends Component {
             getComponent: this.getComponent,
             getGrid: this.getGrid,
             getForm: this.getForm,
-            redirect: this.redirect,
-            toast: this.toast,
-            toastException: this.toastException,
-            toastNotifications: this.toastNotifications
+            redirect: this.redirect
         };
     }
 
     render() {
         if (this.state.isLoadComplete) {
-            const { t } = this.props;
-
             return (
                 <div className="base-page">
                     <div className="row">
                         <div className="col-md-12">
                             <h2>
-                                <span className={this.props.icon} style={{ fontSize: "28px" }} /> {t(this.props.title)}
+                                <span className={this.props.icon} style={{fontSize: "28px"}} /> {this.props.title}
                             </h2>
                             <hr />
                         </div>
@@ -209,8 +174,8 @@ class InternalPage extends Component {
         }
 
         return null;
-
+        
     }
 }
 
-export const Page = withTranslation()(withPageDataProvider(InternalPage));
+export const Page = withPageDataProvider(InternalPage);
