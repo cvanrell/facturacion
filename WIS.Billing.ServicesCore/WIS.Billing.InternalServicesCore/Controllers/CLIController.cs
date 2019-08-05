@@ -24,7 +24,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
 
         #region CLIENTS
         [HttpPost]
-        public async Task<IActionResult> Clients_Page(PageWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> CLI010_Page(PageWrapper data, CancellationToken cancelToken)
         {
             IPageWrapper response = new PageWrapper();
 
@@ -50,7 +50,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CLIENTS_Grid([FromBody]GridWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> CLI010_Grid([FromBody]GridWrapper data, CancellationToken cancelToken)
         {
             IGridWrapper response = new GridWrapper();
 
@@ -76,7 +76,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Clients_Form(FormWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> CLI010_Form(FormWrapper data, CancellationToken cancelToken)
         {
             IFormWrapper response = new FormWrapper();
 
@@ -105,7 +105,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
         #region DET_CLIENTS
 
         [HttpPost]
-        public async Task<IActionResult> DET_CLIENTS_Page(PageWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> CLI020_Page(PageWrapper data, CancellationToken cancelToken)
         {
             IPageWrapper response = new PageWrapper();
 
@@ -131,7 +131,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> DET_CLIENTS_Grid([FromBody]GridWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> CLI020_Grid([FromBody]GridWrapper data, CancellationToken cancelToken)
         {
             IGridWrapper response = new GridWrapper();
 
@@ -141,7 +141,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
 
                 ISessionAccessor session = new SessionAccessor(data.GetSessionData());
 
-                IGridController controller = new ClientController(session, null); //Ver si resolver con inyección de dependencias
+                IGridController controller = new DetClientController(session, null); //Ver si resolver con inyección de dependencias
 
                 response = await entryPoint.InvokeAction(controller, data, null, cancelToken);
 
@@ -157,7 +157,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DET_CLIENTS_Form(FormWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> CLI020_Form([FromBody]FormWrapper data, CancellationToken cancelToken)
         {
             IFormWrapper response = new FormWrapper();
 

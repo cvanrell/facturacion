@@ -148,16 +148,16 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             {
                 //JavaScriptSerializer JSONConverter = new JavaScriptSerializer();
 
-                data.Parameters.Add(new ComponentParameter
-                {
-                    Id = "EDITAR",
-                    Value = "true"
-                });
-                _session.SetValue("Clients_EDITAR", true);
+                //data.Parameters.Add(new ComponentParameter
+                //{
+                //    Id = "EDITAR",
+                //    Value = "true"
+                //});
+                //_session.SetValue("Clients_EDITAR", true);
 
-                data.Redirect = "/Clients/DET_CLIENTS";
+                data.Redirect = "/Clients/CLI020";
 
-                this._session.SetValue("Id", data.Row.GetCell("Id").Value);                
+                this._session.SetValue("Id", data.Row.GetCell("Id").Value);   
 
             }
             //else if (data.ButtonId == "btnSaldo")

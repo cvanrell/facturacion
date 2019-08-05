@@ -17,7 +17,7 @@ using WIS.CommonCore.SortComponents;
 
 namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 {
-    class DetClientController : BaseController
+    public class DetClientController : BaseController
     {
         private readonly ISessionAccessor _session;
         private readonly IDbConnection _connection;
@@ -105,10 +105,10 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                         switch (grid.Id)
                         {
                             //Obtiene grid con registros de las tarifas de horas del cliente
-                            case "DET_CLIENTS_grid_T":
+                            case "CLI020_grid_T":
                                 return GridHourRateFetchRows(service, grid, gridQuery, context, idClliente);
                             //Obtiene grid con registros de las tarifas de soporte del cliente
-                            case "DET_CLIENTS_grid_S":
+                            case "CLI020_grid_S":
                                 return GridSupportRatesFetchRows(service, grid, gridQuery, context, idClliente);
                         }
                     }

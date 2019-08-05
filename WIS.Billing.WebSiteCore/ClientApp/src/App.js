@@ -20,7 +20,9 @@ import { FetchClient } from './pages/Clients/FetchClient';
 import { AddClient } from './pages/Clients/AddClient';
 import { AddHourRate } from './pages/HourRates/AddHourRate';
 import { FetchHourRate } from './pages/HourRates/FetchHourRate';
-import { CLIENTS } from './pages/Clients/CLIENTS';
+import { CLI010 } from './pages/Clients/CLI010';
+import { CLI020 } from './pages/Clients/CLI020';
+
 
 //const Clients = React.lazy(() => import('./pages/Clients/Clients'));
 
@@ -64,7 +66,8 @@ export class App extends Component {
                         <Route path='/addHourRate/' component={AddHourRate} />
                         <Route path='/fetchHourRate' component={FetchHourRate} />
 
-                        <Route path='/Clients/CLIENTS' component={CLIENTS} />
+                        <Route path='/Clients/CLI010' component={CLI010} />
+                        <Route path='/Clients/CLI020' component={CLI020} />
 
                     </Suspense>
                 </ScrollContextProvider>

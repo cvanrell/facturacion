@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button'
 import { Form, Field, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
-export class CLIENTS extends Component {
+export class CLI010 extends Component {
 
     //initialValues = {
     //    name: "Exito",
@@ -41,7 +41,7 @@ export class CLIENTS extends Component {
                 
                 <div className="row mb-4">
                     <div className="col">
-                        <Grid id="Clients_grid_1" rowsToFetch={30} rowsToDisplay={30} enableSelection />
+                        <Grid id="CLI010_grid_1" rowsToFetch={30} rowsToDisplay={30} enableSelection />
                     </div>
                 </div>
             </Page>
