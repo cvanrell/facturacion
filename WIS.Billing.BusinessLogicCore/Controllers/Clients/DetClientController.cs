@@ -98,18 +98,18 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             {                
                 using (WISDB context = new WISDB())
                 {
-                    var idClliente = _session.GetValue<string>("Id");                    
+                    var idCliente = _session.GetValue<string>("Id");                    
 
-                    if (!string.IsNullOrEmpty(idClliente))
+                    if (!string.IsNullOrEmpty(idCliente))
                     {
                         switch (grid.Id)
                         {
                             //Obtiene grid con registros de las tarifas de horas del cliente
                             case "CLI020_grid_T":
-                                return GridHourRateFetchRows(service, grid, gridQuery, context, idClliente);
+                                return GridHourRateFetchRows(service, grid, gridQuery, context, idCliente);
                             //Obtiene grid con registros de las tarifas de soporte del cliente
                             case "CLI020_grid_S":
-                                return GridSupportRatesFetchRows(service, grid, gridQuery, context, idClliente);
+                                return GridSupportRatesFetchRows(service, grid, gridQuery, context, idCliente);
                         }
                     }
                 }
@@ -136,30 +136,28 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         {
             //Para realizar commit desde varias grid, pregunto por el id de la misma y derivo a funcionalidad para 
             //ingresar en la tabla que corresponda
+            var rutCliente = _session.GetValue<string>("RUT");
             using (WISDB context = new WISDB())
             {
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
                     HourRate currentHRate = GridHelper.RowToEntity<HourRate>(row, dataList.ToList());
-                    //Chequeo si el cliente existe buscando por RUT
-                    //Client clientExists = CheckIfClientExists(currentClient);
-                    //Client clientExists = context.Clients.FirstOrDefault(x => x.RUT == currentClient.RUT);
 
 
 
-                    //if (row.IsNew)
-                    //{
-                    //    AddClient(context, currentClient);
-                    //}
-                    //else if (row.IsDeleted)
-                    //{
-                    //    DeleteClient(context, currentClient);
-                    //}
-                    //else
-                    //{
-                    //    UpdateClient(context, currentClient);
-                    //}
+                    if (row.IsNew)
+                    {
+                        AddHourRate(context, currentHRate, rutCliente);
+                    }
+                    else if (row.IsDeleted)
+                    {
+                        DeleteHourRate(context, currentHRate);
+                    }
+                    else
+                    {
+                        UpdateHourRate(context, currentHRate, rutCliente);
+                    }
 
 
                     //context.SaveChanges();
@@ -212,7 +210,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
         public Grid GridHourRateFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context, string idCliente)
         {
-            var query = context.HourRates.Where(x => x.Client.Id.ToString() == idCliente);
+            var query = context.HourRates.Where(x => x.Client.Id.ToString() == idCliente && x.FL_DELETED == "N");
 
             var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
 
@@ -306,5 +304,77 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         //        context.SaveChanges();
         //    }
         //}
+
+
+        public void AddHourRate(WISDB context, HourRate hRate, string rutCliente)
+        {
+            Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
+            //Client client = Utils.CheckIfClientExists(context, c);
+            if (client != null)
+            {
+                //Verificar que no existe una tarifa de hora con los mismos datos
+                HourRate hr = context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id && 
+                                x.Currency == hRate.Currency && x.Currency == hRate.Currency && 
+                                x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
+                                x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
+
+                //No existe tarifa, puede agregarla
+                if(hr != null)
+                {
+                    throw new Exception("Ya existe una tarifa con los datos ingresados");
+                }
+                else
+                {
+                    HourRate newHR = new HourRate()
+                    {
+                        Description = hRate.Description,
+                        Client = client,
+                        Currency = hRate.Currency,
+                        AdjustmentPeriodicity = hRate.AdjustmentPeriodicity,
+                        Amount = hRate.Amount,
+                        SpecialDiscount = hRate.SpecialDiscount,
+                        FL_DELETED = "N"
+                    };
+                    context.HourRates.Add(newHR);
+                    context.SaveChanges();
+                }
+            }
+            else
+            {
+                throw new Exception("No se encontro el cliente especificado");                
+            }
+        }
+
+        public void UpdateHourRate(WISDB context, HourRate hRate, string rutCliente)
+        {
+            HourRate hr = context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+            if (hr == null)
+            {
+                throw new Exception("No se encuentra la tarifa especificada");
+            }
+            else
+            {                
+                hr.Description = hRate.Description;
+                hr.Currency = hRate.Currency;
+                hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
+                hr.Amount = hRate.Amount;
+                hr.SpecialDiscount = hRate.SpecialDiscount;
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteHourRate(WISDB context, HourRate hRate)
+        {
+            HourRate hr = context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+            if (hr == null)
+            {
+                throw new Exception("No se encuentra la tarifa que desea eliminar");
+            }
+            else
+            {
+                hr.FL_DELETED = "S";
+                context.SaveChanges();
+            }
+        }
     }
 }
