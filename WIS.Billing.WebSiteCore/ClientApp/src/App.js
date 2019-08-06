@@ -22,6 +22,7 @@ import { AddHourRate } from './pages/HourRates/AddHourRate';
 import { FetchHourRate } from './pages/HourRates/FetchHourRate';
 import { CLI010 } from './pages/Clients/CLI010';
 import { CLI020 } from './pages/Clients/CLI020';
+import { PRO010 } from './pages/Projects/PRO010';
 
 
 //const Clients = React.lazy(() => import('./pages/Clients/Clients'));
@@ -68,6 +69,8 @@ export class App extends Component {
 
                         <Route path='/Clients/CLI010' component={CLI010} />
                         <Route path='/Clients/CLI020' component={CLI020} />
+
+                        <Route path='/Projects/PRO010' component={PRO010} />
 
                     </Suspense>
                 </ScrollContextProvider>

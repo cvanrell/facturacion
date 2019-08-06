@@ -15,6 +15,7 @@ namespace WIS.Billing.EntitiesCore
         public decimal Total { get; set; }
         public decimal TotalAmount { get; set; }
         public DateTime InitialDate { get; set; }
+        public string FL_DELETED { get; set; }
 
         public Client Client { get; set; }
         public List<Fee> Fees { get; set; }

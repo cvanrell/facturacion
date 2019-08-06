@@ -43,7 +43,7 @@ export class NavMenu extends Component {
                                 <FontAwesomeIcon icon='wrench' /> Mantenimientos
                             </NavItem>
                         </Link>
-                        <Link to={'/fetchproject'}>
+                        <Link to={'/Projects/PRO010'}>
                             <NavItem>
                                 <FontAwesomeIcon icon='tasks' /> Proyectos
                             </NavItem>
