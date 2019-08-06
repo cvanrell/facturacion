@@ -12,19 +12,21 @@ namespace WIS.Billing.EntitiesCore
         public decimal IVA { get; set; }
         public decimal Total { get; set; }
         public Currency Currency { get; set; }
-        public string CurrencyDescription {
-            get
-            {
-                return Currency.GetDescription();
-            }
-        }
-        public Periodicity Periodicity { get; set; }
-        public string PeriodicityDescription
-        {
-            get
-            {
-                return Periodicity.GetDescription();
-            }
-        }
+
+
+        //public string CurrencyDescription {
+        //    get
+        //    {
+        //        return Currency.GetDescription();
+        //    }
+        //}
+        //public Periodicity Periodicity { get; set; }
+        //public string PeriodicityDescription
+        //{
+        //    get
+        //    {
+        //        return Periodicity.GetDescription();
+        //    }
+        //}
     }
 }

@@ -198,8 +198,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         }
 
         public void AddClient(WISDB context, Client c)
-        {
-            //Client client = context.Clients.FirstOrDefault(x => x.RUT == c.RUT);
+        {            
             Client client = CheckIfClientExists(context, c);
             if (client != null)
             {

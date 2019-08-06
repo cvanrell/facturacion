@@ -5,34 +5,14 @@ import Button from 'react-bootstrap/Button'
 import { Form, Field, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
-export class CLI020 extends Component {
+export class PRO010 extends Component {
 
-
-    
-
-    //fieldSetStyle = { border: "1px solid #ddd", margin: "10px", width: "100%" };
-
-    
-    validationSchema = {
-    };
-
-    //onAfterApplyFilter = (context, form, query, nexus) => {
-    //    console.log("----- onAfterApplyFilter ")
-    //    //nexus.getForm("DOC020_form_1").reset();
+    //initialValues = {
+    //    name: "Exito",
+    //    lastname: "",
+    //    password: "Pass",
+    //    type: 2
     //};
-    //onAfterInitialize = (context, form, query, nexus) => {
-    //    console.log("----- onAfterApplyFilter ")
-    //    //nexus.getForm("DOC020_form_1").reset();
-    //};
-
-
-
-    initialValues = {
-        name: "Exito",
-        lastname: "",
-        password: "Pass",
-        type: 2
-    };
 
     validationSchema = {
         name: Yup.string()
@@ -57,32 +37,28 @@ export class CLI020 extends Component {
 
     render() {
         return (
+            <Page {...this.props}>
 
-            <Page
-                icon="fas fa-file"
-                title="Edicion de clientes"//{t("DOC020_Sec0_pageTitle_Titulo")}
-                {...this.props}
-            >
                 <Form
-                    id="CLI020_form_1"
-                    //initialValues={initialValues}
-                    //validationSchema={validationSchema}
-                    >
+                    id="PRO010_form_1"
+                //initialValues={initialValues}
+                //validationSchema={validationSchema}
+                >
                     <div className="row col-12">
                         <fieldset className="row" >
-                            
+
                             <div className="row col-12">
                                 <div className="col-4">
                                     <div className="form-group">
                                         <label htmlFor="Description">{("Descripcion")}</label>
-                                        <Field name="Description" readOnly />
+                                        <Field name="Description" />
                                         <StatusMessage for="Description" />
                                     </div>
                                 </div>
                                 <div className="col-4">
                                     <div className="form-group">
                                         <label htmlFor="Address">{("Direccion")}</label>
-                                        <Field name="Address" readOnly />
+                                        <Field name="Address" />
                                         <StatusMessage for="Address" />
                                     </div>
                                 </div>
@@ -90,7 +66,7 @@ export class CLI020 extends Component {
                                 <div className="col-4">
                                     <div className="form-group">
                                         <label htmlFor="RUT">{("RUT")}</label>
-                                        <Field name="RUT" readOnly />
+                                        <Field name="RUT" />
                                         <StatusMessage for="RUT" />
                                     </div>
                                 </div>
@@ -98,23 +74,10 @@ export class CLI020 extends Component {
                         </fieldset>
                     </div>
                 </Form>
-                <div className="row mb-4">
-                    <div className="col-12">
-                        <Grid id="CLI020_grid_T" rowsToFetch={30} rowsToDisplay={15}
-                            //onAfterApplyFilter={onAfterApplyFilter}
-                            //onAfterInitialize={onAfterInitialize}
-                        //enableExcelExport
-                        />
-                    </div>
-                </div>
 
                 <div className="row mb-4">
-                    <div className="col-12">
-                        <Grid id="CLI020_grid_S" rowsToFetch={30} rowsToDisplay={15}
-                            //onAfterApplyFilter={onAfterApplyFilter}
-                            //onAfterInitialize={onAfterInitialize}
-                        //enableExcelExport
-                        />
+                    <div className="col">
+                        <Grid id="PRO010_grid_1" rowsToFetch={30} rowsToDisplay={30} enableSelection />
                     </div>
                 </div>
             </Page>

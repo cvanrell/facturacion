@@ -81,14 +81,14 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
-            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-                new GridItemHeader("Cosas 1"),
-                new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
-                new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
-                new GridItemDivider(),
-                new GridItemHeader("Cosas 2"),
-                new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
-            }));
+            //grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+            //    new GridItemHeader("Cosas 1"),
+            //    new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
+            //    new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+            //    new GridItemDivider(),
+            //    new GridItemHeader("Cosas 2"),
+            //    new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+            //}));
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
@@ -142,22 +142,43 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
-                    HourRate currentHRate = GridHelper.RowToEntity<HourRate>(row, dataList.ToList());
-
-
-
-                    if (row.IsNew)
+                    
+                    
+                    //Si la grilla es de tarifas:
+                    if(grid.Id == "CLI020_grid_T")
                     {
-                        AddHourRate(context, currentHRate, rutCliente);
-                    }
-                    else if (row.IsDeleted)
+                        HourRate currentHRate = GridHelper.RowToEntity<HourRate>(row, dataList.ToList());
+                        if (row.IsNew)
+                        {
+                            AddHourRate(context, currentHRate, rutCliente);
+                        }
+                        else if (row.IsDeleted)
+                        {
+                            DeleteHourRate(context, currentHRate);
+                        }
+                        else
+                        {
+                            UpdateHourRate(context, currentHRate, rutCliente);
+                        }
+                    }//Si la grilla es de tarifas de soporte
+                    else if(grid.Id ==  "CLI020_grid_S")
                     {
-                        DeleteHourRate(context, currentHRate);
+                        SupportRate currentSRate = GridHelper.RowToEntity<SupportRate>(row, dataList.ToList());
+                        if (row.IsNew)
+                        {
+                            AddSupportRate(context, currentSRate, rutCliente);
+                        }
+                        else if (row.IsDeleted)
+                        {
+                            DeleteSupportRate(context, currentSRate);
+                        }
+                        else
+                        {
+                            UpdateSupportRate(context, currentSRate, rutCliente);
+                        }
                     }
-                    else
-                    {
-                        UpdateHourRate(context, currentHRate, rutCliente);
-                    }
+
+                    
 
 
                     //context.SaveChanges();
@@ -223,12 +244,11 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
         public Grid GridSupportRatesFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context, string idCliente)
         {
-            //var query = context.SupportRates.Where(x => x.Client.Id.ToString() == idCliente);
+            var query = context.SupportRates.Where(x => x.Client.Id.ToString() == idCliente && x.FL_DELETED == "N");
 
-            //var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
+            var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
 
-            //grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
-
+            grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
 
             return grid;
         }
@@ -305,7 +325,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         //    }
         //}
 
-
+        #region TARIFAS
         public void AddHourRate(WISDB context, HourRate hRate, string rutCliente)
         {
             Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
@@ -314,14 +334,21 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             {
                 //Verificar que no existe una tarifa de hora con los mismos datos
                 HourRate hr = context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id && 
-                                x.Currency == hRate.Currency && x.Currency == hRate.Currency && 
-                                x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
+                                x.Currency == hRate.Currency && x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
                                 x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
 
-                //No existe tarifa, puede agregarla
+                //La tarifa existe
                 if(hr != null)
                 {
-                    throw new Exception("Ya existe una tarifa con los datos ingresados");
+                    //Si registro estaba eliminado, lo vuelvo a activar
+                    if (hr.FL_DELETED == "S")
+                    {
+                        hr.FL_DELETED = "N";
+                    }
+                    else
+                    {
+                        throw new Exception("Ya existe una tarifa con los datos ingresados");
+                    }
                 }
                 else
                 {
@@ -376,5 +403,91 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                 context.SaveChanges();
             }
         }
+        #endregion
+
+
+        #region TARIFAS DE SOPORTE
+        public void AddSupportRate(WISDB context, SupportRate sRate, string rutCliente)
+        {
+            Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);            
+            if (client != null)
+            {
+                //Verificar que no existe una tarifa de hora con los mismos datos
+                SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Client.Id == client.Id &&
+                                x.Currency == sRate.Currency && x.AdjustmentPeriodicity == sRate.AdjustmentPeriodicity &&
+                                x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount && 
+                                x.IVA == sRate.IVA && x.Periodicity == sRate.Periodicity);
+
+                //No existe tarifa, puede agregarla
+                if (sr != null)
+                {
+                    //Si registro estaba eliminado, lo vuelvo a activar
+                    if (sr.FL_DELETED == "S")
+                    {
+                        sr.FL_DELETED = "N";
+                    }
+                    else
+                    {
+                        throw new Exception("Ya existe una tarifa de soporte con los datos ingresados");
+                    }
+                }
+                else
+                {
+                    SupportRate newSR = new SupportRate()
+                    {
+                        Description = sRate.Description,
+                        Client = client,
+                        Currency = sRate.Currency,
+                        Periodicity = sRate.Periodicity,
+                        AdjustmentPeriodicity = sRate.AdjustmentPeriodicity,
+                        Amount = sRate.Amount,
+                        SpecialDiscount = sRate.SpecialDiscount,
+                        FL_DELETED = "N"
+                    };
+                    context.SupportRates.Add(newSR);
+                    context.SaveChanges();
+                }
+            }
+            else
+            {
+                throw new Exception("No se encontro el cliente especificado");
+            }
+        }
+
+        public void UpdateSupportRate(WISDB context, SupportRate sRate, string rutCliente)
+        {
+            SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+            if (sr == null)
+            {
+                throw new Exception("No se encuentra la tarifa especificada");
+            }
+            else
+            {
+                sr.Description = sRate.Description;
+                sr.Currency = sRate.Currency;
+                sr.Periodicity = sr.Periodicity;
+                sr.AdjustmentPeriodicity = sRate.AdjustmentPeriodicity;
+                sr.Amount = sRate.Amount;
+                sr.IVA = sRate.IVA;
+                sr.SpecialDiscount = sRate.SpecialDiscount;
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteSupportRate(WISDB context, SupportRate sRate)
+        {
+            SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+            if (sr == null)
+            {
+                throw new Exception("No se encuentra la tarifa que desea eliminar");
+            }
+            else
+            {
+                sr.FL_DELETED = "S";
+                context.SaveChanges();
+            }
+        }
+
+        #endregion
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190805194700_Migration12")]
+    partial class Migration12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,13 +74,13 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<decimal>("Discount");
+                    b.Property<decimal>("IVA");
 
                     b.Property<int>("Month");
 
-                    b.Property<string>("MonthYear");
-
                     b.Property<Guid?>("ProjectId");
+
+                    b.Property<decimal>("Total");
 
                     b.HasKey("Id");
 
@@ -147,17 +149,15 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<Guid?>("ClientId");
 
-                    b.Property<string>("Currency");
+                    b.Property<int>("Currency");
 
                     b.Property<string>("Description");
 
                     b.Property<decimal>("IVA");
 
-                    b.Property<DateTime>("InitialDate");
+                    b.Property<int>("Installments");
 
                     b.Property<decimal>("Total");
-
-                    b.Property<decimal>("TotalAmount");
 
                     b.HasKey("Id");
 
