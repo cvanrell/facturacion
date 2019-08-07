@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using WIS.Billing.EntitiesCore.Enums;
 
@@ -14,7 +15,8 @@ namespace WIS.Billing.EntitiesCore
         public decimal IVA { get; set; }
         public decimal Total { get; set; }
         public decimal TotalAmount { get; set; }
-        public DateTime InitialDate { get; set; }
+        public string InitialDate { get; set; }
+        [MaxLength(1)]        
         public string FL_DELETED { get; set; }
 
         public Client Client { get; set; }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190807125906_Migration15")]
+    partial class Migration15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +32,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                         .IsRequired();
 
                     b.Property<string>("FL_DELETED")
-                        .HasMaxLength(1);
-
-                    b.Property<string>("FL_FOREIGN")
                         .HasMaxLength(1);
 
                     b.Property<string>("RUT");
@@ -154,8 +153,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("FL_DELETED")
-                        .HasMaxLength(1);
+                    b.Property<string>("FL_DELETED");
 
                     b.Property<decimal>("IVA");
 
@@ -332,7 +330,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Project", b =>
                 {
                     b.HasOne("WIS.Billing.EntitiesCore.Client", "Client")
-                        .WithMany("Projects")
+                        .WithMany()
                         .HasForeignKey("ClientId");
                 });
 

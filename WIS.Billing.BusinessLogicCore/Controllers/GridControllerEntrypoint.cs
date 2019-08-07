@@ -56,7 +56,7 @@ namespace WIS.BusinessLogicCore.Controllers
                 }
                 catch (Exception ex)
                 {
-                    response.SetError(ex.Message);
+                    response.SetError(wrapper.GridId + " ha fallado al cargar. Ex:" + ex.Message);
                 }
 
                 return response;

@@ -81,14 +81,14 @@ namespace WIS.Billing.BusinessLogicCore
         //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
-            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-                new GridItemHeader("Cosas 1"),
-                new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
-                new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
-                new GridItemDivider(),
-                new GridItemHeader("Cosas 2"),
-                new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
-            }));
+            //grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+            //    new GridItemHeader("Cosas 1"),
+            //    new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
+            //    new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+            //    new GridItemDivider(),
+            //    new GridItemHeader("Cosas 2"),
+            //    new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+            //}));
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
@@ -148,7 +148,8 @@ namespace WIS.Billing.BusinessLogicCore
 
         public void AddProject(WISDB context, Project p)
         {
-            Project project = context.Projects.FirstOrDefault(x => x.Id == p.Id);
+            Client client = context.Clients.FirstOrDefault(x => x.Id == p.Id);
+            Project project = context.Projects.FirstOrDefault(x => x.Description == p.Description);
             if (project != null)
             {
                 if (project.FL_DELETED == "S")
@@ -173,6 +174,11 @@ namespace WIS.Billing.BusinessLogicCore
                     TotalAmount = p.Total,
                     FL_DELETED = "N",
                 };
+                //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
+                if(client.FL_FOREIGN == "S")
+                {
+                    project.IVA = 0;
+                }
                 context.Projects.Add(project);
                 context.SaveChanges();
             }

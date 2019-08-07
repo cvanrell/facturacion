@@ -98,25 +98,7 @@ export class CLI020 extends Component {
                         </fieldset>
                     </div>
                 </Form>
-                <div className="row mb-4">
-                    <div className="col-12">
-                        <Grid id="CLI020_grid_T" rowsToFetch={30} rowsToDisplay={15}
-                            //onAfterApplyFilter={onAfterApplyFilter}
-                            //onAfterInitialize={onAfterInitialize}
-                        //enableExcelExport
-                        />
-                    </div>
-                </div>
-
-                <div className="row mb-4">
-                    <div className="col-12">
-                        <Grid id="CLI020_grid_S" rowsToFetch={30} rowsToDisplay={15}
-                            //onAfterApplyFilter={onAfterApplyFilter}
-                            //onAfterInitialize={onAfterInitialize}
-                        //enableExcelExport
-                        />
-                    </div>
-                </div>
+                
             </Page>
         );
     }

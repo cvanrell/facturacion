@@ -46,17 +46,26 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         //FORMULARIO
         public override Form FormInitialize(Form form, FormQuery query, int userId)
         {
-            var fieldDescription = form.GetField("description");
+            //var fieldDescription = form.GetField("description");
 
-            fieldDescription.Value = "Exito";
+            //fieldDescription.Value = "Exito";
 
-            var fieldAddress = form.GetField("address");
+            //var fieldAddress = form.GetField("address");
 
-            fieldAddress.Value = "Staccato";
+            //fieldAddress.Value = "Staccato";
 
-            var fieldRut = form.GetField("rut");
+            //var fieldRut = form.GetField("rut");
 
-            fieldRut.Value = "Staccato";
+            //fieldRut.Value = "Staccato";
+
+            string cliente = _session.GetValue<string>("Id");           
+
+            form.GetField("Description").Value = cliente;
+
+            string rutCliente = _session.GetValue<string>("RUT");
+
+            form.GetField("RUT").Value = rutCliente;
+            
             return form;
         }
         public override Form FormSubmit(Form form, FormSubmitQuery query, int userId)
