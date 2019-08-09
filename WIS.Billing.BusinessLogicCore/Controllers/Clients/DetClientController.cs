@@ -58,9 +58,13 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
             //fieldRut.Value = "Staccato";
 
-            string cliente = _session.GetValue<string>("Id");           
+            //string cliente = _session.GetValue<string>("Id");
 
-            form.GetField("Description").Value = cliente;
+            //form.GetField("Description").Value = cliente;
+
+            string clientDescription = _session.GetValue<string>("Description");
+
+            form.GetField("Description").Value = clientDescription;
 
             string rutCliente = _session.GetValue<string>("RUT");
 

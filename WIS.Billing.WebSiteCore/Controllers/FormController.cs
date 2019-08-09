@@ -115,7 +115,7 @@ namespace WIS.Billing.WebSiteCore.Controllers
 
             var client = this._httpClientFactory.CreateClient();
 
-            var result = await _apiClient.PostAsync(client, "http://localhost:51802/", controller, application + "_Form", transferData, cancelToken);
+            var result = await _apiClient.PostAsync(client, "https://localhost:44340/", controller, application + "_Form", transferData, cancelToken);
 
             if (!string.IsNullOrEmpty(result.SessionData))
                 _sessionManager.SetValue("WIS_SESSION", result.SessionData);

@@ -158,6 +158,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                 data.Redirect = "/Clients/CLI020";
 
                 this._session.SetValue("Id", data.Row.GetCell("Id").Value);
+                this._session.SetValue("Description", data.Row.GetCell("Description").Value);
                 this._session.SetValue("RUT", data.Row.GetCell("RUT").Value);
 
             }

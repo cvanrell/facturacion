@@ -97,8 +97,31 @@ export class CLI020 extends Component {
                             </div>
                         </fieldset>
                     </div>
+
+                    <div className="row">
+                        <div className="col">
+                            <SubmitButton value={("Agregar nueva tarifa")} />                            
+                        </div>
+                    </div>                        
                 </Form>
-                
+                <div className="row mb-4">
+                    <div className="col-12">
+                        <Grid id="CLI020_grid_T" rowsToFetch={30} rowsToDisplay={15}
+                        //onAfterApplyFilter={onAfterApplyFilter}
+                        //onAfterInitialize={onAfterInitialize}
+                        //enableExcelExport
+                        />
+                    </div>
+                </div>
+                <div className="row mb-4">
+                    <div className="col-12">
+                        <Grid id="CLI020_grid_S" rowsToFetch={30} rowsToDisplay={15}
+                        //onAfterApplyFilter={onAfterApplyFilter}
+                        //onAfterInitialize={onAfterInitialize}
+                        //enableExcelExport
+                        />
+                    </div>
+                </div>
             </Page>
         );
     }
