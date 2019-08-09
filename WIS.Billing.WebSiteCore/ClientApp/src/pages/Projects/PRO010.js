@@ -2,7 +2,7 @@
 import { Grid } from '../../components/GridComponents/Grid';
 import { Page } from '../../components/Page';
 import Button from 'react-bootstrap/Button'
-import { Form, Field, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
+import { Form, Field, FieldSelect, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
 export class PRO010 extends Component {
@@ -35,6 +35,37 @@ export class PRO010 extends Component {
         nexus.getForm("form_1").reset();
     }
 
+//    <div className="col-4">
+//    <div className="form-group">
+//        <label htmlFor="IVA">{("IVA")}</label>
+//        <Field name="IVA" />
+//        <StatusMessage for="IVA" />
+//    </div>
+//</div>
+//    <div className="col-4">
+//        <div className="form-group">
+//            <label htmlFor="Total">{("Total")}</label>
+//            <Field name="Total" />
+//            <StatusMessage for="Total" />
+//        </div>
+//    </div>
+//    <div className="col-4">
+//        <div className="form-group">
+//            <label htmlFor="Amount">{("Monto")}</label>
+//            <Field name="Amount" />
+//            <StatusMessage for="Amount" />
+//        </div>
+//    </div>
+
+//    <div className="col-4">
+//        <div className="form-group">
+//            <label htmlFor="InitialDate">{("Fecha de inicio")}</label>
+//            <Field name="InitialDate" />
+//            <StatusMessage for="InitialDate" />
+//        </div>
+//    </div>                                
+
+
     render() {
         return (
             <Page {...this.props}>
@@ -44,10 +75,10 @@ export class PRO010 extends Component {
                 //initialValues={initialValues}
                 //validationSchema={validationSchema}
                 >
-                    <div className="row col-12">
-                        <fieldset className="row" >
+                    <div className="col-12">
+                        <fieldset className="col-12" >
 
-                            <div className="row col-12">
+                            <div className="col-12">
                                 <div className="col-4">
                                     <div className="form-group">
                                         <label htmlFor="Description">{("Descripcion")}</label>
@@ -55,24 +86,32 @@ export class PRO010 extends Component {
                                         <StatusMessage for="Description" />
                                     </div>
                                 </div>
-                                <div className="col-4">
-                                    <div className="form-group">
-                                        <label htmlFor="Address">{("Direccion")}</label>
-                                        <Field name="Address" />
-                                        <StatusMessage for="Address" />
-                                    </div>
-                                </div>
 
                                 <div className="col-4">
                                     <div className="form-group">
-                                        <label htmlFor="RUT">{("RUT")}</label>
-                                        <Field name="RUT" />
-                                        <StatusMessage for="RUT" />
+                                        <label htmlFor="Amount">{("Monto")}</label>
+                                        <Field name="Amount" />
+                                        <StatusMessage for="Amount" />
                                     </div>
                                 </div>
+                                <div className="col-4">
+                                    <div className="form-group">
+                                        <label htmlFor="Currency">{("Moneda")}</label>
+                                        <FieldSelect name="Currency" />
+                                        <StatusMessage for="Currency" />
+                                    </div>
+                                </div>
+
+                                
                             </div>
                         </fieldset>
                     </div>
+
+                    <div className="row">
+                        <div className="col">
+                            <SubmitButton value={("Agregar proyecto")} />
+                        </div>
+                    </div>                        
                 </Form>
 
                 <div className="row mb-4">

@@ -4,10 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using WIS.Billing.BusinessLogicCore.Controllers;
+using WIS.Billing.BusinessLogicCore.Enums;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.BusinessLogicCore.Controllers;
 using WIS.BusinessLogicCore.GridUtil.Services;
+using WIS.CommonCore.App;
 using WIS.CommonCore.Enums;
 using WIS.CommonCore.FormComponents;
 using WIS.CommonCore.GridComponents;
@@ -46,6 +48,9 @@ namespace WIS.Billing.BusinessLogicCore
         //FORMULARIO
         public override Form FormInitialize(Form form, FormQuery query, int userId)
         {
+            //Inicializar selects
+            this.InicializarSelects(ref form, userId); //TODO: No hace falta hacer un ref, los objetos se pasan por referencia
+
             var fieldDescription = form.GetField("description");
 
             fieldDescription.Value = "Exito";
@@ -75,6 +80,69 @@ namespace WIS.Billing.BusinessLogicCore
             form.GetField("type").Value = "3";
 
             return form;
+        }
+
+        private void InicializarSelects(ref Form form, int userId)
+        {
+            //Inicializar selects
+            FormField selectCurrency = form.GetField("Currency");
+            
+
+            selectCurrency.Options = new List<SelectOption>();
+            
+
+            //Cargar selects
+            selectCurrency.Options.Add(new SelectOption(TipoMoneda.Dólar.ToString(), TipoMoneda.Dólar.ToString()));
+            selectCurrency.Options.Add(new SelectOption(TipoMoneda.Pesos.ToString(), TipoMoneda.Pesos.ToString()));
+
+            //using (UnitOfWork uow = new UnitOfWork(this._pageName, userId))
+            //{
+            //    //VIA
+            //    var queryVia = uow.BuildQuery(new GetViaQuery());
+
+            //    var dataVia = queryVia.Select(e => e).ToList();
+
+            //    foreach (var VIA in dataVia)
+            //    {
+            //        selectVia.Options.Add(new SelectOption(VIA.CD_VIA.ToString(), VIA.DS_VIA));
+            //    }
+
+            //    //TRANSPORTADORA
+            //    var queryTransportadora = uow.BuildQuery(new GetTransportadoraQuery());
+            //    var dataTransportadora = queryTransportadora.Select(t => t).ToList();
+
+            //    foreach (var transportadora in dataTransportadora)
+            //    {
+            //        selectTransportadora.Options.Add(new SelectOption(transportadora.CD_TRANSPORTADORA.ToString(), transportadora.DS_TRANSPORTADORA));
+            //    }
+
+            //    //MONEDA
+            //    var queryMoneda = uow.BuildQuery(new GetMonedaQuery());
+            //    var dataMoneda = queryMoneda.Select(m => m).ToList();
+
+            //    foreach (var moneda in dataMoneda)
+            //    {
+            //        selectMoneda.Options.Add(new SelectOption(moneda.CD_MONEDA.ToString(), moneda.DS_MONEDA));
+            //    }
+
+            //    //ALMACENAJE Y SEGURO
+            //    var queryAlmacenajeSeguro = uow.BuildQuery(new GetAlmacenajeSeguroQuery());
+            //    var dataAlmcenajeSeguro = queryAlmacenajeSeguro.Select(a => a).ToList();
+
+            //    foreach (var almacenajeSeguro in dataAlmcenajeSeguro)
+            //    {
+            //        selectAlmacenajeSeguro.Options.Add(new SelectOption(almacenajeSeguro.TP_ALMACENAJE_Y_SEGURO.ToString(), almacenajeSeguro.DS_ALMACENAJE_Y_SEGURO));
+            //    }
+
+            //    //UNIDAD MEDIDA
+            //    //GetUnidadMedidaQuery queryUnidadMedida = new GetUnidadMedidaQuery(context);
+            //    //var dataUnidadMedida = queryUnidadMedida.GetQuery().Select(e => e).ToList();
+
+            //    //foreach (var unidadMedida in dataUnidadMedida)
+            //    //{
+            //    //    selectUnidadMedida.Options.Add(new SelectOption(unidadMedida.CD_UNIDADE_MEDIDA.ToString(), unidadMedida.DS_UNIDADE_MEDIDA));
+            //    //}
+            //}
         }
 
 

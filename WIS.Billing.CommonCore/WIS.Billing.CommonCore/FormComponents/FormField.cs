@@ -20,7 +20,7 @@ namespace WIS.CommonCore.FormComponents
         public string ErrorMessage { get; set; }
         public List<string> Dependencies { get; set; }
         public string Value { get; set; }
-        public List<SelectOption> options { get; set; }
+        public List<SelectOption> Options { get; set; }
 
         [JsonIgnore]
         public bool IsValidated { get; set; }

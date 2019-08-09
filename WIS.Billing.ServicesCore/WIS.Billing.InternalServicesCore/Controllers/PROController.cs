@@ -70,7 +70,7 @@ namespace WIS.Billing.InternalServicesCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PRO010_Form(FormWrapper data, CancellationToken cancelToken)
+        public async Task<IActionResult> PRO010_Form([FromBody]FormWrapper data, CancellationToken cancelToken)
         {
             IFormWrapper response = new FormWrapper();
 
