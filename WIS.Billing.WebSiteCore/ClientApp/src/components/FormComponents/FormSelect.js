@@ -1,64 +1,94 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { FastField as FormikField, connect, getIn } from 'formik-custom';
 import { withFormContext } from './WithFormContext';
+import Select from 'react-select';
+import { useTranslation } from 'react-i18next';
 
-export class InternalField extends Component {
-    constructor(props) {
-        super(props);
+function FieldSelectInternal(props) {
+    const { t } = useTranslation();
 
-        props.formProps.registerField(this);
-    }
-
-    componentWillUnmount() {
-        this.props.formProps.unregisterField(this.props.name);
-    }
-
-    handleValidate = (value) => {
-        return this.props.formProps.validateField(this.props.name, value);
-    }
-
-    getProps = () => {
-        const { formProps, ...result } = this.props;
-
-        return result;
-    }
-    getOptions = (options) => {
-        if (options) {
-            return options.map(d => <option key={d.value} value={d.value}>{d.description}</option>);
+    const fieldData = {
+        props: {
+            name: props.name,
+            hidden: props.hidden,
+            readOnly: props.readOnly,
+            disabled: props.disabled
         }
+    };
+
+    useLayoutEffect(() => props.formProps.registerField(fieldData), []);
+    useEffect(() => () => props.formProps.unregisterField(props.name), []);
+    const valueRef = useRef(null);
+
+    const handleChange = (option) => {
+        let values = {
+            [props.name]: option.value
+        };
+        let errors = {
+            [props.name]: undefined
+        };
+        let touched = {
+            [props.name]: true
+        };
+
+        props.formik.setFieldValue(props.name, option.value, false);
+
+        setTimeout(() => {
+            props.formProps.validateField(props.name, option.value).catch(error => {
+                errors[props.name] = error;
+            }).then(d => {
+                props.formik.setAllProperties(values, errors, touched);
+            });
+        }, 100); //Tengo que ejecutarlo despues del setState de formik, pero setFieldValue no retorna una promesa
+    };
+
+    const getNoOptionMessage = () => {
+        return t("General_Sec0_lbl_SELECT_NO_OPTIONS");
+    };
+
+    const { options, ...fieldProps } = props.formProps.getFieldProps(props.name);
+    let { className, ...elementProps } = props;
+
+    const error = getIn(props.formik.errors, props.name);
+    const touch = getIn(props.formik.touched, props.name);
+    const value = getIn(props.formik.values, props.name);
+
+    if (!props.readOnly && !props.disabled) {
+        const errorEmpty = touch && error && !(error && (typeof error === "object") && !Object.keys(error).length);
+
+        className = (className || "") + " form-select " + (touch && error && errorEmpty ? " is-invalid" : (errorEmpty ? '' : (touch ? " is-valid" : "")));
     }
 
-    getStatusClass = (error, touch) => {
-        const errorEmpty = this.isErrorEmptyObject(error);
+    const selectedOption = options ? options.find(d => d.value === value) : null;
 
-        if (this.props.readOnly || this.props.disabled)
-            return "";
+    //valueRef.current = selectedOption;
 
-        return (touch && error && !errorEmpty ? "is-invalid" : (errorEmpty ? '' : (touch ? "is-valid" : "")));
-    }
-
-    isErrorEmptyObject(error) {
-        //Si error es vacío, por lo general significa que la validación con Yup tiró excepción
-        return error && (typeof error === "object") && !Object.keys(error).length;
-    }
-
-    render() {
-        const error = getIn(this.props.formik.errors, this.props.name);
-        const touch = getIn(this.props.formik.touched, this.props.name);
-        const className = this.props.className + " form-control " + this.getStatusClass(error, touch);
-        const { options, ...fieldProps } = this.props.formProps.getFieldProps(this.props.name);
-
+    if (fieldProps.readOnly) {
         return (
-            <FormikField
-                {...this.getProps()}
-                {...fieldProps}
-                className={className}
-                validate={this.handleValidate}
-            >  
-                {this.getOptions(options)}
-            </FormikField>
+            <input
+                className="form-control"
+                readOnly
+                value={selectedOption ? selectedOption.label : ""}
+            />
         );
     }
+    else {
+        return (
+            <Select
+                className={className}
+                options={options}
+                onChange={handleChange}
+                value={valueRef.current}
+                captureMenuScroll
+                isDisabled={fieldProps.disabled}
+                placeholder={("Seleccionar")}
+                //noOptionsMessage={getNoOptionMessage}
+                {...fieldProps}
+                {...elementProps}
+            />
+        );
+    }
+
 }
 
-export const FieldSelect = withFormContext(connect(InternalField));
+export const FieldSelect = withFormContext(connect(FieldSelectInternal));

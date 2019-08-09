@@ -15,16 +15,9 @@ export class PRO010 extends Component {
     //};
 
     validationSchema = {
-        name: Yup.string()
-            .min(2)
-            .max(8)
-            .required(),
-        password: Yup.string()
-            .min(6)
-            .required(),
-        type: Yup.number()
-            .min(1)
-            .max(3)
+        //Client: Yup.string().required(),
+        //Currency: Yup.string().required(),
+        //Description: Yup.string().required(),
     };
 
     onBeforeButtonAction = (context, form, query, nexus) => {
@@ -35,35 +28,35 @@ export class PRO010 extends Component {
         nexus.getForm("form_1").reset();
     }
 
-//    <div className="col-4">
-//    <div className="form-group">
-//        <label htmlFor="IVA">{("IVA")}</label>
-//        <Field name="IVA" />
-//        <StatusMessage for="IVA" />
-//    </div>
-//</div>
-//    <div className="col-4">
-//        <div className="form-group">
-//            <label htmlFor="Total">{("Total")}</label>
-//            <Field name="Total" />
-//            <StatusMessage for="Total" />
-//        </div>
-//    </div>
-//    <div className="col-4">
-//        <div className="form-group">
-//            <label htmlFor="Amount">{("Monto")}</label>
-//            <Field name="Amount" />
-//            <StatusMessage for="Amount" />
-//        </div>
-//    </div>
+    //    <div className="col-4">
+    //    <div className="form-group">
+    //        <label htmlFor="IVA">{("IVA")}</label>
+    //        <Field name="IVA" />
+    //        <StatusMessage for="IVA" />
+    //    </div>
+    //</div>
+    //    <div className="col-4">
+    //        <div className="form-group">
+    //            <label htmlFor="Total">{("Total")}</label>
+    //            <Field name="Total" />
+    //            <StatusMessage for="Total" />
+    //        </div>
+    //    </div>
+    //    <div className="col-4">
+    //        <div className="form-group">
+    //            <label htmlFor="Amount">{("Monto")}</label>
+    //            <Field name="Amount" />
+    //            <StatusMessage for="Amount" />
+    //        </div>
+    //    </div>
 
-//    <div className="col-4">
-//        <div className="form-group">
-//            <label htmlFor="InitialDate">{("Fecha de inicio")}</label>
-//            <Field name="InitialDate" />
-//            <StatusMessage for="InitialDate" />
-//        </div>
-//    </div>                                
+    //    <div className="col-4">
+    //        <div className="form-group">
+    //            <label htmlFor="InitialDate">{("Fecha de inicio")}</label>
+    //            <Field name="InitialDate" />
+    //            <StatusMessage for="InitialDate" />
+    //        </div>
+    //    </div>                                
 
 
     render() {
@@ -72,8 +65,8 @@ export class PRO010 extends Component {
 
                 <Form
                     id="PRO010_form_1"
-                //initialValues={initialValues}
-                //validationSchema={validationSchema}
+                    //initialValues={initialValues}
+                    //validationSchema={validationSchema}
                 >
                     <div className="col-12">
                         <fieldset className="col-12" >
@@ -84,6 +77,14 @@ export class PRO010 extends Component {
                                         <label htmlFor="Description">{("Descripcion")}</label>
                                         <Field name="Description" />
                                         <StatusMessage for="Description" />
+                                    </div>
+                                </div>
+
+                                <div className="col-4">
+                                    <div className="form-group">
+                                        <label htmlFor="Client">{("Cliente")}</label>
+                                        <FieldSelect name="Client" />
+                                        <StatusMessage for="Client" />
                                     </div>
                                 </div>
 
@@ -102,7 +103,7 @@ export class PRO010 extends Component {
                                     </div>
                                 </div>
 
-                                
+
                             </div>
                         </fieldset>
                     </div>
@@ -111,7 +112,7 @@ export class PRO010 extends Component {
                         <div className="col">
                             <SubmitButton value={("Agregar proyecto")} />
                         </div>
-                    </div>                        
+                    </div>
                 </Form>
 
                 <div className="row mb-4">

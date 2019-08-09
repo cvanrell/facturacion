@@ -51,17 +51,17 @@ namespace WIS.Billing.BusinessLogicCore
             //Inicializar selects
             this.InicializarSelects(ref form, userId); //TODO: No hace falta hacer un ref, los objetos se pasan por referencia
 
-            var fieldDescription = form.GetField("description");
+            //var fieldDescription = form.GetField("description");
 
-            fieldDescription.Value = "Exito";
+            //fieldDescription.Value = "Exito";
 
-            var fieldAddress = form.GetField("address");
+            //var fieldAddress = form.GetField("address");
 
-            fieldAddress.Value = "Staccato";
+            //fieldAddress.Value = "Staccato";
 
-            var fieldRut = form.GetField("rut");
+            //var fieldRut = form.GetField("rut");
 
-            fieldRut.Value = "Staccato";
+            //fieldRut.Value = "Staccato";
             return form;
         }
         public override Form FormSubmit(Form form, FormSubmitQuery query, int userId)
@@ -87,53 +87,32 @@ namespace WIS.Billing.BusinessLogicCore
             //Inicializar selects
             FormField selectCurrency = form.GetField("Currency");
             
-
             selectCurrency.Options = new List<SelectOption>();
-            
+
+            FormField selectClient = form.GetField("Client");
+
+            selectClient.Options = new List<SelectOption>();
+
 
             //Cargar selects
+
+            //MONEDA
             selectCurrency.Options.Add(new SelectOption(TipoMoneda.Dólar.ToString(), TipoMoneda.Dólar.ToString()));
             selectCurrency.Options.Add(new SelectOption(TipoMoneda.Pesos.ToString(), TipoMoneda.Pesos.ToString()));
 
+
+            using(WISDB context = new WISDB())
+            {
+                //CLIENTES
+                var clients = context.Clients.ToList();
+
+                foreach (var c in clients)
+                {
+                    selectClient.Options.Add(new SelectOption(c.Id.ToString(), c.Description));
+                }
+            }
             //using (UnitOfWork uow = new UnitOfWork(this._pageName, userId))
-            //{
-            //    //VIA
-            //    var queryVia = uow.BuildQuery(new GetViaQuery());
-
-            //    var dataVia = queryVia.Select(e => e).ToList();
-
-            //    foreach (var VIA in dataVia)
-            //    {
-            //        selectVia.Options.Add(new SelectOption(VIA.CD_VIA.ToString(), VIA.DS_VIA));
-            //    }
-
-            //    //TRANSPORTADORA
-            //    var queryTransportadora = uow.BuildQuery(new GetTransportadoraQuery());
-            //    var dataTransportadora = queryTransportadora.Select(t => t).ToList();
-
-            //    foreach (var transportadora in dataTransportadora)
-            //    {
-            //        selectTransportadora.Options.Add(new SelectOption(transportadora.CD_TRANSPORTADORA.ToString(), transportadora.DS_TRANSPORTADORA));
-            //    }
-
-            //    //MONEDA
-            //    var queryMoneda = uow.BuildQuery(new GetMonedaQuery());
-            //    var dataMoneda = queryMoneda.Select(m => m).ToList();
-
-            //    foreach (var moneda in dataMoneda)
-            //    {
-            //        selectMoneda.Options.Add(new SelectOption(moneda.CD_MONEDA.ToString(), moneda.DS_MONEDA));
-            //    }
-
-            //    //ALMACENAJE Y SEGURO
-            //    var queryAlmacenajeSeguro = uow.BuildQuery(new GetAlmacenajeSeguroQuery());
-            //    var dataAlmcenajeSeguro = queryAlmacenajeSeguro.Select(a => a).ToList();
-
-            //    foreach (var almacenajeSeguro in dataAlmcenajeSeguro)
-            //    {
-            //        selectAlmacenajeSeguro.Options.Add(new SelectOption(almacenajeSeguro.TP_ALMACENAJE_Y_SEGURO.ToString(), almacenajeSeguro.DS_ALMACENAJE_Y_SEGURO));
-            //    }
-
+            //{            
             //    //UNIDAD MEDIDA
             //    //GetUnidadMedidaQuery queryUnidadMedida = new GetUnidadMedidaQuery(context);
             //    //var dataUnidadMedida = queryUnidadMedida.GetQuery().Select(e => e).ToList();
