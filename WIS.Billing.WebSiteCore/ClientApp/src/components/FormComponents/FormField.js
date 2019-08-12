@@ -18,7 +18,7 @@ export class InternalField extends Component {
     }
     
     getProps = () => {
-        const { formProps, ...result } = this.props;
+        const { formProps, formik, ...result } = this.props;
 
         return result;
     }

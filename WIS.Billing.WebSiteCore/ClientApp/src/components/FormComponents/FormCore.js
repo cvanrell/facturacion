@@ -356,7 +356,7 @@ class InternalFormCore extends Component {
 
         //this.fields = fields;
 
-        this.props.formik.setAllProperties(values, errors, touched);
+6
 
         //fields.forEach(field => {
         //    if (this.fields && this.fields.some(d => d.id === field.id && (forceValue || d.value !== field.value))) {

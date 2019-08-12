@@ -61,7 +61,7 @@ function FieldSelectInternal(props) {
 
     const selectedOption = options ? options.find(d => d.value === value) : null;
 
-    //valueRef.current = selectedOption;
+    valueRef.current = selectedOption;
 
     if (fieldProps.readOnly) {
         return (
