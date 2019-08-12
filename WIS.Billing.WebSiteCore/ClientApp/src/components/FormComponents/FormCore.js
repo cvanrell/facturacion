@@ -332,8 +332,11 @@ class InternalFormCore extends Component {
         return false;
     }
 
-    updateFields = (fields, forceTouch) => {
+    updateFields = (fields, forceTouch, forceValue) => {
         this.fields = fields;
+        let values = {};
+        let errors = {};
+        let touched = {};
 
         this.fields.forEach(field => {
             this.props.formik.setFieldValue(field.id, field.value, false);
@@ -350,6 +353,32 @@ class InternalFormCore extends Component {
                 this.props.formik.setFieldTouched(field.id, false, false);
             }
         }, this);
+
+        //this.fields = fields;
+
+        this.props.formik.setAllProperties(values, errors, touched);
+
+        //fields.forEach(field => {
+        //    if (this.fields && this.fields.some(d => d.id === field.id && (forceValue || d.value !== field.value))) {
+        //        values[field.id] = field.value || "";
+        //    }
+
+        //    if (field.status === formStatus.error) {
+        //        errors[field.id] = field.errorMessage;
+        //    }
+
+        //    if (forceTouch === formTouchValue.touch) {
+        //        if (!field.readOnly && !field.disabled)
+        //            touched[field.id] = true;
+        //    }
+        //    else if (forceTouch === formTouchValue.clean) {
+        //        touched[field.id] = false;
+        //    }
+        //});
+
+        //this.fields = fields;
+
+        //this.props.formik.setAllProperties(values, errors, touched);
     }
     registerField = (field) => {
         const data = {

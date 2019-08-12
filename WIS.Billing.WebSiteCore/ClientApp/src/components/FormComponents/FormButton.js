@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { withFormContext } from './WithFormContext';
 import { connect } from 'formik-custom';
+import { Spinner } from 'react-bootstrap';
 
 class InternalButton extends Component {
     handleClick = (evt) => {
@@ -8,7 +9,7 @@ class InternalButton extends Component {
     }
 
     getProps = () => {
-        const { formProps, ...result } = this.props;
+        const { formProps, isLoading, ...result } = this.props;
 
         return result;
     }

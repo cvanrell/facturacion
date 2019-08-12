@@ -11,6 +11,8 @@ import { Counter } from './components/Counter';
 
 import { Maintenances } from './components/Maintenances';
 
+
+
 import { FetchMaintenance } from './pages/Maintenances/FetchMaintenance';
 import { AddMaintenance } from './pages/Maintenances/AddMaintenance';
 import { FetchProject } from './pages/Projects/FetchProject';
@@ -22,7 +24,10 @@ import { AddHourRate } from './pages/HourRates/AddHourRate';
 import { FetchHourRate } from './pages/HourRates/FetchHourRate';
 import { CLI010 } from './pages/Clients/CLI010';
 import { CLI020 } from './pages/Clients/CLI020';
-import { PRO010 } from './pages/Projects/PRO010';
+
+
+const PRO010 = React.lazy(() => import('./pages/Projects/PRO010'));
+//import { PRO010 } from './pages/Projects/PRO010';
 
 
 //const Clients = React.lazy(() => import('./pages/Clients/Clients'));
@@ -70,7 +75,9 @@ export class App extends Component {
                         <Route path='/Clients/CLI010' component={CLI010} />
                         <Route path='/Clients/CLI020' component={CLI020} />
 
-                        <Route path='/Projects/PRO010' component={PRO010} />
+                        <Route path='/Projects/PRO010' render={(props) => <PRO010 {...props} />} />
+
+
 
                     </Suspense>
                 </ScrollContextProvider>

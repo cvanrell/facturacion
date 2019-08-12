@@ -2,6 +2,10 @@
 import PropTypes from 'prop-types';
 import { Field } from './FormField';
 import { FieldSelect } from './FormSelect';
+import { FieldSelectAsync } from './FormSelectAsync';
+import { FieldSelectLegacy } from './FormSelectLegacy';
+import { FieldDate } from './FormFieldDate';
+import { FieldDateTime } from './FormFieldDateTime';
 import { StatusMessage } from './FormStatusMessage';
 import { SubmitButton } from './FormSubmitButton';
 import { Button } from './FormButton';
@@ -81,6 +85,10 @@ export const Form = withFormDataProvider(InternalForm);
 export {
     Field,
     FieldSelect,
+    FieldSelectAsync,
+    FieldSelectLegacy,
+    FieldDate,
+    FieldDateTime,
     SubmitButton,
     Button,
     StatusMessage

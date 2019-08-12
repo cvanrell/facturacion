@@ -1,26 +1,29 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useState } from 'react';
 import { Grid } from '../../components/GridComponents/Grid';
 import { Page } from '../../components/Page';
 import Button from 'react-bootstrap/Button'
-import { Form, Field, FieldSelect, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
+import { Form, Field, FieldSelect, FieldSelectAsync, FieldDate, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
-export class PRO010 extends Component {
+export default function PRO010(props) {
 
-    //initialValues = {
-    //    name: "Exito",
-    //    lastname: "",
-    //    password: "Pass",
-    //    type: 2
-    //};
-
-    validationSchema = {
-        //Client: Yup.string().required(),
-        //Currency: Yup.string().required(),
-        //Description: Yup.string().required(),
+    const initialValues = {
+        //name: "Exito",
+        //lastname: "",
+        //password: "Pass",
+        //type: 2
+        Client: "",
+        Currency: "",
+        Descrption: ""
     };
 
-    onBeforeButtonAction = (context, form, query, nexus) => {
+    const validationSchema = {
+        Client: Yup.string().required(),
+        Currency: Yup.string().required(),
+        Description: Yup.string().required(),
+    };
+
+    const onBeforeButtonAction = (context, form, query, nexus) => {
         context.abortServerCall = true;
 
         //nexus.redirect("/stock/STO110");
@@ -59,14 +62,14 @@ export class PRO010 extends Component {
     //    </div>                                
 
 
-    render() {
+    
         return (
-            <Page {...this.props}>
+            <Page {...props}>
 
                 <Form
                     id="PRO010_form_1"
-                    //initialValues={initialValues}
-                    //validationSchema={validationSchema}
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
                 >
                     <div className="col-12">
                         <fieldset className="col-12" >
@@ -122,7 +125,7 @@ export class PRO010 extends Component {
                 </div>
             </Page>
         );
-    }
+    
 
 
 }
