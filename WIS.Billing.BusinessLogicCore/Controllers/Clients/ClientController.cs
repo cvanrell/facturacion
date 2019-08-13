@@ -21,6 +21,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
     {
         private readonly ISessionAccessor _session;
         private readonly IDbConnection _connection;
+        private readonly string _pageName = "CLI010";
         private List<string> GridKeys { get; }
 
         public ClientController(ISessionAccessor session, IDbConnection connection)

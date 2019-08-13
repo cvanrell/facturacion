@@ -18,6 +18,7 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<Maintenance> Maintenances { get; set; }
         public DbSet<T_GRID_USER_CONFIG> T_GRID_USER_CONFIG { get; set; }
         public DbSet<T_GRID_DEFAULT_CONFIG> T_GRID_DEFAULT_CONFIG { get; set; }
+        public DbSet<T_LOG_CLIENT> T_LOG_CLIENT { get; set; }
         //public static DbContextOptions options;
 
 

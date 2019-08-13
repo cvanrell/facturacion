@@ -12,7 +12,9 @@ namespace WIS.Billing.EntitiesCore
         public string Description { get; set; }
         public int Amount { get; set; }        
         public decimal SpecialDiscount { get; set; }
-               
+
+        public DateTime DT_ADDROW { get; set; }
+        public DateTime DT_UPDROW { get; set; }
         public string AdjustmentPeriodicity { get; set; }
         public string Currency { get; set; }
         [MaxLength(1)]

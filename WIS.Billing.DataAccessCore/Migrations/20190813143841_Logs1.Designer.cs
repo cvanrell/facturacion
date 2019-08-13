@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190813143841_Logs1")]
+    partial class Logs1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,28 +320,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.HasAlternateKey("USERID");
 
                     b.ToTable("T_GRID_USER_CONFIG");
-                });
-
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.T_LOG_CLIENT", b =>
-                {
-                    b.Property<int>("NU_LOG")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ACTION");
-
-                    b.Property<string>("DATA")
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<DateTime>("DT_ADDROW");
-
-                    b.Property<string>("ID_CLIENT");
-
-                    b.Property<int>("USER");
-
-                    b.HasKey("NU_LOG");
-
-                    b.ToTable("T_LOG_CLIENT");
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Development", b =>

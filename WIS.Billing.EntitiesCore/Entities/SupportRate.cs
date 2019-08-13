@@ -15,6 +15,8 @@ namespace WIS.Billing.EntitiesCore
         public string Periodicity { get; set; }
         public string AdjustmentPeriodicity { get; set; }
         public decimal SpecialDiscount { get; set; }
+        public DateTime DT_ADDROW { get; set; }
+        public DateTime DT_UPDROW { get; set; }
 
         [MaxLength(1)]
         public string FL_DELETED { get; set; }

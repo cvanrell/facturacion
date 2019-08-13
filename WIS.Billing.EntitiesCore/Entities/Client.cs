@@ -12,8 +12,12 @@ namespace WIS.Billing.EntitiesCore
         public string Description { get; set; }
         public string RUT { get; set; }
         public string Address { get; set; }
+        public DateTime DT_ADDROW { get; set; }
+        public DateTime DT_UPDROW { get; set; }
         [MaxLength(1)]
         public string FL_DELETED { get; set; }
+
+        //Flag por si es extranjero para facturacion
         [MaxLength(1)]
         public string FL_FOREIGN { get; set; }
 
