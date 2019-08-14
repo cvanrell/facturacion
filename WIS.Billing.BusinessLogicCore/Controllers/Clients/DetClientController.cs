@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using WIS.Billing.BusinessLogicCore.DataModel;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.BusinessLogicCore.Controllers;
@@ -21,6 +22,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
     {
         private readonly ISessionAccessor _session;
         private readonly IDbConnection _connection;
+        private readonly string _pageName = "CLI020";
         private List<string> GridKeys { get; }
 
         public DetClientController(ISessionAccessor session, IDbConnection connection)
@@ -69,7 +71,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             string rutCliente = _session.GetValue<string>("RUT");
 
             form.GetField("RUT").Value = rutCliente;
-            
+
             return form;
         }
         public override Form FormSubmit(Form form, FormSubmitQuery query, int userId)
@@ -108,10 +110,10 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         public override Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
             try
-            {                
+            {
                 using (WISDB context = new WISDB())
                 {
-                    var idCliente = _session.GetValue<string>("Id");                    
+                    var idCliente = _session.GetValue<string>("Id");
 
                     if (!string.IsNullOrEmpty(idCliente))
                     {
@@ -128,7 +130,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                 }
             }
             catch (Exception ex)
-            {                
+            {
                 throw new System.Exception("Erro al cargar la grilla:" + grid.Id);
             }
 
@@ -150,54 +152,60 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             //Para realizar commit desde varias grid, pregunto por el id de la misma y derivo a funcionalidad para 
             //ingresar en la tabla que corresponda
             var rutCliente = _session.GetValue<string>("RUT");
-            using (WISDB context = new WISDB())
+
+            using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
             {
+                //using (WISDB context = new WISDB())
+                //{
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
-                    
-                    
+
+
                     //Si la grilla es de tarifas:
-                    if(grid.Id == "CLI020_grid_T")
+                    if (grid.Id == "CLI020_grid_T")
                     {
                         HourRate currentHRate = GridHelper.RowToEntity<HourRate>(row, dataList.ToList());
                         if (row.IsNew)
                         {
-                            AddHourRate(context, currentHRate, rutCliente);
+                            context.ClientRepository.AddHourRate(currentHRate, rutCliente);
+                            //AddHourRate(context, currentHRate, rutCliente);
                         }
                         else if (row.IsDeleted)
                         {
-                            DeleteHourRate(context, currentHRate);
+                            context.ClientRepository.DeleteHourRate(currentHRate);
                         }
                         else
                         {
-                            UpdateHourRate(context, currentHRate, rutCliente);
+                            context.ClientRepository.UpdateHourRate(currentHRate, rutCliente);
                         }
                     }//Si la grilla es de tarifas de soporte
-                    else if(grid.Id ==  "CLI020_grid_S")
+                    else if (grid.Id == "CLI020_grid_S")
                     {
                         SupportRate currentSRate = GridHelper.RowToEntity<SupportRate>(row, dataList.ToList());
                         if (row.IsNew)
                         {
-                            AddSupportRate(context, currentSRate, rutCliente);
+                            //context.ClientRepository.AddSupportRate(currentSRate, rutCliente);
                         }
                         else if (row.IsDeleted)
                         {
-                            DeleteSupportRate(context, currentSRate);
+                            //DeleteSupportRate(context, currentSRate);
                         }
                         else
                         {
-                            UpdateSupportRate(context, currentSRate, rutCliente);
+                            //UpdateSupportRate(context, currentSRate, rutCliente);
                         }
                     }
 
-                    
+
 
 
                     //context.SaveChanges();
                 }
 
+                //}
             }
+
             return grid;
         }
 
@@ -249,7 +257,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
 
             grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
-        
+
 
             return grid;
         }
@@ -346,12 +354,12 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             if (client != null)
             {
                 //Verificar que no existe una tarifa de hora con los mismos datos
-                HourRate hr = context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id && 
+                HourRate hr = context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id &&
                                 x.Currency == hRate.Currency && x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
                                 x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
 
                 //La tarifa existe
-                if(hr != null)
+                if (hr != null)
                 {
                     //Si registro estaba eliminado, lo vuelvo a activar
                     if (hr.FL_DELETED == "S")
@@ -381,7 +389,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             }
             else
             {
-                throw new Exception("No se encontro el cliente especificado");                
+                throw new Exception("No se encontro el cliente especificado");
             }
         }
 
@@ -393,7 +401,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                 throw new Exception("No se encuentra la tarifa especificada");
             }
             else
-            {                
+            {
                 hr.Description = hRate.Description;
                 hr.Currency = hRate.Currency;
                 hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
@@ -422,13 +430,13 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         #region TARIFAS DE SOPORTE
         public void AddSupportRate(WISDB context, SupportRate sRate, string rutCliente)
         {
-            Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);            
+            Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
             if (client != null)
             {
                 //Verificar que no existe una tarifa de hora con los mismos datos
                 SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Client.Id == client.Id &&
                                 x.Currency == sRate.Currency && x.AdjustmentPeriodicity == sRate.AdjustmentPeriodicity &&
-                                x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount && 
+                                x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount &&
                                 x.IVA == sRate.IVA && x.Periodicity == sRate.Periodicity);
 
                 //No existe tarifa, puede agregarla

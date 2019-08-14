@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using WIS.Billing.BusinessLogicCore.DataModel;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.BusinessLogicCore.Controllers;
@@ -97,7 +98,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         {
             using (WISDB context = new WISDB())
             {
-                var query = context.Clients.Where(x => x.FL_DELETED == "N" );
+                var query = context.Clients.Where(x => x.FL_DELETED == "N");
 
                 var defaultSort = new SortCommand("Description", SortDirection.Ascending);
 
@@ -109,8 +110,10 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
         public override Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId)
         {
-            using (WISDB context = new WISDB())
+            using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
             {
+                //using (WISDB context = new WISDB())
+                //{
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
@@ -122,23 +125,27 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
 
                     if (row.IsNew)
-                    {
-                        AddClient(context, currentClient);
+                    {                        
+                        context.ClientRepository.AddClient(currentClient);
                     }
                     else if (row.IsDeleted)
                     {
-                        DeleteClient(context, currentClient);
+                        context.ClientRepository.DeleteClient(currentClient);
+                        //DeleteClient(context, currentClient);
                     }
                     else
                     {
-                        UpdateClient(context, currentClient);
+                        context.ClientRepository.UpdateClient(currentClient);
+                        //UpdateClient(context, currentClient);
                     }
 
 
                     context.SaveChanges();
                 }
 
+                //}
             }
+
             return grid;
         }
 
@@ -199,60 +206,61 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
         }
 
-        public void AddClient(WISDB context, Client c)
-        {            
-            Client client = CheckIfClientExists(context, c);
-            if (client != null)
-            {
-                if (client.FL_DELETED == "S")
-                {
-                    client.FL_DELETED = "N";
-                }
-                else {
-                    throw new Exception("Ya existe un cliente con el RUT especificado");
-                }
-            }
-            else
-            {
-                client = new Client()
-                {
-                    Address = c.Address,
-                    Description = c.Description,
-                    RUT = c.RUT,
-                    FL_DELETED = "N",
-                };
-                context.Clients.Add(client);
-                context.SaveChanges();
-            }
-        }
+        //public void AddClient(WISDB context, Client c)
+        //{
+        //    Client client = CheckIfClientExists(context, c);
+        //    if (client != null)
+        //    {
+        //        if (client.FL_DELETED == "S")
+        //        {
+        //            client.FL_DELETED = "N";
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("Ya existe un cliente con el RUT especificado");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        client = new Client()
+        //        {
+        //            Address = c.Address,
+        //            Description = c.Description,
+        //            RUT = c.RUT,
+        //            FL_DELETED = "N",
+        //        };
+        //        context.Clients.Add(client);
+        //        context.SaveChanges();
+        //    }
+        //}
 
-        public void UpdateClient(WISDB context, Client c)
-        {
-            Client client = CheckIfClientExists(context, c);
-            if (client == null)
-            {
-                throw new Exception("No se encuentra el cliente especificado");
-            }
-            else
-            {
-                client.Address = c.Address;
-                client.Description = c.Description;
-                context.SaveChanges();
-            }
-        }
+        //public void UpdateClient(WISDB context, Client c)
+        //{
+        //    Client client = CheckIfClientExists(context, c);
+        //    if (client == null)
+        //    {
+        //        throw new Exception("No se encuentra el cliente especificado");
+        //    }
+        //    else
+        //    {
+        //        client.Address = c.Address;
+        //        client.Description = c.Description;
+        //        context.SaveChanges();
+        //    }
+        //}
 
-        public void DeleteClient(WISDB context, Client c)
-        {
-            Client client = CheckIfClientExists(context, c);
-            if (client == null)
-            {
-                throw new Exception("No se encuentra el cliente que desea eliminar");
-            }
-            else
-            {
-                client.FL_DELETED = "S";
-                context.SaveChanges();
-            }
-        }
+        //public void DeleteClient(WISDB context, Client c)
+        //{
+        //    Client client = CheckIfClientExists(context, c);
+        //    if (client == null)
+        //    {
+        //        throw new Exception("No se encuentra el cliente que desea eliminar");
+        //    }
+        //    else
+        //    {
+        //        client.FL_DELETED = "S";
+        //        context.SaveChanges();
+        //    }
+        //}
     }
 }

@@ -19,9 +19,4 @@
     <ProjectReference Include="..\WIS.Billing.EntitiesCore\WIS.Billing.EntitiesCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataModel\Mappers\" />
-    <Folder Include="DataModel\Repositories\" />
-  </ItemGroup>
-
 </Project>
