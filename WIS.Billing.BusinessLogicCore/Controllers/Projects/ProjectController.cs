@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using WIS.Billing.BusinessLogicCore.Controllers;
+using WIS.Billing.BusinessLogicCore.DataModel;
 using WIS.Billing.BusinessLogicCore.Enums;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
@@ -23,6 +24,7 @@ namespace WIS.Billing.BusinessLogicCore
     {
         private readonly ISessionAccessor _session;
         private readonly IDbConnection _connection;
+        private readonly string _pageName = "PRO010";
         private List<string> GridKeys { get; }
 
         public ProjectController(ISessionAccessor session, IDbConnection connection)
@@ -86,7 +88,7 @@ namespace WIS.Billing.BusinessLogicCore
         {
             //Inicializar selects
             FormField selectCurrency = form.GetField("Currency");
-            
+
             selectCurrency.Options = new List<SelectOption>();
 
             FormField selectClient = form.GetField("Client");
@@ -101,7 +103,7 @@ namespace WIS.Billing.BusinessLogicCore
             selectCurrency.Options.Add(new SelectOption(TipoMoneda.Pesos.ToString(), TipoMoneda.Pesos.ToString()));
 
 
-            using(WISDB context = new WISDB())
+            using (WISDB context = new WISDB())
             {
                 //CLIENTES
                 var clients = context.Clients.ToList();
@@ -155,8 +157,10 @@ namespace WIS.Billing.BusinessLogicCore
 
         public override Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId)
         {
-            using (WISDB context = new WISDB())
+            using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
             {
+                //using (WISDB context = new WISDB())
+                //{
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
@@ -167,6 +171,7 @@ namespace WIS.Billing.BusinessLogicCore
 
                     if (row.IsNew)
                     {
+                        
                         AddProject(context, currentProject);
                     }
                     else if (row.IsDeleted)
@@ -182,6 +187,7 @@ namespace WIS.Billing.BusinessLogicCore
                     context.SaveChanges();
                 }
 
+                //}
             }
             return grid;
         }
@@ -211,7 +217,7 @@ namespace WIS.Billing.BusinessLogicCore
             else
             {
                 project = new Project()
-                {                     
+                {
                     Description = p.Description,
                     Currency = p.Currency,
                     Amount = p.Amount,
@@ -222,7 +228,7 @@ namespace WIS.Billing.BusinessLogicCore
                     FL_DELETED = "N",
                 };
                 //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
-                if(client.FL_FOREIGN == "S")
+                if (client.FL_FOREIGN == "S")
                 {
                     project.IVA = 0;
                 }

@@ -7,6 +7,7 @@ using WIS.Billing.BusinessLogicCore.DataModel.Mappers;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.Billing.EntitiesCore.Entities;
+using WIS.Billing.EntitiesCore.LogsEntities;
 
 namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 {
@@ -149,7 +150,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                         hr.FL_DELETED = "N";
                         hr.DT_UPDROW = DateTime.Now;
 
-                        //insertar log de detalle 
+                        _context.SaveChanges();
+                        LogHourRate(hr, client, "UPDATE");
                     }
                     else
                     {
@@ -185,6 +187,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         public void UpdateHourRate(HourRate hRate, string rutCliente)
         {
             HourRate hr = _context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+            Client client;
+
             if (hr == null)
             {
                 throw new Exception("No se encuentra la tarifa especificada");
@@ -196,16 +200,21 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
                 hr.Amount = hRate.Amount;
                 hr.SpecialDiscount = hRate.SpecialDiscount;
-                //hr.DT_UPDROW = Datetime.Now;
+                hr.DT_UPDROW = DateTime.Now;
 
-                //insertar en log 
-                //context.SaveChanges();
+
+                _context.SaveChanges();
+
+                client = CheckIfClientExists(hr.Client);
+
+                LogHourRate(hr, client, "UPDATE");
             }
         }
 
         public void DeleteHourRate(HourRate hRate)
         {
             HourRate hr = _context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+            Client client;
             if (hr == null)
             {
                 throw new Exception("No se encuentra la tarifa que desea eliminar");
@@ -215,16 +224,18 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
 
                 hr.FL_DELETED = "S";
-                //hr.DT_UPDROW = Datetime.Now;
+                hr.DT_UPDROW = DateTime.Now;
 
                 //Insertar en log 
-                //context.SaveChanges();
+                _context.SaveChanges();
+                client = CheckIfClientExists(hr.Client);
+
+                LogHourRate(hr, client, "UPDATE");
             }
         }
 
         public HourRate CheckIfHourRateExists(HourRate hRate, Client client)
         {
-            Client c = CheckIfClientExists(client);
             HourRate hr = _context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id &&
                                 x.Currency == hRate.Currency && x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
                                 x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
@@ -240,10 +251,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             if (client != null)
             {
                 //Verificar que no existe una tarifa de hora con los mismos datos
-                SupportRate sr = _context.SupportRates.FirstOrDefault(x => x.Client.Id == client.Id &&
-                                x.Currency == sRate.Currency && x.AdjustmentPeriodicity == sRate.AdjustmentPeriodicity &&
-                                x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount &&
-                                x.IVA == sRate.IVA && x.Periodicity == sRate.Periodicity);
+                SupportRate sr = CheckIfSupportRateExists(sRate, client);
 
                 //No existe tarifa, puede agregarla
                 if (sr != null)
@@ -318,10 +326,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         #endregion
         #endregion
 
-
-
-        #region LOGS
-
+        #region LOGs
 
         public void LogClient(Client c, string action)
         {
@@ -343,12 +348,12 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             this._context.T_LOG_CLIENT.Add(l);
         }
 
-        public void LogHourRate(HourRate hr,Client c, string action)
+        public void LogHourRate(HourRate hr, Client c, string action)
         {
             HourRate hRate = CheckIfHourRateExists(hr, c);
 
-            //CREAR UNA CLASE CON LOS CAMPOS QUE NECESITO DE HourRate Y CAMBIARLA POR LA CLASE ANONIMA QUE PASO POR PARAMETRO
-            string json = JsonConvert.SerializeObject(new {
+            HourRateLogObject hrLog = new HourRateLogObject()
+            {
                 Id = hRate.Id.ToString(),
                 Description = hRate.Description,
                 Currency = hRate.Currency,
@@ -358,27 +363,95 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 FL_DELETED = hRate.FL_DELETED,
                 DT_ADDROW = hRate.DT_ADDROW,
                 DT_UPDROW = hRate.DT_UPDROW,
-                Client = new
+                ClientLogObject = new ClientLogObject
                 {
-                    Id = hRate.Client.Id.ToString()
+                    Id = hRate.Client.Id.ToString(),
+                    Description = hRate.Client.Description,
+                    RUT = hRate.Client.RUT,
+                    Address = hRate.Client.Address,
+                    FL_DELETED = hRate.Client.FL_DELETED,
+                    FL_FOREIGN = hRate.Client.FL_FOREIGN,
+                    DT_ADDROW = hRate.Client.DT_ADDROW,
+                    DT_UPDROW = hRate.Client.DT_UPDROW,
+                    Country = hRate.Client.Country,
                 }
-            });
-
-
-
-            T_LOG_HOUR_RATE l = new T_LOG_HOUR_RATE()
-            {
-                USER = this._userId,
-                ACTION = action,
-                DT_ADDROW = DateTime.Now,
-                DATA = json,
-                PAGE = "CLI020",
-                ID_HOUR_RATE = hr.Id.ToString()
             };
+            string json = JsonConvert.SerializeObject(hrLog);
+            {
+                T_LOG_HOUR_RATE l = new T_LOG_HOUR_RATE()
+                {
+                    USER = this._userId,
+                    ACTION = action,
+                    DT_ADDROW = DateTime.Now,
+                    DATA = json,
+                    PAGE = "CLI020",
+                    ID_HOUR_RATE = hr.Id.ToString()
+                };
 
-            this._context.T_LOG_HOUR_RATE.Add(l);
+                this._context.T_LOG_HOUR_RATE.Add(l);
+                HourRateLogObject jsonDeserialized = JsonConvert.DeserializeObject<HourRateLogObject>(l.DATA);
+            }
+        }
+
+        public void LogSupportRate(SupportRate sr, Client c, string action)
+        {
+            SupportRate sRate = CheckIfSupportRateExists(sr, c);
+
+            SupportRateObjectLog srLog = new SupportRateObjectLog()
+            {
+                Id = sRate.Id.ToString(),
+                Description = sRate.Description,
+                Currency = sRate.Currency,
+                IVA = sRate.IVA,
+                AdjustmentPeriodicity = sRate.AdjustmentPeriodicity,
+                Periodicity = sRate.Periodicity,
+                Amount = sRate.Amount,
+                SpecialDiscount = sRate.SpecialDiscount,
+                FL_DELETED = sRate.FL_DELETED,
+                DT_ADDROW = sRate.DT_ADDROW,
+                DT_UPDROW = sRate.DT_UPDROW,
+                ClientLogObject = new ClientLogObject
+                {
+                    Id = sRate.Client.Id.ToString(),
+                    Description = sRate.Client.Description,
+                    RUT = sRate.Client.RUT,
+                    Address = sRate.Client.Address,
+                    FL_DELETED = sRate.Client.FL_DELETED,
+                    FL_FOREIGN = sRate.Client.FL_FOREIGN,
+                    DT_ADDROW = sRate.Client.DT_ADDROW,
+                    DT_UPDROW = sRate.Client.DT_UPDROW,
+                    Country = sRate.Client.Country,
+                }
+            };
+            string json = JsonConvert.SerializeObject(srLog);
+            {
+                T_LOG_HOUR_RATE l = new T_LOG_HOUR_RATE()
+                {
+                    USER = this._userId,
+                    ACTION = action,
+                    DT_ADDROW = DateTime.Now,
+                    DATA = json,
+                    PAGE = "CLI020",
+                    ID_HOUR_RATE = sr.Id.ToString()
+                };
+                this._context.T_LOG_HOUR_RATE.Add(l);
+            }
+        }
+
+        public void LogProject(Project p)
+        {
+
         }
 
         #endregion
+
+        public SupportRate CheckIfSupportRateExists(SupportRate sRate, Client client)
+        {            
+            SupportRate sr = _context.SupportRates.FirstOrDefault(x => x.Client.Id == client.Id &&
+                                x.Currency == sRate.Currency && x.AdjustmentPeriodicity == sRate.AdjustmentPeriodicity &&
+                                x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount &&
+                                x.IVA == sRate.IVA && x.Periodicity == sRate.Periodicity);
+            return sr;
+        }
     }
 }
