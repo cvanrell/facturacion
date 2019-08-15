@@ -6,6 +6,7 @@ using System.Text;
 using WIS.Billing.BusinessLogicCore.DataModel.Mappers;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
+using WIS.Billing.EntitiesCore.Entities;
 
 namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 {
@@ -31,7 +32,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         #region CLIENT
 
-        public void AddClient( Client c)
+        public void AddClient(Client c)
         {
             Client client = CheckIfClientExists(c);
             if (client != null)
@@ -41,6 +42,9 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     client.FL_DELETED = "N";
                     client.DT_UPDROW = DateTime.Now;
                     //en log poner que la accion fue un insert pero en json de data, poner client.FL_DELETED = "N";
+                    this._context.SaveChanges();
+
+                    LogClient(client, "UPDATE");
 
                 }
                 else
@@ -61,11 +65,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     DT_UPDROW = DateTime.Now,
                 };
 
-                
+
 
 
                 this._context.Clients.Add(client);
-                _context.SaveChanges();
+                this._context.SaveChanges();
 
                 //Hacer ingreso de log aca
                 LogClient(client, "INSERT");
@@ -85,14 +89,12 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 client.Description = c.Description;
                 client.DT_UPDROW = DateTime.Now;
 
-                //Hacer ingreso de log aca
-
-
-                //context.SaveChanges();
+                _context.SaveChanges();
+                LogClient(client, "UPDATE");
             }
         }
 
-        public void DeleteClient( Client c)
+        public void DeleteClient(Client c)
         {
             Client client = CheckIfClientExists(c);
             if (client == null)
@@ -102,11 +104,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             else
             {
                 client.FL_DELETED = "S";
+                client.DT_UPDROW = DateTime.Now;
 
-                //Hacer ingreso de log aca (accion delete y en campo DATA poner client.FL_DELETED = "S";)
+                _context.SaveChanges();
 
-
-                //context.SaveChanges();
+                LogClient(client, "DELETE");
             }
         }
 
@@ -128,17 +130,15 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         #region DET_CLIENTS
 
-        #region TARIFAS DE SOPORTE
+        #region TARIFAS DE HORAS
         public void AddHourRate(HourRate hRate, string rutCliente)
         {
             Client client = _context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
-            //Client client = Utils.CheckIfClientExists(context, c);
+
             if (client != null)
             {
                 //Verificar que no existe una tarifa de hora con los mismos datos
-                HourRate hr = _context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id &&
-                                x.Currency == hRate.Currency && x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
-                                x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
+                HourRate hr = CheckIfHourRateExists(hRate, client);
 
                 //La tarifa existe
                 if (hr != null)
@@ -147,7 +147,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     if (hr.FL_DELETED == "S")
                     {
                         hr.FL_DELETED = "N";
-                        //hr.DT_UPDROW = Datetime.Now;
+                        hr.DT_UPDROW = DateTime.Now;
 
                         //insertar log de detalle 
                     }
@@ -166,12 +166,14 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                         AdjustmentPeriodicity = hRate.AdjustmentPeriodicity,
                         Amount = hRate.Amount,
                         SpecialDiscount = hRate.SpecialDiscount,
-                        FL_DELETED = "N"
-                        //hr.DT_ADDROW = Datetime.Now;
-                        //hr.DT_UPDROW = Datetime.Now;
+                        FL_DELETED = "N",
+                        DT_ADDROW = DateTime.Now,
+                        DT_UPDROW = DateTime.Now
                     };
                     this._context.HourRates.Add(newHR);
-                    //context.SaveChanges();
+                    this._context.SaveChanges();
+
+                    LogHourRate(newHR, client, "INSERT");
                 }
             }
             else
@@ -218,6 +220,15 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 //Insertar en log 
                 //context.SaveChanges();
             }
+        }
+
+        public HourRate CheckIfHourRateExists(HourRate hRate, Client client)
+        {
+            Client c = CheckIfClientExists(client);
+            HourRate hr = _context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id &&
+                                x.Currency == hRate.Currency && x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
+                                x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
+            return hr;
         }
         #endregion
 
@@ -317,15 +328,57 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             Client client = CheckIfClientExists(c);
             string json = JsonConvert.SerializeObject(c);
 
+
+
             T_LOG_CLIENT l = new T_LOG_CLIENT()
             {
                 USER = this._userId,
                 ACTION = action,
                 DT_ADDROW = DateTime.Now,
                 DATA = json,
+                PAGE = "CLI010",
                 ID_CLIENT = client.Id.ToString()
             };
+
+            this._context.T_LOG_CLIENT.Add(l);
         }
+
+        public void LogHourRate(HourRate hr,Client c, string action)
+        {
+            HourRate hRate = CheckIfHourRateExists(hr, c);
+
+            //CREAR UNA CLASE CON LOS CAMPOS QUE NECESITO DE HourRate Y CAMBIARLA POR LA CLASE ANONIMA QUE PASO POR PARAMETRO
+            string json = JsonConvert.SerializeObject(new {
+                Id = hRate.Id.ToString(),
+                Description = hRate.Description,
+                Currency = hRate.Currency,
+                AdjustmentPeriodicity = hRate.AdjustmentPeriodicity,
+                Amount = hRate.Amount,
+                SpecialDiscount = hRate.SpecialDiscount,
+                FL_DELETED = hRate.FL_DELETED,
+                DT_ADDROW = hRate.DT_ADDROW,
+                DT_UPDROW = hRate.DT_UPDROW,
+                Client = new
+                {
+                    Id = hRate.Client.Id.ToString()
+                }
+            });
+
+
+
+            T_LOG_HOUR_RATE l = new T_LOG_HOUR_RATE()
+            {
+                USER = this._userId,
+                ACTION = action,
+                DT_ADDROW = DateTime.Now,
+                DATA = json,
+                PAGE = "CLI020",
+                ID_HOUR_RATE = hr.Id.ToString()
+            };
+
+            this._context.T_LOG_HOUR_RATE.Add(l);
+        }
+
         #endregion
     }
 }

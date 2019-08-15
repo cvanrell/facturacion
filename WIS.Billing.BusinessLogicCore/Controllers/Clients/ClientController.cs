@@ -117,11 +117,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
-                    Client currentClient = GridHelper.RowToEntity<Client>(row, dataList.ToList());
-                    //Chequeo si el cliente existe buscando por RUT
-                    //Client clientExists = CheckIfClientExists(currentClient);
-                    //Client clientExists = context.Clients.FirstOrDefault(x => x.RUT == currentClient.RUT);
-
+                    Client currentClient = GridHelper.RowToEntity<Client>(row, dataList.ToList());                    
 
 
                     if (row.IsNew)
@@ -192,19 +188,19 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             return data;
         }
 
-        public Client CheckIfClientExists(WISDB context, Client client)
-        {
-            Client c = context.Clients.FirstOrDefault(x => x.RUT == client.RUT);
-            if (c != null)
-            {
-                return c;
-            }
-            else
-            {
-                return null;
-            }
+        //public Client CheckIfClientExists(WISDB context, Client client)
+        //{
+        //    Client c = context.Clients.FirstOrDefault(x => x.RUT == client.RUT);
+        //    if (c != null)
+        //    {
+        //        return c;
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
 
-        }
+        //}
 
         //public void AddClient(WISDB context, Client c)
         //{

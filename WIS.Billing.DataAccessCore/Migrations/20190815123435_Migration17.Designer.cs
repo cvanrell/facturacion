@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190815123435_Migration17")]
+    partial class Migration17
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +74,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.ToTable("Developments");
                 });
 
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_HOUR_RATE", b =>
+            modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_DET_CLIENT", b =>
                 {
                     b.Property<int>("NU_LOG")
                         .ValueGeneratedOnAdd()
@@ -85,7 +87,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<DateTime>("DT_ADDROW");
 
-                    b.Property<string>("ID_HOUR_RATE");
+                    b.Property<string>("ID_DET_CLIENT");
 
                     b.Property<string>("PAGE");
 
@@ -93,7 +95,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.HasKey("NU_LOG");
 
-                    b.ToTable("T_LOG_HOUR_RATE");
+                    b.ToTable("T_LOG_DET_CLIENT");
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_PROJECT", b =>
@@ -118,30 +120,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.HasKey("NU_LOG");
 
                     b.ToTable("T_LOG_PROJECT");
-                });
-
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_SUPPORT_RATE", b =>
-                {
-                    b.Property<int>("NU_LOG")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ACTION");
-
-                    b.Property<string>("DATA")
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<DateTime>("DT_ADDROW");
-
-                    b.Property<string>("ID_SUPPORT_RATE");
-
-                    b.Property<string>("PAGE");
-
-                    b.Property<int>("USER");
-
-                    b.HasKey("NU_LOG");
-
-                    b.ToTable("T_LOG_SUPPORT_RATE");
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Fee", b =>

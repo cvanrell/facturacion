@@ -5,6 +5,7 @@ using WIS.Billing.EntitiesCore;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WIS.Billing.EntitiesCore.Entities;
 
 namespace WIS.Billing.DataAccessCore.Database
 {    
@@ -19,6 +20,9 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<T_GRID_USER_CONFIG> T_GRID_USER_CONFIG { get; set; }
         public DbSet<T_GRID_DEFAULT_CONFIG> T_GRID_DEFAULT_CONFIG { get; set; }
         public DbSet<T_LOG_CLIENT> T_LOG_CLIENT { get; set; }
+        public DbSet<T_LOG_HOUR_RATE> T_LOG_HOUR_RATE { get; set; }
+        public DbSet<T_LOG_SUPPORT_RATE> T_LOG_SUPPORT_RATE { get; set; }
+        public DbSet<T_LOG_PROJECT> T_LOG_PROJECT { get; set; }
         //public static DbContextOptions options;
 
 

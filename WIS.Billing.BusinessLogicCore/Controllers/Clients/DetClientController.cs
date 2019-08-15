@@ -200,7 +200,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
 
 
-                    //context.SaveChanges();
+                    context.SaveChanges();
                 }
 
                 //}

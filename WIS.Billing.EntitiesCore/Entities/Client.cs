@@ -21,6 +21,8 @@ namespace WIS.Billing.EntitiesCore
         [MaxLength(1)]
         public string FL_FOREIGN { get; set; }
 
+        public string Country { get; set; }
+
 
         public List<HourRate> HourRates { get; set; }        
         public List<Project> Projects { get; set; }
