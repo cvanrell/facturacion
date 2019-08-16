@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using WIS.Billing.BusinessLogicCore.DataModel.Mappers;
 using WIS.Billing.DataAccessCore.Database;
+using WIS.Billing.EntitiesCore;
+using WIS.Billing.EntitiesCore.Entities;
+using WIS.Billing.EntitiesCore.LogsEntities;
 
 namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 {
@@ -21,16 +26,20 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             this._mapper = new ProjectMapper();
         }
 
+        #region PROYECTOS
 
-        public void AddProject(WISDB context, Project p)
+        public void AddProject(Project p)
         {
-            Client client = context.Clients.FirstOrDefault(x => x.Id == p.Id);
-            Project project = context.Projects.FirstOrDefault(x => x.Description == p.Description);
+            //Client client = _context.Clients.FirstOrDefault(x => x.Id == p.Client.Id);
+            Project project = CheckIfProjectExists(p);
             if (project != null)
             {
                 if (project.FL_DELETED == "S")
                 {
                     project.FL_DELETED = "N";
+                    project.DT_UPDROW = DateTime.Now;
+
+                    //LOG ACA
                 }
                 else
                 {
@@ -49,49 +58,111 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     InitialDate = p.InitialDate,
                     TotalAmount = p.Total,
                     FL_DELETED = "N",
-                };
+                    DT_ADDROW = DateTime.Now,
+                    DT_UPDROW = DateTime.Now,
+            };
                 //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
-                if (client.FL_FOREIGN == "S")
-                {
-                    project.IVA = 0;
-                }
-                context.Projects.Add(project);
-                context.SaveChanges();
+                //if (client.FL_FOREIGN == "S")
+                //{
+                //    project.IVA = 0;
+                //}
+                this._context.Projects.Add(project);
+                this._context.SaveChanges();
+
+                //LOG ACA
+                LogProject(project, "INSERT");
             }
         }
 
-        public void UpdateProject(WISDB context, Project p)
+        //public void UpdateProject(Project p)
+        //{
+        //    Project project = context.Projects.FirstOrDefault(x => x.Id == p.Id);
+        //    if (project == null)
+        //    {
+        //        throw new Exception("No se encuentra el proyecto especificado");
+        //    }
+        //    else
+        //    {
+        //        project.Description = p.Description;
+        //        project.Currency = p.Currency;
+        //        project.Amount = p.Amount;
+        //        project.IVA = p.IVA;
+        //        project.Total = p.Total;
+        //        project.InitialDate = p.InitialDate;
+        //        project.TotalAmount = p.TotalAmount;
+        //        context.SaveChanges();
+        //    }
+        //}
+
+        //public void DeleteProject(Project p)
+        //{
+        //    Project project = context.Projects.FirstOrDefault(x => x.Id == p.Id);
+        //    if (project == null)
+        //    {
+        //        throw new Exception("No se encuentra el proyecto que desea eliminar");
+        //    }
+        //    else
+        //    {
+        //        project.FL_DELETED = "S";
+        //        context.SaveChanges();
+        //    }
+        //}
+
+        #endregion
+
+        public Project CheckIfProjectExists(Project p)
         {
-            Project project = context.Projects.FirstOrDefault(x => x.Id == p.Id);
-            if (project == null)
-            {
-                throw new Exception("No se encuentra el proyecto especificado");
-            }
-            else
-            {
-                project.Description = p.Description;
-                project.Currency = p.Currency;
-                project.Amount = p.Amount;
-                project.IVA = p.IVA;
-                project.Total = p.Total;
-                project.InitialDate = p.InitialDate;
-                project.TotalAmount = p.TotalAmount;
-                context.SaveChanges();
-            }
+            Project pro = this._context.Projects.FirstOrDefault(x => x.Description == p.Description);
+            return pro;
         }
 
-        public void DeleteProject(WISDB context, Project p)
+        #region LOGS
+
+        public void LogProject(Project p, string action)
         {
-            Project project = context.Projects.FirstOrDefault(x => x.Id == p.Id);
-            if (project == null)
+            Project project = CheckIfProjectExists(p);
+            //Client c;
+            ProjectLogObject pLog = new ProjectLogObject()
             {
-                throw new Exception("No se encuentra el proyecto que desea eliminar");
-            }
-            else
+                Id = project.Id.ToString(),
+                Description = project.Description,
+                Currency = project.Currency,
+                Amount = project.Amount,
+                IVA = project.IVA,
+                Total = project.Total,
+                InitialDate = project.InitialDate,
+                TotalAmount = project.TotalAmount,
+                FL_DELETED = project.FL_DELETED,
+                DT_ADDROW = project.DT_ADDROW,
+                DT_UPDROW = project.DT_UPDROW,
+                //ClientLogObject = new ClientLogObject()
+                //{
+                //    Id = project.Client.Id.ToString(),
+                //    Description = project.Client.Description,
+                //    RUT = project.Client.RUT,
+                //    Address = project.Client.Address,
+                //    FL_DELETED = project.Client.FL_DELETED,
+                //    FL_FOREIGN = project.Client.FL_FOREIGN,
+                //    DT_ADDROW = project.Client.DT_ADDROW,
+                //    DT_UPDROW = project.Client.DT_UPDROW,
+                //}
+            };
+
+            string json = JsonConvert.SerializeObject(pLog);
+
+            T_LOG_PROJECT l = new T_LOG_PROJECT()
             {
-                project.FL_DELETED = "S";
-                context.SaveChanges();
-            }
+                ID_PROJECT = p.Id.ToString(),
+                USER = _userId,
+                DT_ADDROW = DateTime.Now,
+                ACTION = action,
+                DATA = json,
+                PAGE = "PRO010"
+            };
+
+            this._context.T_LOG_PROJECT.Add(l);
         }
+
+        #endregion
     }
 }

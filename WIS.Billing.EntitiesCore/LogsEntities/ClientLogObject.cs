@@ -13,7 +13,6 @@ namespace WIS.Billing.EntitiesCore.LogsEntities
         public DateTime DT_ADDROW { get; set; }
         public DateTime DT_UPDROW { get; set; }
         public string FL_DELETED { get; set; }
-        public string FL_FOREIGN { get; set; }
-        public string Country { get; set; }
+        public string FL_FOREIGN { get; set; }        
     }
 }

@@ -372,8 +372,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_DELETED = hRate.Client.FL_DELETED,
                     FL_FOREIGN = hRate.Client.FL_FOREIGN,
                     DT_ADDROW = hRate.Client.DT_ADDROW,
-                    DT_UPDROW = hRate.Client.DT_UPDROW,
-                    Country = hRate.Client.Country,
+                    DT_UPDROW = hRate.Client.DT_UPDROW,                    
                 }
             };
             string json = JsonConvert.SerializeObject(hrLog);
@@ -419,8 +418,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_DELETED = sRate.Client.FL_DELETED,
                     FL_FOREIGN = sRate.Client.FL_FOREIGN,
                     DT_ADDROW = sRate.Client.DT_ADDROW,
-                    DT_UPDROW = sRate.Client.DT_UPDROW,
-                    Country = sRate.Client.Country,
+                    DT_UPDROW = sRate.Client.DT_UPDROW,                    
                 }
             };
             string json = JsonConvert.SerializeObject(srLog);
@@ -436,12 +434,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 };
                 this._context.T_LOG_HOUR_RATE.Add(l);
             }
-        }
-
-        public void LogProject(Project p)
-        {
-
-        }
+        }        
 
         #endregion
 

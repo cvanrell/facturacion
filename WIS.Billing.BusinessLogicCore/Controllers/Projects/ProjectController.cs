@@ -171,16 +171,16 @@ namespace WIS.Billing.BusinessLogicCore
 
                     if (row.IsNew)
                     {
-                        
-                        AddProject(context, currentProject);
+                        context.ProjectRepository.AddProject(currentProject);
+                        //AddProject(context, currentProject);
                     }
                     else if (row.IsDeleted)
                     {
-                        DeleteProject(context, currentProject);
+                        //DeleteProject(context, currentProject);
                     }
                     else
                     {
-                        UpdateProject(context, currentProject);
+                        //UpdateProject(context, currentProject);
                     }
 
 

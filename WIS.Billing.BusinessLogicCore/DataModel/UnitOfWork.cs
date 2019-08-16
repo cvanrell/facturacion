@@ -22,6 +22,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
 
         
         public ClientRepository ClientRepository { get; set; }
+        public ProjectRepository ProjectRepository { get; set; }
         
 
         public UnitOfWork(string application, int userId)
@@ -31,6 +32,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
             this._userId = userId;
             
             this.ClientRepository = new ClientRepository(this._context, this._appplication, this._userId);
+            this.ProjectRepository = new ProjectRepository(this._context, this._appplication, this._userId);
         }
 
         public void BeginTransaction()
