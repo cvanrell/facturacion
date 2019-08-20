@@ -32,12 +32,7 @@ export class NavMenu extends Component {
                             <NavItem>
                                 <FontAwesomeIcon icon='fas fa-user' /> Clientes
                             </NavItem>
-                        </Link>
-                        <Link to={'/Clients/CLI020'} exact>
-                            <NavItem>
-                                <FontAwesomeIcon icon='fas fa-user' /> Det
-                            </NavItem>
-                        </Link>
+                        </Link>                        
                         <Link to={'/fetchmaintenance'} exact>
                             <NavItem>
                                 <FontAwesomeIcon icon='wrench' /> Mantenimientos

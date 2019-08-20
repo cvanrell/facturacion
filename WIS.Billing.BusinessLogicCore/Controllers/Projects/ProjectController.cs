@@ -9,6 +9,7 @@ using WIS.Billing.BusinessLogicCore.Enums;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.BusinessLogicCore.Controllers;
+using WIS.BusinessLogicCore.FormUtil.Validation;
 using WIS.BusinessLogicCore.GridUtil.Services;
 using WIS.CommonCore.App;
 using WIS.CommonCore.Enums;
@@ -68,9 +69,36 @@ namespace WIS.Billing.BusinessLogicCore
         }
         public override Form FormSubmit(Form form, FormSubmitQuery query, int userId)
         {
-            form.GetField("address").Value = "Submitted and commited";
+            //form.GetField("address").Value = "Submitted and commited";
 
             //query.Redirect = "/stock/STO110";
+            try
+            {                
+                Project project = new Project()
+                {
+                    Description = form.GetField("Description").Value,
+                    Amount = Decimal.Parse(form.GetField("Amount").Value) ,
+                    Currency = form.GetField("Currency").Value,
+                    IVA = Decimal.Parse(form.GetField("IVA").Value),
+                    Total = Decimal.Parse(form.GetField("Total").Value),
+                    InitialDate = form.GetField("InitialDate").Value,
+                    TotalAmount = Decimal.Parse(form.GetField("TotalAmount").Value),
+
+                };
+
+                using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
+                {
+                    Client c = context.ClientRepository.CheckIfClientExists(form.GetField("Client").Value);
+                    project.Client = c;
+                    context.ProjectRepository.AddProject(project);
+                    context.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
             query.ResetForm = true;
 
@@ -82,6 +110,18 @@ namespace WIS.Billing.BusinessLogicCore
             form.GetField("type").Value = "3";
 
             return form;
+        }
+
+        protected override FormValidationSchema GetValidationSchema(Form form, List<ComponentParameter> parameters, int userId, WISDB context)
+        {
+            var schema = new FormValidationSchema
+            {
+                //["Description"] = this.ValidateDescription,
+                //["Client"] = this.ValidateClient,
+                //["Amount"] = this.ValidateAmount,
+                //["Currency"] = this.ValidateCurrency
+            };
+            return schema;
         }
 
         private void InicializarSelects(ref Form form, int userId)
@@ -165,7 +205,7 @@ namespace WIS.Billing.BusinessLogicCore
                 {
                     string[] dataList = new string[] { "" };
                     Project currentProject = GridHelper.RowToEntity<Project>(row, dataList.ToList());
-                    //Chequeo si el cliente existe buscando por RUT                    
+                    //Chequeo s |i el cliente existe buscando por RUT                    
 
 
 
@@ -176,11 +216,11 @@ namespace WIS.Billing.BusinessLogicCore
                     }
                     else if (row.IsDeleted)
                     {
-                        //DeleteProject(context, currentProject);
+                        context.ProjectRepository.DeleteProject(currentProject);
                     }
                     else
                     {
-                        //UpdateProject(context, currentProject);
+                        context.ProjectRepository.UpdateProject(currentProject);
                     }
 
 

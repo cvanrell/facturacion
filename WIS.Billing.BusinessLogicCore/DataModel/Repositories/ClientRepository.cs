@@ -127,6 +127,20 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         }
 
+        public Client CheckIfClientExists(string clientId)
+        {
+            Client c = this._context.Clients.FirstOrDefault(x => x.Id.ToString() == clientId);
+            if (c != null)
+            {
+                return c;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
         #endregion
 
         #region DET_CLIENTS
@@ -260,6 +274,10 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     if (sr.FL_DELETED == "S")
                     {
                         sr.FL_DELETED = "N";
+                        sr.DT_UPDROW = DateTime.Now;
+
+                        _context.SaveChanges();
+                        LogSupportRate(sr, client, "UPDATE");
                     }
                     else
                     {
@@ -277,10 +295,17 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                         AdjustmentPeriodicity = sRate.AdjustmentPeriodicity,
                         Amount = sRate.Amount,
                         SpecialDiscount = sRate.SpecialDiscount,
-                        FL_DELETED = "N"
+                        FL_DELETED = "N",
+                        DT_ADDROW = DateTime.Now,
+                        DT_UPDROW = DateTime.Now
                     };
-                    this._context.SupportRates.Add(newSR);
+                    this._context.SupportRates.Add(newSR);                    
+                    this._context.SaveChanges();
+
+                    LogSupportRate(newSR, client, "INSERT");
+
                     //context.SaveChanges();
+
                 }
             }
             else
@@ -292,6 +317,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         public void UpdateSupportRate(SupportRate sRate, string rutCliente)
         {
             SupportRate sr = _context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+            Client client;
             if (sr == null)
             {
                 throw new Exception("No se encuentra la tarifa especificada");
@@ -305,6 +331,14 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 sr.Amount = sRate.Amount;
                 sr.IVA = sRate.IVA;
                 sr.SpecialDiscount = sRate.SpecialDiscount;
+                sr.DT_UPDROW = DateTime.Now;
+
+
+                _context.SaveChanges();
+
+                client = CheckIfClientExists(sr.Client);
+
+                LogSupportRate(sr, client, "UPDATE");
                 //context.SaveChanges();
             }
         }
@@ -312,6 +346,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         public void DeleteSupportRate(SupportRate sRate)
         {
             SupportRate sr = _context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+            Client client;
             if (sr == null)
             {
                 throw new Exception("No se encuentra la tarifa que desea eliminar");
@@ -319,6 +354,13 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             else
             {
                 sr.FL_DELETED = "S";
+                sr.DT_UPDROW = DateTime.Now;
+
+                //Insertar en log 
+                _context.SaveChanges();
+                client = CheckIfClientExists(sr.Client);
+
+                LogSupportRate(sr, client, "UPDATE");
                 //context.SaveChanges();
             }
         }
@@ -423,16 +465,16 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             };
             string json = JsonConvert.SerializeObject(srLog);
             {
-                T_LOG_HOUR_RATE l = new T_LOG_HOUR_RATE()
+                T_LOG_SUPPORT_RATE l = new T_LOG_SUPPORT_RATE()
                 {
                     USER = this._userId,
                     ACTION = action,
                     DT_ADDROW = DateTime.Now,
                     DATA = json,
                     PAGE = "CLI020",
-                    ID_HOUR_RATE = sr.Id.ToString()
+                    ID_SUPPORT_RATE = sr.Id.ToString()
                 };
-                this._context.T_LOG_HOUR_RATE.Add(l);
+                this._context.T_LOG_SUPPORT_RATE.Add(l);
             }
         }        
 

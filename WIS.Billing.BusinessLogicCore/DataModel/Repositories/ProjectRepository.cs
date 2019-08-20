@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,9 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     project.FL_DELETED = "N";
                     project.DT_UPDROW = DateTime.Now;
 
-                    //LOG ACA
+                    this._context.SaveChanges();
+
+                    LogProject(project, "UPDATE");                    
                 }
                 else
                 {
@@ -52,67 +55,72 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 {
                     Description = p.Description,
                     Currency = p.Currency,
+                    Client = p.Client,
                     Amount = p.Amount,
                     IVA = p.IVA,
                     Total = p.Total,
                     InitialDate = p.InitialDate,
-                    TotalAmount = p.Total,
+                    TotalAmount = p.TotalAmount,
                     FL_DELETED = "N",
                     DT_ADDROW = DateTime.Now,
                     DT_UPDROW = DateTime.Now,
             };
                 //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
-                //if (client.FL_FOREIGN == "S")
-                //{
-                //    project.IVA = 0;
-                //}
+                if (project.Client.FL_FOREIGN == "S")
+                {
+                    project.IVA = 0;
+                }
                 this._context.Projects.Add(project);
-                this._context.SaveChanges();
-
-                //LOG ACA
+                this._context.SaveChanges();                
                 LogProject(project, "INSERT");
             }
         }
 
-        //public void UpdateProject(Project p)
-        //{
-        //    Project project = context.Projects.FirstOrDefault(x => x.Id == p.Id);
-        //    if (project == null)
-        //    {
-        //        throw new Exception("No se encuentra el proyecto especificado");
-        //    }
-        //    else
-        //    {
-        //        project.Description = p.Description;
-        //        project.Currency = p.Currency;
-        //        project.Amount = p.Amount;
-        //        project.IVA = p.IVA;
-        //        project.Total = p.Total;
-        //        project.InitialDate = p.InitialDate;
-        //        project.TotalAmount = p.TotalAmount;
-        //        context.SaveChanges();
-        //    }
-        //}
+        public void UpdateProject(Project p)
+        {
+            Project project = _context.Projects.Include(x => x.Client).FirstOrDefault(x => x.Id == p.Id);
+            if (project == null)
+            {
+                throw new Exception("No se encuentra el proyecto especificado");
+            }
+            else
+            {
+                project.Description = p.Description;
+                project.Currency = p.Currency;
+                project.Amount = p.Amount;
+                project.IVA = p.IVA;
+                project.Total = p.Total;
+                project.InitialDate = p.InitialDate;
+                project.TotalAmount = p.TotalAmount;
+                project.DT_UPDROW = DateTime.Now;
+                _context.SaveChanges();
 
-        //public void DeleteProject(Project p)
-        //{
-        //    Project project = context.Projects.FirstOrDefault(x => x.Id == p.Id);
-        //    if (project == null)
-        //    {
-        //        throw new Exception("No se encuentra el proyecto que desea eliminar");
-        //    }
-        //    else
-        //    {
-        //        project.FL_DELETED = "S";
-        //        context.SaveChanges();
-        //    }
-        //}
+                LogProject(project, "UPDATE");
+            }
+        }
+
+        public void DeleteProject(Project p)
+        {
+            Project project = _context.Projects.Include(x => x.Client).FirstOrDefault(x => x.Id == p.Id);
+            if (project == null)
+            {
+                throw new Exception("No se encuentra el proyecto que desea eliminar");
+            }
+            else
+            {
+                project.FL_DELETED = "S";
+                project.DT_UPDROW = DateTime.Now;
+                _context.SaveChanges();
+
+                LogProject(project, "DELETE");
+            }
+        }
 
         #endregion
 
         public Project CheckIfProjectExists(Project p)
         {
-            Project pro = this._context.Projects.FirstOrDefault(x => x.Description == p.Description);
+            Project pro = this._context.Projects.Include(x => x.Client).FirstOrDefault(x => x.Description == p.Description && x.Client == p.Client);
             return pro;
         }
 
@@ -135,17 +143,17 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 FL_DELETED = project.FL_DELETED,
                 DT_ADDROW = project.DT_ADDROW,
                 DT_UPDROW = project.DT_UPDROW,
-                //ClientLogObject = new ClientLogObject()
-                //{
-                //    Id = project.Client.Id.ToString(),
-                //    Description = project.Client.Description,
-                //    RUT = project.Client.RUT,
-                //    Address = project.Client.Address,
-                //    FL_DELETED = project.Client.FL_DELETED,
-                //    FL_FOREIGN = project.Client.FL_FOREIGN,
-                //    DT_ADDROW = project.Client.DT_ADDROW,
-                //    DT_UPDROW = project.Client.DT_UPDROW,
-                //}
+                ClientLogObject = new ClientLogObject()
+                {
+                    Id = project.Client.Id.ToString(),
+                    Description = project.Client.Description,
+                    RUT = project.Client.RUT,
+                    Address = project.Client.Address,
+                    FL_DELETED = project.Client.FL_DELETED,
+                    FL_FOREIGN = project.Client.FL_FOREIGN,
+                    DT_ADDROW = project.Client.DT_ADDROW,
+                    DT_UPDROW = project.Client.DT_UPDROW,
+                }
             };
 
             string json = JsonConvert.SerializeObject(pLog);

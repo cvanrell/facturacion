@@ -60,7 +60,7 @@ export class CLI020 extends Component {
 
             <Page
                 icon="fas fa-file"
-                title="Edicion de clientes"//{t("DOC020_Sec0_pageTitle_Titulo")}
+                title="Tarifas de clientes"//{t("DOC020_Sec0_pageTitle_Titulo")}
                 {...this.props}
             >
                 <Form
@@ -98,12 +98,10 @@ export class CLI020 extends Component {
                         </fieldset>
                     </div>
 
-                    <div className="row">
-                        <div className="col">
-                            <SubmitButton value={("Agregar nueva tarifa")} />                            
-                        </div>
-                    </div>                        
+                    
                 </Form>
+
+                <h4 className="form-title">{("Tarifas de horas")}</h4>
                 <div className="row mb-4">
                     <div className="col-12">
                         <Grid id="CLI020_grid_T" rowsToFetch={30} rowsToDisplay={15}
@@ -113,6 +111,8 @@ export class CLI020 extends Component {
                         />
                     </div>
                 </div>
+
+                <h4 className="form-title">{("Tarifas de soporte")}</h4>
                 <div className="row mb-4">
                     <div className="col-12">
                         <Grid id="CLI020_grid_S" rowsToFetch={30} rowsToDisplay={15}

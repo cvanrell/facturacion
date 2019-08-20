@@ -37,7 +37,9 @@ export class CLI010 extends Component {
 
     render() {
         return (
-            <Page {...this.props}>
+            <Page {...this.props}
+                title="Clientes"
+            >
                 
                 <div className="row mb-4">
                     <div className="col">

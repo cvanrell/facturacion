@@ -185,15 +185,15 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                         SupportRate currentSRate = GridHelper.RowToEntity<SupportRate>(row, dataList.ToList());
                         if (row.IsNew)
                         {
-                            //context.ClientRepository.AddSupportRate(currentSRate, rutCliente);
+                            context.ClientRepository.AddSupportRate(currentSRate, rutCliente);
                         }
                         else if (row.IsDeleted)
                         {
-                            //DeleteSupportRate(context, currentSRate);
+                            context.ClientRepository.DeleteSupportRate(currentSRate);
                         }
                         else
                         {
-                            //UpdateSupportRate(context, currentSRate, rutCliente);
+                            context.ClientRepository.UpdateSupportRate(currentSRate, rutCliente);
                         }
                     }
 

@@ -23,7 +23,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers
                     string add = row.Cells[0].Column.Name;
 
 
-                    GridCell cell = row.Cells.FirstOrDefault(x => x.Column.Name == prop.Name);
+                    GridCell cell = row.Cells.FirstOrDefault(x => x.Column.Id == prop.Name);
                     if (cell != null)
                     {
                         string inValue = cell.Value;

@@ -84,12 +84,12 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
             grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-                new GridItemHeader("Cosas 1"),
+                new GridItemHeader("Opciones"),
                 new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
-                new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+                //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
                 new GridItemDivider(),
-                new GridItemHeader("Cosas 2"),
-                new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+                //new GridItemHeader("Cosas 2"),
+                //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
             }));
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
@@ -150,14 +150,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         {
             if (data.ButtonId == "btnEditar")
             {
-                //JavaScriptSerializer JSONConverter = new JavaScriptSerializer();
-
-                //data.Parameters.Add(new ComponentParameter
-                //{
-                //    Id = "EDITAR",
-                //    Value = "true"
-                //});
-                //_session.SetValue("Clients_EDITAR", true);
+                
 
                 data.Redirect = "/Clients/CLI020";
 
@@ -165,23 +158,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
                 this._session.SetValue("Description", data.Row.GetCell("Description").Value);
                 this._session.SetValue("RUT", data.Row.GetCell("RUT").Value);
 
-            }
-            //else if (data.ButtonId == "btnSaldo")
-            //{
-            //    data.Redirect = "/documento/DOC020";
-
-            //    this._session.SetValue("DOC020_NU_DOCUMENTO", data.Row.GetCell("NU_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC020_TP_DOCUMENTO", data.Row.GetCell("TP_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC020_CD_EMPRESA", data.Row.GetCell("CD_EMPRESA").Value);
-            //}
-            //else
-            //{
-            //    data.Redirect = "/documento/DOC081";
-
-            //    this._session.SetValue("DOC080_NU_DOCUMENTO", data.Row.GetCell("NU_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC080_TP_DOCUMENTO", data.Row.GetCell("TP_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC080_CD_EMPRESA", data.Row.GetCell("CD_EMPRESA").Value);
-            //}
+            }            
 
 
 

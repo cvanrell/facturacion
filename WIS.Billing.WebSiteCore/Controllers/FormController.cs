@@ -92,7 +92,7 @@ namespace WIS.Billing.WebSiteCore.Controllers
         }
 
         private async Task<IFormWrapper> CallFormServiceAsync(ServerRequest request, FormAction action, CancellationToken cancelToken)
-        {
+            {
             string controller = request.GetBaseApplication();
             string application = request.Application;
 
