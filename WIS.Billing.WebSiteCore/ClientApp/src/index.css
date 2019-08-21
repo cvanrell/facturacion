@@ -49,9 +49,9 @@ html, body, #root {
 #root {
     overflow-x: hidden;
     display: grid;
-    grid-template-rows: 50px auto 50px;
+    grid-template-rows: auto;
     grid-template-columns: auto 1fr;
-    grid-template-areas: "wis-nav    wis-header" "wis-nav    wis-main" "wis-nav    wis-footer";
+    grid-template-areas: "wis-nav wis-main";
     font-family: PTSans;
     font-size: 16px;
 }
@@ -69,12 +69,9 @@ hr {
     padding: 0;
 }
 
-/*nav {
+nav {
     grid-area: wis-nav;
-    z-index: 2;
-    background-color: #1063CA;
-    transition: width 0.2s ease-out;
-}*/
+}
 
 main {
     grid-area: wis-main;

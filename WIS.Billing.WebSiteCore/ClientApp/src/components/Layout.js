@@ -13,16 +13,14 @@ export class Layout extends Component {
 
     render() {
         return (
-            <Container fluid>
-                <Row>
-                    <Col sm={3}>
-                        <NavMenu />
-                    </Col>
-                    <Col sm={9}>
+            <React.Fragment>
+                <NavMenu />
+                <main>
+                    <Container className="mt-2" fluid>
                         {this.props.children}
-                    </Col>
-                </Row>
-            </Container>
+                    </Container>
+                </main>
+            </React.Fragment>
         );
     }
 }

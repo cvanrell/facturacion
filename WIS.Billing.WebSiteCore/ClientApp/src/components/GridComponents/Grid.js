@@ -1266,7 +1266,7 @@ export class InternalGrid extends Component {
     }
 
     getMeasures = () => {
-        return this.state.columns.reduce((measures, col) => {
+        return this.state.columns.filter(d => !d.hidden).reduce((measures, col) => {
             if (col.fixed === columnFixed.left) {
                 measures.widthLeft = measures.widthLeft + col.width;
             }
