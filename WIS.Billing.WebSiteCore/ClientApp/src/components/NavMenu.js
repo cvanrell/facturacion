@@ -11,14 +11,12 @@ export class NavMenu extends Component {
 
     render() {
         return (
-            <Navbar inverse fixedTop fluid collapseOnSelect>
-                
-                    <Navbar.Brand>
-                        <Link to={'/'}>WIS SISTEMA DE FACTURACIÓN</Link>
-                    </Navbar.Brand>
-                    
-                
-                <Navbar.Collapse>
+            <Navbar bg="dark" expand="lg">                
+                <Navbar.Brand>
+                    <Link to={'/'}>WIS SISTEMA DE FACTURACIÓN</Link>
+                </Navbar.Brand>                    
+                <Navbar.Toggle aria-controls="menuNav" />
+                <Navbar.Collapse id="menuNav">
                     <Navbar.Text>
                         ADMINISTRACIÓN
                     </Navbar.Text>

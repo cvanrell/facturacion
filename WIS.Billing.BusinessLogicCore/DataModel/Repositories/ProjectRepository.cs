@@ -42,7 +42,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
                     this._context.SaveChanges();
 
-                    LogProject(project, "UPDATE");                    
+                    LogProject(project, "UPDATE");
                 }
                 else
                 {
@@ -64,14 +64,24 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_DELETED = "N",
                     DT_ADDROW = DateTime.Now,
                     DT_UPDROW = DateTime.Now,
-            };
+                };
+
+                if (int.Parse(p.Currency) == 0)
+                {
+                    project.Currency = "Dólares";
+                }
+                else if (int.Parse(p.Currency) == 1)
+                {
+                    project.Currency = "Pesos";
+                }
+
                 //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
                 if (project.Client.FL_FOREIGN == "S")
                 {
                     project.IVA = 0;
                 }
                 this._context.Projects.Add(project);
-                this._context.SaveChanges();                
+                this._context.SaveChanges();
                 LogProject(project, "INSERT");
             }
         }
@@ -86,13 +96,26 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             else
             {
                 project.Description = p.Description;
-                project.Currency = p.Currency;
+                //project.Currency = p.Currency;
                 project.Amount = p.Amount;
                 project.IVA = p.IVA;
                 project.Total = p.Total;
                 project.InitialDate = p.InitialDate;
                 project.TotalAmount = p.TotalAmount;
                 project.DT_UPDROW = DateTime.Now;
+
+                if (project.Currency != p.Currency)
+                {
+                    if (int.Parse(p.Currency) == 0)
+                    {
+                        project.Currency = "Dólares";
+                    }
+                    else if (int.Parse(p.Currency) == 1)
+                    {
+                        project.Currency = "Pesos";
+                    }
+                }
+
                 _context.SaveChanges();
 
                 LogProject(project, "UPDATE");
