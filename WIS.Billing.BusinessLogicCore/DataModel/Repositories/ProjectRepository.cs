@@ -66,14 +66,14 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     DT_UPDROW = DateTime.Now,
                 };
 
-                if (int.Parse(p.Currency) == 0)
-                {
-                    project.Currency = "Dólares";
-                }
-                else if (int.Parse(p.Currency) == 1)
-                {
-                    project.Currency = "Pesos";
-                }
+                //if (int.Parse(p.Currency) == 0)
+                //{
+                //    project.Currency = "Dólares";
+                //}
+                //else if (int.Parse(p.Currency) == 1)
+                //{
+                //    project.Currency = "Pesos";
+                //}
 
                 //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
                 if (project.Client.FL_FOREIGN == "S")

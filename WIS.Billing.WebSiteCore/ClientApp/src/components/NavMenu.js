@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
-import { faUser, faWrench, faTasks, faCog } from '@fortawesome/free-solid-svg-icons';
+  import { faUser, faWrench, faTasks, faCog } from '@fortawesome/free-solid-svg-icons';
 
 export class NavMenu extends Component {
     displayName = NavMenu.name
