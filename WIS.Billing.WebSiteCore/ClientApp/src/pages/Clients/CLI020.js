@@ -101,7 +101,7 @@ export class CLI020 extends Component {
                     
                 </Form>
 
-                <h4 className="form-title">{("Tarifas de horas")}</h4>
+                <h3 className="form-title">{("Tarifas de horas")}</h3>
                 <div className="row mb-4">
                     <div className="col-12">
                         <Grid id="CLI020_grid_T" rowsToFetch={30} rowsToDisplay={15}
@@ -112,7 +112,7 @@ export class CLI020 extends Component {
                     </div>
                 </div>
 
-                <h4 className="form-title">{("Tarifas de soporte")}</h4>
+                <h3 className="form-title">{("Tarifas de soporte")}</h3>
                 <div className="row mb-4">
                     <div className="col-12">
                         <Grid id="CLI020_grid_S" rowsToFetch={30} rowsToDisplay={15}

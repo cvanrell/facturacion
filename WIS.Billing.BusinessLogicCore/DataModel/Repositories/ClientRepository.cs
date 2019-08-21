@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -186,6 +187,35 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                         DT_ADDROW = DateTime.Now,
                         DT_UPDROW = DateTime.Now
                     };
+
+
+                    #region IF TEMPORAL PARA PERIODICIDAD Y MONEDA 
+                    if (int.Parse(hRate.Currency) == 0)
+                    {
+                        newHR.Currency = "Dólares";
+                    }
+                    else if(int.Parse(hRate.Currency) == 1)
+                    {
+                        newHR.Currency = "Pesos";
+                    }
+
+                    switch(int.Parse(hRate.AdjustmentPeriodicity))
+                    {
+                        case 0:
+                            newHR.AdjustmentPeriodicity = "Mensual";
+                            break;
+                        case 1:
+                            newHR.AdjustmentPeriodicity = "Trimestral";
+                            break;
+                        case 2:
+                            newHR.AdjustmentPeriodicity = "Semestral";
+                            break;
+                        case 3:
+                            newHR.AdjustmentPeriodicity = "Anual";
+                            break;
+                    }
+
+                    #endregion
                     this._context.HourRates.Add(newHR);
                     this._context.SaveChanges();
 
@@ -200,7 +230,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public void UpdateHourRate(HourRate hRate, string rutCliente)
         {
-            HourRate hr = _context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+            HourRate hr = _context.HourRates.Include(x => x.Client).FirstOrDefault(x => x.Id == hRate.Id);
             Client client;
 
             if (hr == null)
@@ -210,13 +240,46 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             else
             {
                 hr.Description = hRate.Description;
-                hr.Currency = hRate.Currency;
-                hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
+                //hr.Currency = hRate.Currency;
+                //hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
                 hr.Amount = hRate.Amount;
                 hr.SpecialDiscount = hRate.SpecialDiscount;
                 hr.DT_UPDROW = DateTime.Now;
 
 
+                #region IF TEMPORAL PARA PERIODICIDAD Y MONEDA 
+                if (hr.Currency != hRate.Currency)
+                {
+                    if (int.Parse(hRate.Currency) == 0)
+                    {
+                        hr.Currency = "Dólares";
+                    }
+                    else if (int.Parse(hRate.Currency) == 1)
+                    {
+                        hr.Currency = "Pesos";
+                    }
+                }
+                
+                if(hr.AdjustmentPeriodicity != hRate.AdjustmentPeriodicity)
+                {
+                    switch (int.Parse(hRate.AdjustmentPeriodicity))
+                    {
+                        case 0:
+                            hr.AdjustmentPeriodicity = "Mensual";
+                            break;
+                        case 1:
+                            hr.AdjustmentPeriodicity = "Trimestral";
+                            break;
+                        case 2:
+                            hr.AdjustmentPeriodicity = "Semestral";
+                            break;
+                        case 3:
+                            hr.AdjustmentPeriodicity = "Anual";
+                            break;
+                    }
+                }
+
+                #endregion
                 _context.SaveChanges();
 
                 client = CheckIfClientExists(hr.Client);
@@ -227,7 +290,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public void DeleteHourRate(HourRate hRate)
         {
-            HourRate hr = _context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+            HourRate hr = _context.HourRates.Include(x => x.Client).FirstOrDefault(x => x.Id == hRate.Id);
             Client client;
             if (hr == null)
             {
@@ -299,6 +362,51 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                         DT_ADDROW = DateTime.Now,
                         DT_UPDROW = DateTime.Now
                     };
+
+
+                    #region IF TEMPORAL PARA PERIODICIDAD Y MONEDA 
+                    if (int.Parse(sRate.Currency) == 0)
+                    {
+                        newSR.Currency = "Dólares";
+                    }
+                    else if (int.Parse(sRate.Currency) == 1)
+                    {
+                        newSR.Currency = "Pesos";
+                    }
+
+                    switch (int.Parse(sRate.AdjustmentPeriodicity))
+                    {
+                        case 0:
+                            newSR.AdjustmentPeriodicity = "Mensual";
+                            break;
+                        case 1:
+                            newSR.AdjustmentPeriodicity = "Trimestral";
+                            break;
+                        case 2:
+                            newSR.AdjustmentPeriodicity = "Semestral";
+                            break;
+                        case 3:
+                            newSR.AdjustmentPeriodicity = "Anual";
+                            break;
+                    }
+
+                    switch (int.Parse(sRate.Periodicity))
+                    {
+                        case 0:
+                            newSR.Periodicity = "Mensual";
+                            break;
+                        case 1:
+                            newSR.Periodicity = "Trimestral";
+                            break;
+                        case 2:
+                            newSR.Periodicity = "Semestral";
+                            break;
+                        case 3:
+                            newSR.Periodicity = "Anual";
+                            break;
+                    }
+
+                    #endregion
                     this._context.SupportRates.Add(newSR);                    
                     this._context.SaveChanges();
 
@@ -316,7 +424,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public void UpdateSupportRate(SupportRate sRate, string rutCliente)
         {
-            SupportRate sr = _context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+            SupportRate sr = _context.SupportRates.Include(x => x.Client).FirstOrDefault(x => x.Id == sRate.Id);
             Client client;
             if (sr == null)
             {
@@ -325,15 +433,67 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             else
             {
                 sr.Description = sRate.Description;
-                sr.Currency = sRate.Currency;
-                sr.Periodicity = sr.Periodicity;
-                sr.AdjustmentPeriodicity = sRate.AdjustmentPeriodicity;
+                //sr.Currency = sRate.Currency;
+                sr.Periodicity = sRate.Periodicity;
+                //sr.AdjustmentPeriodicity = sRate.AdjustmentPeriodicity;
                 sr.Amount = sRate.Amount;
                 sr.IVA = sRate.IVA;
                 sr.SpecialDiscount = sRate.SpecialDiscount;
                 sr.DT_UPDROW = DateTime.Now;
 
 
+
+                #region IF TEMPORAL PARA PERIODICIDAD Y MONEDA 
+                if (sr.Currency != sRate.Currency)
+                {
+                    if (int.Parse(sRate.Currency) == 0)
+                    {
+                        sr.Currency = "Dólares";
+                    }
+                    else if (int.Parse(sRate.Currency) == 1)
+                    {
+                        sr.Currency = "Pesos";
+                    }
+                }
+
+                if (sr.AdjustmentPeriodicity != sRate.AdjustmentPeriodicity)
+                {
+                    switch (int.Parse(sRate.AdjustmentPeriodicity))
+                    {
+                        case 0:
+                            sr.AdjustmentPeriodicity = "Mensual";
+                            break;
+                        case 1:
+                            sr.AdjustmentPeriodicity = "Trimestral";
+                            break;
+                        case 2:
+                            sr.AdjustmentPeriodicity = "Semestral";
+                            break;
+                        case 3:
+                            sr.AdjustmentPeriodicity = "Anual";
+                            break;
+                    }
+                }
+
+                if (sr.Periodicity != sRate.Periodicity)
+                {
+                    switch (int.Parse(sRate.Periodicity))
+                    {
+                        case 0:
+                            sr.Periodicity = "Mensual";
+                            break;
+                        case 1:
+                            sr.Periodicity = "Trimestral";
+                            break;
+                        case 2:
+                            sr.Periodicity = "Semestral";
+                            break;
+                        case 3:
+                            sr.Periodicity = "Anual";
+                            break;
+                    }
+                }
+                #endregion
                 _context.SaveChanges();
 
                 client = CheckIfClientExists(sr.Client);
@@ -345,7 +505,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public void DeleteSupportRate(SupportRate sRate)
         {
-            SupportRate sr = _context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+            SupportRate sr = _context.SupportRates.Include(x => x.Client).FirstOrDefault(x => x.Id == sRate.Id);
             Client client;
             if (sr == null)
             {

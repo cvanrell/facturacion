@@ -68,6 +68,10 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
             form.GetField("Description").Value = clientDescription;
 
+            string clientAddress = _session.GetValue<string>("Address");
+
+            form.GetField("Address").Value = clientAddress;
+
             string rutCliente = _session.GetValue<string>("RUT");
 
             form.GetField("RUT").Value = rutCliente;
