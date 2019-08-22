@@ -78,8 +78,7 @@ namespace WIS.Billing.BusinessLogicCore
                 {
                     Description = form.GetField("Description").Value,
                     Amount = Decimal.Parse(form.GetField("Amount").Value) ,
-                    Currency = form.GetField("Currency").Value,
-                    IVA = Decimal.Parse(form.GetField("IVA").Value),
+                    Currency = form.GetField("Currency").Value,                    
                     Total = Decimal.Parse(form.GetField("Total").Value),
                     InitialDate = form.GetField("InitialDate").Value,
                     TotalAmount = Decimal.Parse(form.GetField("TotalAmount").Value),
@@ -146,7 +145,7 @@ namespace WIS.Billing.BusinessLogicCore
             using (WISDB context = new WISDB())
             {
                 //CLIENTES
-                var clients = context.Clients.ToList();
+                var clients = context.Clients.Where(x => x.FL_DELETED == "N").ToList();
 
                 foreach (var c in clients)
                 {
@@ -237,6 +236,22 @@ namespace WIS.Billing.BusinessLogicCore
         {
             return data;
         }
+
+        #region VALIDACIONES
+
+        private FormValidationGroup ValidateDescription(FormField field, Form form, List<ComponentParameter> parameters, int userId, WISDB context)
+        {
+            return new FormValidationGroup
+            {
+                BreakValidationChain = true,
+                Rules = new List<WIS.BusinessLogicCore.Validation.IValidationRule>
+                {
+                    
+                }//,
+                //OnSuccess = this.ValidateTP_INGRESO_OnSuccess
+            };
+        }
+        #endregion
 
 
         public void AddProject(WISDB context, Project p)

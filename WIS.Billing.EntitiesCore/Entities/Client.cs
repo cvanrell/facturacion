@@ -19,12 +19,11 @@ namespace WIS.Billing.EntitiesCore
 
         //Flag por si es extranjero para facturacion
         [MaxLength(1)]
-        public string FL_FOREIGN { get; set; }
-
-        public string Country { get; set; }
+        public string FL_FOREIGN { get; set; }        
 
 
-        public List<HourRate> HourRates { get; set; }        
+        public List<HourRate> HourRates { get; set; }
+        public List<SupportRate> SupportRates { get; set; }
         public List<Project> Projects { get; set; }
     }
 }

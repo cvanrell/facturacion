@@ -80,6 +80,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 {
                     project.IVA = 0;
                 }
+                else if(project.Client.FL_FOREIGN == "N")
+                {
+                    project.IVA = 22;
+                }
+
                 this._context.Projects.Add(project);
                 this._context.SaveChanges();
                 LogProject(project, "INSERT");

@@ -23,7 +23,9 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
         
         public ClientRepository ClientRepository { get; set; }
         public ProjectRepository ProjectRepository { get; set; }
-        
+        public AdjustmentRepository AdjustmentRepository { get; set; }
+
+
 
         public UnitOfWork(string application, int userId)
         {

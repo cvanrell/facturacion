@@ -17,12 +17,15 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<Project> Projects { get; set; }
         public DbSet<Development> Developments { get; set; }
         public DbSet<Maintenance> Maintenances { get; set; }
+        public DbSet<Adjustment> Adjustments { get; set; }
         public DbSet<T_GRID_USER_CONFIG> T_GRID_USER_CONFIG { get; set; }
         public DbSet<T_GRID_DEFAULT_CONFIG> T_GRID_DEFAULT_CONFIG { get; set; }
         public DbSet<T_LOG_CLIENT> T_LOG_CLIENT { get; set; }
         public DbSet<T_LOG_HOUR_RATE> T_LOG_HOUR_RATE { get; set; }
         public DbSet<T_LOG_SUPPORT_RATE> T_LOG_SUPPORT_RATE { get; set; }
         public DbSet<T_LOG_PROJECT> T_LOG_PROJECT { get; set; }
+        public DbSet<T_LOG_ADJUSTMENT> T_LOG_ADJUSTMENT { get; set; }
+        
         //public static DbContextOptions options;
 
 

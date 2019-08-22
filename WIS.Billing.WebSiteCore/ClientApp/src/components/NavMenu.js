@@ -44,6 +44,11 @@ export class NavMenu extends Component {
                             FACTURACIÓN
                         </Navbar.Text>
                         <NavItem>
+                            <Link to={'/Adjustments/ADJ010'} className="nav-link" exact>
+                                <i className='fas fa-wrench' /> Ajustes de IPC
+                            </Link>
+                        </NavItem>
+                        <NavItem>
                             <Link to={'/'} className="nav-link" exact>
                                 <i className='fas fa-wrench' /> Mantenimiento
                             </Link>

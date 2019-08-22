@@ -27,6 +27,7 @@ import { CLI020 } from './pages/Clients/CLI020';
 
 
 const PRO010 = React.lazy(() => import('./pages/Projects/PRO010'));
+const ADJ010 = React.lazy(() => import('./pages/Adjustments/ADJ010'));
 //import { PRO010 } from './pages/Projects/PRO010';
 
 
@@ -76,6 +77,7 @@ export class App extends Component {
                         <Route path='/Clients/CLI020' component={CLI020} />
 
                         <Route path='/Projects/PRO010' render={(props) => <PRO010 {...props} />} />
+                        <Route path='/Adjustments/ADJ010' render={(props) => <ADJ010 {...props} />} />
 
 
 

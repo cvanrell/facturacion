@@ -5,7 +5,7 @@ import { Page } from '../../components/Page';
 import { Form, Field, FieldSelect, FieldSelectAsync, FieldDate, SubmitButton, Button, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
-export default function PRO010(props) {
+export default function ADJ010(props) {
     //const { t } = useTranslation();
     const [isFormEnabled, setFormEnabled] = useState(false);
     const [isShowForm, setShowForm] = useState(false);
@@ -38,8 +38,8 @@ export default function PRO010(props) {
     };
     const onAfterSubmit = (context, form, query, nexus) => {
         setShowForm(false);
-        nexus.getForm("PRO010_form_1").reset();
-        nexus.getGrid("PRO010_grid_1").refresh();
+        nexus.getForm("ADJ010_form_1").reset();
+        nexus.getGrid("ADJ010_grid_1").refresh();
     };
 
     const onBeforeButtonAction = (context, form, query, nexus) => {
@@ -52,20 +52,20 @@ export default function PRO010(props) {
         query.abortServerCall = true;
 
         if (query.buttonId === "showFormButton") {
-            nexus.getForm("PRO010_form_1").reset();
+            nexus.getForm("ADJ010_form_1").reset();
             setShowForm(true);
             setEditing(true);
         }
         else if (query.buttonId === "hideFormButton") {
             setShowForm(false);
-            nexus.getForm("PRO010_form_1").reset();
+            nexus.getForm("ADJ010_form_1").reset();
         }
     }
 
     const onAfterButtonAction = (data, nexus) => {
         setShowForm(false);
-        nexus.getForm("PRO010_form_1").reset();
-        nexus.getGrid("PRO010_grid_1").refresh();
+        nexus.getForm("ADJ010_form_1").reset();
+        nexus.getGrid("ADJ010_grid_1").refresh();
 
     };
 
@@ -77,10 +77,10 @@ export default function PRO010(props) {
 
     return (
         <Page {...props}
-        title="Proyectos">
+            title="Ajustes de IPC">
 
             <Form
-                id="PRO010_form_1"
+                id="ADJ010_form_1"
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onAfterSubmit={onAfterSubmit}
@@ -88,7 +88,7 @@ export default function PRO010(props) {
             >
 
                 <div className={formShowButtonClassName} style={{ textAlign: "center" }}>
-                    <Button id="showFormButton" value={("Agregar nuevo proyecto")} className="btn btn-success" style={{ margin: "15px" }} isLoading={isFormEnabled} />
+                    <Button id="showFormButton" value={("Agregar nuevo ajuste")} className="btn btn-success" style={{ margin: "15px" }} isLoading={isFormEnabled} />
                 </div>
 
                 <div className={formClassName}>
@@ -99,55 +99,27 @@ export default function PRO010(props) {
                                 <div className="col-12">
                                     <div className="col-4">
                                         <div className="form-group">
-                                            <label htmlFor="Description">{("Descripción")}</label>
-                                            <Field name="Description" />
-                                            <StatusMessage for="Description" />
+                                            <label htmlFor="Year">{("Año")}</label>
+                                            <Field name="Year" />
+                                            <StatusMessage for="Year" />
                                         </div>
                                     </div>
 
                                     <div className="col-4">
                                         <div className="form-group">
-                                            <label htmlFor="Client">{("Cliente")}</label>
-                                            <FieldSelect name="Client" />
-                                            <StatusMessage for="Client" />
+                                            <label htmlFor="Month">{("Mes")}</label>
+                                            <FieldSelect name="Month" />
+                                            <StatusMessage for="Month" />
                                         </div>
                                     </div>
 
                                     <div className="col-4">
                                         <div className="form-group">
-                                            <label htmlFor="Amount">{("Monto")}</label>
-                                            <Field name="Amount" />
-                                            <StatusMessage for="Amount" />
-                                        </div>
-                                    </div>
-                                    <div className="col-4">
-                                        <div className="form-group">
-                                            <label htmlFor="Currency">{("Moneda")}</label>
-                                            <FieldSelect name="Currency" />
-                                            <StatusMessage for="Currency" />
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="Date">{("Fecha")}</label>
-                                        <FieldDate name="Date" />
-                                        <StatusMessage for="Date" />
-                                    </div> 
-                                    
-                                    <div className="col-4">
-                                        <div className="form-group">
-                                            <label htmlFor="InitialDate">{("Fecha de inicio")}</label>
-                                            <Field name="InitialDate" />
-                                            <StatusMessage for="InitialDate" />
+                                            <label htmlFor="IPCValue">{("Valor IPC")}</label>
+                                            <Field name="IPCValue" />
+                                            <StatusMessage for="IPCValue" />
                                         </div>
                                     </div>                                    
-                                    <div className="col-4">
-                                        <div className="form-group">
-                                            <label htmlFor="Total">{("Total")}</label>
-                                            <Field name="Total" />
-                                            <StatusMessage for="Total" />
-                                        </div>
-                                    </div>
 
                                 </div>
                             </fieldset>
@@ -155,7 +127,7 @@ export default function PRO010(props) {
 
                         <div className="row">
                             <div className="col">
-                                <SubmitButton value={("Agregar proyecto")} />
+                                <SubmitButton value={("Agregar Ajuste")} />
                                 &nbsp;
                                 <Button id="hideFormButton" value={("Cancelar")} className="btn btn-danger" />
                             </div>
@@ -164,14 +136,14 @@ export default function PRO010(props) {
                 </div>
             </Form>
 
-                    <div className="row mb-4">
-                        <div className="col">
-                            <Grid id="PRO010_grid_1" rowsToFetch={30} rowsToDisplay={30} enableSelection />
-                        </div>
-                    </div>
+            <div className="row mb-4">
+                <div className="col">
+                    <Grid id="ADJ010_grid_1" rowsToFetch={30} rowsToDisplay={30} enableSelection />
+                </div>
+            </div>
         </Page>
-                );
-            
-            
-            
+    );
+
+
+
 }

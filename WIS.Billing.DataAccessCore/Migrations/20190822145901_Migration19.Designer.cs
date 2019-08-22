@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190822145901_Migration19")]
+    partial class Migration19
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,10 +78,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("DT_ADDROW");
-
-                    b.Property<DateTime>("DT_UPDROW");
-
                     b.Property<decimal>("IPCValue");
 
                     b.Property<string>("Month");
@@ -89,30 +87,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Adjustments");
-                });
-
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_ADJUSTMENT", b =>
-                {
-                    b.Property<int>("NU_LOG")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ACTION");
-
-                    b.Property<string>("DATA")
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<DateTime>("DT_ADDROW");
-
-                    b.Property<string>("ID_ADJUSTMENT");
-
-                    b.Property<string>("PAGE");
-
-                    b.Property<int>("USER");
-
-                    b.HasKey("NU_LOG");
-
-                    b.ToTable("T_LOG_ADJUSTMENT");
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_HOUR_RATE", b =>
