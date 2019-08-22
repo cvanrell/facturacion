@@ -20,15 +20,15 @@ export default function ADJ010(props) {
         //lastname: "",
         //password: "Pass",
         //type: 2
-        Client: "",
-        Currency: "",
-        Descrption: ""
+        Year: "",
+        Mes: "",
+        IPCValue: ""
     };
 
     const validationSchema = {
-        Client: Yup.string().required(),
-        Currency: Yup.string().required(),
-        Description: Yup.string().required(),
+        Year: Yup.string().required(),
+        //Mes: Yup.string().required(),
+        IPCValue: Yup.string().required(),
     };
 
 

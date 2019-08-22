@@ -35,6 +35,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
             
             this.ClientRepository = new ClientRepository(this._context, this._appplication, this._userId);
             this.ProjectRepository = new ProjectRepository(this._context, this._appplication, this._userId);
+            this.AdjustmentRepository = new AdjustmentRepository(this._context, this._appplication, this._userId);
         }
 
         public void BeginTransaction()
