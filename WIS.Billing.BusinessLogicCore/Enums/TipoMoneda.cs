@@ -6,7 +6,7 @@ namespace WIS.Billing.BusinessLogicCore.Enums
 {
     public enum TipoMoneda
     {
-        Dólar,
+        Dólares,
         Pesos
     }
 }

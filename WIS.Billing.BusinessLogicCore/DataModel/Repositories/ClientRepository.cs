@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WIS.Billing.BusinessLogicCore.DataModel.Mappers;
+using WIS.Billing.BusinessLogicCore.Enums;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.Billing.EntitiesCore.Entities;
@@ -367,11 +368,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     #region IF TEMPORAL PARA PERIODICIDAD Y MONEDA 
                     if (int.Parse(sRate.Currency) == 0)
                     {
-                        newSR.Currency = "Dólares";
+                        newSR.Currency = TipoMoneda.Dólares.ToString();
                     }
                     else if (int.Parse(sRate.Currency) == 1)
                     {
-                        newSR.Currency = "Pesos";
+                        newSR.Currency = TipoMoneda.Pesos.ToString();
                     }
 
                     switch (int.Parse(sRate.AdjustmentPeriodicity))

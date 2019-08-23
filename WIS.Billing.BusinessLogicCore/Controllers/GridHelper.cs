@@ -79,16 +79,16 @@ namespace WIS.Billing.BusinessLogicCore.Controllers
                         converted = (Decimal?)Decimal.Parse(valor);
                 }
                 // DATEIME
-                else if (propertyType == typeof(DateTime))
-                {
-                    var ci = new CultureInfo("es-UY");
-                    var formatString = "yyyy-MM-dd HH:mm:ss";
+                //else if (propertyType == typeof(DateTime))
+                //{
+                //    var ci = new CultureInfo("es-UY");
+                //    var formatString = "yyyy-MM-dd HH:mm:ss";
 
-                    if (valor.ToString().Length == 10)
-                        formatString = "yyyy-MM-dd";
+                //    if (valor.ToString().Length == 10)
+                //        formatString = "yyyy-MM-dd";
 
-                    converted = DateTime.ParseExact(valor, formatString, ci);
-                }
+                //    converted = DateTime.ParseExact(valor, formatString, ci);
+                //}
                 else if (propertyType == typeof(DateTime?))
                 {
                     if (!string.IsNullOrEmpty(valor))
