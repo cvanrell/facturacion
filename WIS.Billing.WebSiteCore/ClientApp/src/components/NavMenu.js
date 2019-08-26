@@ -47,22 +47,12 @@ export class NavMenu extends Component {
                             <Link to={'/Adjustments/ADJ010'} className="nav-link" exact>
                                 <i className='fas fa-wrench' /> Ajustes de IPC
                             </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link to={'/'} className="nav-link" exact>
-                                <i className='fas fa-wrench' /> Mantenimiento
-                            </Link>
                         </NavItem>                        
                         <NavItem>
                             <Link to={'/counter'} className="nav-link">
                                 <i className='fas fa-cog' /> Desarrollos
                             </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link to={'/fetchdata'} className="nav-link">
-                                <i className='fas fa-tasks' /> Proyectos                            
-                            </Link>
-                        </NavItem>
+                        </NavItem>                        
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

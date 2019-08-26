@@ -12,6 +12,7 @@ namespace WIS.Billing.DataAccessCore.Database
     public class WISDB : DbContext
     {
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Fee> Fees { get; set; }
         public DbSet<HourRate> HourRates { get; set; }
         public DbSet<SupportRate> SupportRates { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -21,6 +22,7 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<T_GRID_USER_CONFIG> T_GRID_USER_CONFIG { get; set; }
         public DbSet<T_GRID_DEFAULT_CONFIG> T_GRID_DEFAULT_CONFIG { get; set; }
         public DbSet<T_LOG_CLIENT> T_LOG_CLIENT { get; set; }
+        public DbSet<T_LOG_FEE> T_LOG_FEE { get; set; }
         public DbSet<T_LOG_HOUR_RATE> T_LOG_HOUR_RATE { get; set; }
         public DbSet<T_LOG_SUPPORT_RATE> T_LOG_SUPPORT_RATE { get; set; }
         public DbSet<T_LOG_PROJECT> T_LOG_PROJECT { get; set; }

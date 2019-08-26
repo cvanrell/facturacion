@@ -138,7 +138,7 @@ namespace WIS.Billing.BusinessLogicCore
             //Cargar selects
 
             //MONEDA
-            selectCurrency.Options.Add(new SelectOption(TipoMoneda.Dólar.ToString(), TipoMoneda.Dólar.ToString()));
+            selectCurrency.Options.Add(new SelectOption(TipoMoneda.Dólares.ToString(), TipoMoneda.Dólares.ToString()));
             selectCurrency.Options.Add(new SelectOption(TipoMoneda.Pesos.ToString(), TipoMoneda.Pesos.ToString()));
 
 
@@ -169,14 +169,14 @@ namespace WIS.Billing.BusinessLogicCore
         //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
-            //grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-            //    new GridItemHeader("Cosas 1"),
-            //    new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
-            //    new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
-            //    new GridItemDivider(),
-            //    new GridItemHeader("Cosas 2"),
-            //    new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
-            //}));
+            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+                //new GridItemHeader("Cosas 1"),
+                new GridButton("btnCuotas", "Cuotas de proyecto", "fas fa-wrench"),
+                //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+                //new GridItemDivider(),
+                //new GridItemHeader("Cosas 2"),
+                //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+            }));
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
@@ -234,6 +234,14 @@ namespace WIS.Billing.BusinessLogicCore
 
         public override GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId)
         {
+            if (data.ButtonId == "btnCuotas")
+            {
+                data.Redirect = "/Fees/FEE010";
+
+                this._session.SetValue("Id", data.Row.GetCell("Id").Value);
+                this._session.SetValue("Description", data.Row.GetCell("Description").Value);                                
+
+            }
             return data;
         }
 

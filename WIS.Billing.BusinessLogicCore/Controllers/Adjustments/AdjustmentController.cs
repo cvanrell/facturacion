@@ -142,7 +142,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
             {
                 var query = context.Adjustments;
 
-                var defaultSort = new SortCommand("Year", SortDirection.Descending);
+                var defaultSort = new SortCommand("DT_ADDROW", SortDirection.Descending);
 
                 grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
             }

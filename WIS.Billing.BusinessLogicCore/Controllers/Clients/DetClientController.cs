@@ -136,17 +136,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             catch (Exception ex)
             {
                 throw new System.Exception("Erro al cargar la grilla:" + grid.Id);
-            }
-
-
-            //using (WISDB context = new WISDB())
-            //{
-            //    var query = context.Clients.Where(x => x.FL_DELETED == "N");
-
-            //    var defaultSort = new SortCommand("Description", SortDirection.Ascending);
-
-            //    grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
-            //}
+            }            
 
             return grid;
         }
