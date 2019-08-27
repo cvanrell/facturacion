@@ -125,7 +125,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             T_LOG_ADJUSTMENT l = new T_LOG_ADJUSTMENT()
             {
                 ID_ADJUSTMENT = a.Id.ToString(),
-                USER = _userId,
+                ID_USER = _userId,
                 DT_ADDROW = DateTime.Now,
                 ACTION = action,
                 DATA = json,

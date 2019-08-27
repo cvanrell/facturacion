@@ -24,6 +24,31 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 name: "Fee",
                 newName: "Fees");
 
+            migrationBuilder.RenameColumn(
+                name: "USER",
+                table: "T_LOG_SUPPORT_RATE",
+                newName: "ID_USER");
+
+            migrationBuilder.RenameColumn(
+                name: "USER",
+                table: "T_LOG_PROJECT",
+                newName: "ID_USER");
+
+            migrationBuilder.RenameColumn(
+                name: "USER",
+                table: "T_LOG_HOUR_RATE",
+                newName: "ID_USER");
+
+            migrationBuilder.RenameColumn(
+                name: "USER",
+                table: "T_LOG_CLIENT",
+                newName: "ID_USER");
+
+            migrationBuilder.RenameColumn(
+                name: "USER",
+                table: "T_LOG_ADJUSTMENT",
+                newName: "ID_USER");
+
             migrationBuilder.RenameIndex(
                 name: "IX_Fee_ProjectId",
                 table: "Fees",
@@ -40,7 +65,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 {
                     NU_LOG = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    USER = table.Column<int>(nullable: false),
+                    ID_USER = table.Column<int>(nullable: false),
                     DT_ADDROW = table.Column<DateTime>(nullable: false),
                     ACTION = table.Column<string>(nullable: true),
                     DATA = table.Column<string>(type: "nvarchar(4000)", nullable: true),
@@ -77,6 +102,31 @@ namespace WIS.Billing.DataAccessCore.Migrations
             migrationBuilder.RenameTable(
                 name: "Fees",
                 newName: "Fee");
+
+            migrationBuilder.RenameColumn(
+                name: "ID_USER",
+                table: "T_LOG_SUPPORT_RATE",
+                newName: "USER");
+
+            migrationBuilder.RenameColumn(
+                name: "ID_USER",
+                table: "T_LOG_PROJECT",
+                newName: "USER");
+
+            migrationBuilder.RenameColumn(
+                name: "ID_USER",
+                table: "T_LOG_HOUR_RATE",
+                newName: "USER");
+
+            migrationBuilder.RenameColumn(
+                name: "ID_USER",
+                table: "T_LOG_CLIENT",
+                newName: "USER");
+
+            migrationBuilder.RenameColumn(
+                name: "ID_USER",
+                table: "T_LOG_ADJUSTMENT",
+                newName: "USER");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Fees_ProjectId",

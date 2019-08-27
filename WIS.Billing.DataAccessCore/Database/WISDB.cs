@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WIS.Billing.EntitiesCore.Entities;
+using WIS.Billing.EntitiesCore.QueryTypes;
 
 namespace WIS.Billing.DataAccessCore.Database
 {    
@@ -27,7 +28,8 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<T_LOG_SUPPORT_RATE> T_LOG_SUPPORT_RATE { get; set; }
         public DbSet<T_LOG_PROJECT> T_LOG_PROJECT { get; set; }
         public DbSet<T_LOG_ADJUSTMENT> T_LOG_ADJUSTMENT { get; set; }
-        
+        public DbQuery<H_HOUR_RATE> H_HOUR_RATE { get; set; }
+
         //public static DbContextOptions options;
 
 

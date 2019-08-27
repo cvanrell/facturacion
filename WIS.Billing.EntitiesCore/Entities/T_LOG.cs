@@ -10,7 +10,7 @@ namespace WIS.Billing.EntitiesCore.Entities
     {
         [Key]
         public int NU_LOG { get; set; }        
-        public int USER { get; set; }
+        public int ID_USER { get; set; }
         public DateTime DT_ADDROW { get; set; }
         public string ACTION { get; set; }
         [Column(TypeName = "nvarchar(4000)")]

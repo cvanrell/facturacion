@@ -308,7 +308,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 _context.SaveChanges();
                 client = CheckIfClientExists(hr.Client);
 
-                LogHourRate(hr, client, "UPDATE");
+                LogHourRate(hr, client, "DELETE");
             }
         }
 
@@ -521,7 +521,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 _context.SaveChanges();
                 client = CheckIfClientExists(sr.Client);
 
-                LogSupportRate(sr, client, "UPDATE");
+                LogSupportRate(sr, client, "DELETE");
                 //context.SaveChanges();
             }
         }
@@ -529,7 +529,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         #endregion
         #endregion
 
-        #region LOGs
+        #region LOGS
 
         public void LogClient(Client c, string action)
         {
@@ -540,7 +540,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
             T_LOG_CLIENT l = new T_LOG_CLIENT()
             {
-                USER = this._userId,
+                ID_USER = this._userId,
                 ACTION = action,
                 DT_ADDROW = DateTime.Now,
                 DATA = json,
@@ -582,7 +582,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             {
                 T_LOG_HOUR_RATE l = new T_LOG_HOUR_RATE()
                 {
-                    USER = this._userId,
+                    ID_USER = this._userId,
                     ACTION = action,
                     DT_ADDROW = DateTime.Now,
                     DATA = json,
@@ -628,7 +628,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             {
                 T_LOG_SUPPORT_RATE l = new T_LOG_SUPPORT_RATE()
                 {
-                    USER = this._userId,
+                    ID_USER = this._userId,
                     ACTION = action,
                     DT_ADDROW = DateTime.Now,
                     DATA = json,

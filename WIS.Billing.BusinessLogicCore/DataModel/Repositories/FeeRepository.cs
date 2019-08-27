@@ -190,7 +190,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
             T_LOG_FEE l = new T_LOG_FEE()
             {
-                USER = this._userId,
+                ID_USER = this._userId,
                 ACTION = action,
                 DT_ADDROW = DateTime.Now,
                 DATA = json,

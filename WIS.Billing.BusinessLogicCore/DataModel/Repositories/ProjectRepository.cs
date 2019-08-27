@@ -189,7 +189,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             T_LOG_PROJECT l = new T_LOG_PROJECT()
             {
                 ID_PROJECT = p.Id.ToString(),
-                USER = _userId,
+                ID_USER = _userId,
                 DT_ADDROW = DateTime.Now,
                 ACTION = action,
                 DATA = json,

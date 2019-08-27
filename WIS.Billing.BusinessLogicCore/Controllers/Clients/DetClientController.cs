@@ -100,14 +100,14 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
-            //grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-            //    new GridItemHeader("Cosas 1"),
-            //    new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
-            //    new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
-            //    new GridItemDivider(),
-            //    new GridItemHeader("Cosas 2"),
-            //    new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
-            //}));
+            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+                //new GridItemHeader("Cosas 1"),
+                new GridButton("btnHistorico", "Historico Tarifa", "fas fa-wrench"),
+                //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+                //new GridItemDivider(),
+                //new GridItemHeader("Cosas 2"),
+                //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+            }));
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
@@ -206,41 +206,23 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
         public override GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId)
         {
-            if (data.ButtonId == "btnEditar")
+            if (data.ButtonId == "btnHistorico")
             {
                 //JavaScriptSerializer JSONConverter = new JavaScriptSerializer();
 
                 data.Parameters.Add(new ComponentParameter
                 {
-                    Id = "EDITAR",
+                    Id = "HISTORICO",
                     Value = "true"
                 });
-                _session.SetValue("Clients_EDITAR", true);
+                _session.SetValue("Tarifas_HISTORICO", true);
 
-                data.Redirect = "/Clients/DET_CLIENTS";
+                data.Redirect = "/Clients/CLI030";
 
                 this._session.SetValue("Id", data.Row.GetCell("Id").Value);
+                this._session.SetValue("Description", data.Row.GetCell("Description").Value);
 
             }
-            //else if (data.ButtonId == "btnSaldo")
-            //{
-            //    data.Redirect = "/documento/DOC020";
-
-            //    this._session.SetValue("DOC020_NU_DOCUMENTO", data.Row.GetCell("NU_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC020_TP_DOCUMENTO", data.Row.GetCell("TP_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC020_CD_EMPRESA", data.Row.GetCell("CD_EMPRESA").Value);
-            //}
-            //else
-            //{
-            //    data.Redirect = "/documento/DOC081";
-
-            //    this._session.SetValue("DOC080_NU_DOCUMENTO", data.Row.GetCell("NU_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC080_TP_DOCUMENTO", data.Row.GetCell("TP_DOCUMENTO").Value);
-            //    this._session.SetValue("DOC080_CD_EMPRESA", data.Row.GetCell("CD_EMPRESA").Value);
-            //}
-
-
-
             return data;
         }
 
@@ -340,169 +322,169 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         //    }
         //}
 
-        #region TARIFAS
-        public void AddHourRate(WISDB context, HourRate hRate, string rutCliente)
-        {
-            Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
-            //Client client = Utils.CheckIfClientExists(context, c);
-            if (client != null)
-            {
-                //Verificar que no existe una tarifa de hora con los mismos datos
-                HourRate hr = context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id &&
-                                x.Currency == hRate.Currency && x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
-                                x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
+        //#region TARIFAS
+        //public void AddHourRate(WISDB context, HourRate hRate, string rutCliente)
+        //{
+        //    Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
+        //    //Client client = Utils.CheckIfClientExists(context, c);
+        //    if (client != null)
+        //    {
+        //        //Verificar que no existe una tarifa de hora con los mismos datos
+        //        HourRate hr = context.HourRates.FirstOrDefault(x => x.Client.Id == client.Id &&
+        //                        x.Currency == hRate.Currency && x.AdjustmentPeriodicity == hRate.AdjustmentPeriodicity &&
+        //                        x.Amount == hRate.Amount && x.SpecialDiscount == hRate.SpecialDiscount);
 
-                //La tarifa existe
-                if (hr != null)
-                {
-                    //Si registro estaba eliminado, lo vuelvo a activar
-                    if (hr.FL_DELETED == "S")
-                    {
-                        hr.FL_DELETED = "N";
-                    }
-                    else
-                    {
-                        throw new Exception("Ya existe una tarifa con los datos ingresados");
-                    }
-                }
-                else
-                {
-                    HourRate newHR = new HourRate()
-                    {
-                        Description = hRate.Description,
-                        Client = client,
-                        Currency = hRate.Currency,
-                        AdjustmentPeriodicity = hRate.AdjustmentPeriodicity,
-                        Amount = hRate.Amount,
-                        SpecialDiscount = hRate.SpecialDiscount,
-                        FL_DELETED = "N"
-                    };
-                    context.HourRates.Add(newHR);
-                    context.SaveChanges();
-                }
-            }
-            else
-            {
-                throw new Exception("No se encontro el cliente especificado");
-            }
-        }
+        //        //La tarifa existe
+        //        if (hr != null)
+        //        {
+        //            //Si registro estaba eliminado, lo vuelvo a activar
+        //            if (hr.FL_DELETED == "S")
+        //            {
+        //                hr.FL_DELETED = "N";
+        //            }
+        //            else
+        //            {
+        //                throw new Exception("Ya existe una tarifa con los datos ingresados");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            HourRate newHR = new HourRate()
+        //            {
+        //                Description = hRate.Description,
+        //                Client = client,
+        //                Currency = hRate.Currency,
+        //                AdjustmentPeriodicity = hRate.AdjustmentPeriodicity,
+        //                Amount = hRate.Amount,
+        //                SpecialDiscount = hRate.SpecialDiscount,
+        //                FL_DELETED = "N"
+        //            };
+        //            context.HourRates.Add(newHR);
+        //            context.SaveChanges();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("No se encontro el cliente especificado");
+        //    }
+        //}
 
-        public void UpdateHourRate(WISDB context, HourRate hRate, string rutCliente)
-        {
-            HourRate hr = context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
-            if (hr == null)
-            {
-                throw new Exception("No se encuentra la tarifa especificada");
-            }
-            else
-            {
-                hr.Description = hRate.Description;
-                hr.Currency = hRate.Currency;
-                hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
-                hr.Amount = hRate.Amount;
-                hr.SpecialDiscount = hRate.SpecialDiscount;
-                context.SaveChanges();
-            }
-        }
+        //public void UpdateHourRate(WISDB context, HourRate hRate, string rutCliente)
+        //{
+        //    HourRate hr = context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+        //    if (hr == null)
+        //    {
+        //        throw new Exception("No se encuentra la tarifa especificada");
+        //    }
+        //    else
+        //    {
+        //        hr.Description = hRate.Description;
+        //        hr.Currency = hRate.Currency;
+        //        hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
+        //        hr.Amount = hRate.Amount;
+        //        hr.SpecialDiscount = hRate.SpecialDiscount;
+        //        context.SaveChanges();
+        //    }
+        //}
 
-        public void DeleteHourRate(WISDB context, HourRate hRate)
-        {
-            HourRate hr = context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
-            if (hr == null)
-            {
-                throw new Exception("No se encuentra la tarifa que desea eliminar");
-            }
-            else
-            {
-                hr.FL_DELETED = "S";
-                context.SaveChanges();
-            }
-        }
-        #endregion
+        //public void DeleteHourRate(WISDB context, HourRate hRate)
+        //{
+        //    HourRate hr = context.HourRates.FirstOrDefault(x => x.Id == hRate.Id);
+        //    if (hr == null)
+        //    {
+        //        throw new Exception("No se encuentra la tarifa que desea eliminar");
+        //    }
+        //    else
+        //    {
+        //        hr.FL_DELETED = "S";
+        //        context.SaveChanges();
+        //    }
+        //}
+        //#endregion
 
 
-        #region TARIFAS DE SOPORTE
-        public void AddSupportRate(WISDB context, SupportRate sRate, string rutCliente)
-        {
-            Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
-            if (client != null)
-            {
-                //Verificar que no existe una tarifa de hora con los mismos datos
-                SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Client.Id == client.Id &&
-                                x.Currency == sRate.Currency && x.AdjustmentPeriodicity == sRate.AdjustmentPeriodicity &&
-                                x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount &&
-                                x.IVA == sRate.IVA && x.Periodicity == sRate.Periodicity);
+        //#region TARIFAS DE SOPORTE
+        //public void AddSupportRate(WISDB context, SupportRate sRate, string rutCliente)
+        //{
+        //    Client client = context.Clients.FirstOrDefault(x => x.RUT == rutCliente);
+        //    if (client != null)
+        //    {
+        //        //Verificar que no existe una tarifa de hora con los mismos datos
+        //        SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Client.Id == client.Id &&
+        //                        x.Currency == sRate.Currency && x.AdjustmentPeriodicity == sRate.AdjustmentPeriodicity &&
+        //                        x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount &&
+        //                        x.IVA == sRate.IVA && x.Periodicity == sRate.Periodicity);
 
-                //No existe tarifa, puede agregarla
-                if (sr != null)
-                {
-                    //Si registro estaba eliminado, lo vuelvo a activar
-                    if (sr.FL_DELETED == "S")
-                    {
-                        sr.FL_DELETED = "N";
-                    }
-                    else
-                    {
-                        throw new Exception("Ya existe una tarifa de soporte con los datos ingresados");
-                    }
-                }
-                else
-                {
-                    SupportRate newSR = new SupportRate()
-                    {
-                        Description = sRate.Description,
-                        Client = client,
-                        Currency = sRate.Currency,
-                        Periodicity = sRate.Periodicity,
-                        AdjustmentPeriodicity = sRate.AdjustmentPeriodicity,
-                        Amount = sRate.Amount,
-                        SpecialDiscount = sRate.SpecialDiscount,
-                        FL_DELETED = "N"
-                    };
-                    context.SupportRates.Add(newSR);
-                    context.SaveChanges();
-                }
-            }
-            else
-            {
-                throw new Exception("No se encontro el cliente especificado");
-            }
-        }
+        //        //No existe tarifa, puede agregarla
+        //        if (sr != null)
+        //        {
+        //            //Si registro estaba eliminado, lo vuelvo a activar
+        //            if (sr.FL_DELETED == "S")
+        //            {
+        //                sr.FL_DELETED = "N";
+        //            }
+        //            else
+        //            {
+        //                throw new Exception("Ya existe una tarifa de soporte con los datos ingresados");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            SupportRate newSR = new SupportRate()
+        //            {
+        //                Description = sRate.Description,
+        //                Client = client,
+        //                Currency = sRate.Currency,
+        //                Periodicity = sRate.Periodicity,
+        //                AdjustmentPeriodicity = sRate.AdjustmentPeriodicity,
+        //                Amount = sRate.Amount,
+        //                SpecialDiscount = sRate.SpecialDiscount,
+        //                FL_DELETED = "N"
+        //            };
+        //            context.SupportRates.Add(newSR);
+        //            context.SaveChanges();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("No se encontro el cliente especificado");
+        //    }
+        //}
 
-        public void UpdateSupportRate(WISDB context, SupportRate sRate, string rutCliente)
-        {
-            SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
-            if (sr == null)
-            {
-                throw new Exception("No se encuentra la tarifa especificada");
-            }
-            else
-            {
-                sr.Description = sRate.Description;
-                sr.Currency = sRate.Currency;
-                sr.Periodicity = sr.Periodicity;
-                sr.AdjustmentPeriodicity = sRate.AdjustmentPeriodicity;
-                sr.Amount = sRate.Amount;
-                sr.IVA = sRate.IVA;
-                sr.SpecialDiscount = sRate.SpecialDiscount;
-                context.SaveChanges();
-            }
-        }
+        //public void UpdateSupportRate(WISDB context, SupportRate sRate, string rutCliente)
+        //{
+        //    SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+        //    if (sr == null)
+        //    {
+        //        throw new Exception("No se encuentra la tarifa especificada");
+        //    }
+        //    else
+        //    {
+        //        sr.Description = sRate.Description;
+        //        sr.Currency = sRate.Currency;
+        //        sr.Periodicity = sr.Periodicity;
+        //        sr.AdjustmentPeriodicity = sRate.AdjustmentPeriodicity;
+        //        sr.Amount = sRate.Amount;
+        //        sr.IVA = sRate.IVA;
+        //        sr.SpecialDiscount = sRate.SpecialDiscount;
+        //        context.SaveChanges();
+        //    }
+        //}
 
-        public void DeleteSupportRate(WISDB context, SupportRate sRate)
-        {
-            SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
-            if (sr == null)
-            {
-                throw new Exception("No se encuentra la tarifa que desea eliminar");
-            }
-            else
-            {
-                sr.FL_DELETED = "S";
-                context.SaveChanges();
-            }
-        }
+        //public void DeleteSupportRate(WISDB context, SupportRate sRate)
+        //{
+        //    SupportRate sr = context.SupportRates.FirstOrDefault(x => x.Id == sRate.Id);
+        //    if (sr == null)
+        //    {
+        //        throw new Exception("No se encuentra la tarifa que desea eliminar");
+        //    }
+        //    else
+        //    {
+        //        sr.FL_DELETED = "S";
+        //        context.SaveChanges();
+        //    }
+        //}
 
-        #endregion
+        //#endregion
     }
 }

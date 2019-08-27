@@ -106,9 +106,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("ID_ADJUSTMENT");
 
-                    b.Property<string>("PAGE");
+                    b.Property<int>("ID_USER");
 
-                    b.Property<int>("USER");
+                    b.Property<string>("PAGE");
 
                     b.HasKey("NU_LOG");
 
@@ -130,9 +130,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("ID_FEE");
 
-                    b.Property<string>("PAGE");
+                    b.Property<int>("ID_USER");
 
-                    b.Property<int>("USER");
+                    b.Property<string>("PAGE");
 
                     b.HasKey("NU_LOG");
 
@@ -154,9 +154,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("ID_HOUR_RATE");
 
-                    b.Property<string>("PAGE");
+                    b.Property<int>("ID_USER");
 
-                    b.Property<int>("USER");
+                    b.Property<string>("PAGE");
 
                     b.HasKey("NU_LOG");
 
@@ -178,9 +178,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("ID_PROJECT");
 
-                    b.Property<string>("PAGE");
+                    b.Property<int>("ID_USER");
 
-                    b.Property<int>("USER");
+                    b.Property<string>("PAGE");
 
                     b.HasKey("NU_LOG");
 
@@ -202,9 +202,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("ID_SUPPORT_RATE");
 
-                    b.Property<string>("PAGE");
+                    b.Property<int>("ID_USER");
 
-                    b.Property<int>("USER");
+                    b.Property<string>("PAGE");
 
                     b.HasKey("NU_LOG");
 
@@ -474,9 +474,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("ID_CLIENT");
 
-                    b.Property<string>("PAGE");
+                    b.Property<int>("ID_USER");
 
-                    b.Property<int>("USER");
+                    b.Property<string>("PAGE");
 
                     b.HasKey("NU_LOG");
 
