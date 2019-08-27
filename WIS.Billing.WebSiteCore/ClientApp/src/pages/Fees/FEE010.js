@@ -84,9 +84,7 @@ export class FEE010 extends Component {
                     </div>
 
 
-                </Form>
-
-                <h3 className="form-title">{("Tarifas de horas")}</h3>
+                </Form>                
                 <div className="row mb-4">
                     <div className="col-12">
                         <Grid id="FEE010_grid_T" rowsToFetch={30} rowsToDisplay={15}

@@ -89,13 +89,13 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Fees
             {
                 using (WISDB context = new WISDB())
                 {
-                    var idCliente = _session.GetValue<string>("Id");
+                    var idProyecto = _session.GetValue<string>("Id");
 
-                    if (!string.IsNullOrEmpty(idCliente))
+                    if (!string.IsNullOrEmpty(idProyecto))
                     {
-                        var query = context.Fees.Where(x => x.FL_DELETED == "N");
+                        var query = context.Fees.Where(x => x.Project.Id.ToString() == idProyecto && x.FL_DELETED == "N");
 
-                        var defaultSort = new SortCommand("MonthYear", SortDirection.Ascending);
+                        var defaultSort = new SortCommand("DT_ADDROW", SortDirection.Descending);
 
                         grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
                     }

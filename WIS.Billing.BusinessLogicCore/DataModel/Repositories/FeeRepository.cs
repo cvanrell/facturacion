@@ -41,7 +41,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             if (project != null)
             {
                 //Verificar que no existe una cuota con los mismos datos
-                Fee fee = CheckIfFeeExists(f);
+                Fee fee = CheckIfFeeExists(f, project);
                 if (fee != null)
                 {
                     if (fee.FL_DELETED == "S")
@@ -63,7 +63,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     fee = new Fee()
                     {
                         Description = f.Description,
-                        Month = f.Month,
+                        //Month = f.Month,
                         MonthYear = f.MonthYear,
                         Amount = f.Amount,
                         Discount = f.Discount,
@@ -98,8 +98,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             }
             else
             {
-                fee.Description = f.Description;
-                fee.Month = f.Month;
+                //fee.Description = f.Description;
+                //fee.Month = f.Month;
                 fee.MonthYear = f.MonthYear;
                 fee.Amount = f.Amount;
                 fee.Discount = f.Discount;
@@ -130,14 +130,13 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public Fee CheckIfFeeExists(Fee fee)
         {
-            return this._context.Fees.Include(x => x.Project).FirstOrDefault(x => x.Description == fee.Description && x.MonthYear == fee.MonthYear /*&& x.Month == fee.Month && x.Project.Id.ToString() == fee.Project.Id.ToString()*/);
-            //if (f != null)
-            //{
-            //    return f;
-            //}
-            //return null;
+            return this._context.Fees.Include(x => x.Project).Include(x => x.Project.Client).FirstOrDefault(x => x.Description == fee.Description && x.MonthYear == fee.MonthYear && x.Id == fee.Id);            
+        }
 
-
+        public Fee CheckIfFeeExists(Fee fee, Project p)
+        {
+            //string idPro = p.Id.ToString();
+            return this._context.Fees.Include(x => x.Project).Include(x => x.Project.Client).FirstOrDefault(x => x.Description == fee.Description && x.MonthYear == fee.MonthYear && x.Project.Id == p.Id);
         }
 
 
@@ -172,6 +171,17 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_DELETED = fee.Project.FL_DELETED,                    
                     DT_ADDROW = fee.Project.DT_ADDROW,
                     DT_UPDROW = fee.Project.DT_UPDROW,
+                    ClientLogObject = new ClientLogObject
+                    {
+                        Id = fee.Project.Client.Id.ToString(),
+                        Description = fee.Project.Client.Description,
+                        RUT = fee.Project.Client.RUT,
+                        Address = fee.Project.Client.Address,
+                        FL_DELETED = fee.Project.Client.FL_DELETED,
+                        FL_FOREIGN = fee.Project.Client.FL_FOREIGN,
+                        DT_ADDROW = fee.Project.Client.DT_ADDROW,
+                        DT_UPDROW = fee.Project.Client.DT_UPDROW,
+                    }
                 }
             };
             string json = JsonConvert.SerializeObject(fLog);

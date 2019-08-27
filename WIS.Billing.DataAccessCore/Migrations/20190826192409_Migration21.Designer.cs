@@ -10,7 +10,7 @@ using WIS.Billing.DataAccessCore.Database;
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    [Migration("20190826153314_Migration21")]
+    [Migration("20190826192409_Migration21")]
     partial class Migration21
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -230,8 +230,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("FL_DELETED")
                         .HasMaxLength(1);
-
-                    b.Property<int>("Month");
 
                     b.Property<string>("MonthYear");
 

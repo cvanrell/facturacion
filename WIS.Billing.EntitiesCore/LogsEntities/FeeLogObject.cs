@@ -8,8 +8,7 @@ namespace WIS.Billing.EntitiesCore.LogsEntities
     public class FeeLogObject
     {
         public string Id { get; set; }
-        public string Description { get; set; }
-        public int Month { get; set; }
+        public string Description { get; set; }        
         public decimal Amount { get; set; }
         public decimal Discount { get; set; }
         public string MonthYear { get; set; }

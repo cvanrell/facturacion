@@ -16,6 +16,10 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 name: "PK_Fee",
                 table: "Fee");
 
+            migrationBuilder.DropColumn(
+                name: "Month",
+                table: "Fee");
+
             migrationBuilder.RenameTable(
                 name: "Fee",
                 newName: "Fees");
@@ -78,6 +82,12 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 name: "IX_Fees_ProjectId",
                 table: "Fee",
                 newName: "IX_Fee_ProjectId");
+
+            migrationBuilder.AddColumn<int>(
+                name: "Month",
+                table: "Fee",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Fee",

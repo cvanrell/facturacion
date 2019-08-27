@@ -229,8 +229,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.Property<string>("FL_DELETED")
                         .HasMaxLength(1);
 
-                    b.Property<int>("Month");
-
                     b.Property<string>("MonthYear");
 
                     b.Property<Guid?>("ProjectId");
