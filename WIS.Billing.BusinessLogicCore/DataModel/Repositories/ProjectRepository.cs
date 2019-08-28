@@ -74,15 +74,14 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 //{
                 //    project.Currency = "Pesos";
                 //}
-
-                //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
-                if (project.Client.FL_FOREIGN == "S")
-                {
-                    project.IVA = 0;
-                }
-                else if(project.Client.FL_FOREIGN == "N")
+                
+                if (project.Client.FL_IVA == "S")
                 {
                     project.IVA = 22;
+                }
+                else if(project.Client.FL_IVA == "N")
+                {
+                    project.IVA = 0;
                 }
 
                 this._context.Projects.Add(project);
@@ -178,7 +177,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     RUT = project.Client.RUT,
                     Address = project.Client.Address,
                     FL_DELETED = project.Client.FL_DELETED,
-                    FL_FOREIGN = project.Client.FL_FOREIGN,
+                    FL_IVA = project.Client.FL_IVA,
                     DT_ADDROW = project.Client.DT_ADDROW,
                     DT_UPDROW = project.Client.DT_UPDROW,
                 }

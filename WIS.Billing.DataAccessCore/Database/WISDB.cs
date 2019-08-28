@@ -28,7 +28,12 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<T_LOG_SUPPORT_RATE> T_LOG_SUPPORT_RATE { get; set; }
         public DbSet<T_LOG_PROJECT> T_LOG_PROJECT { get; set; }
         public DbSet<T_LOG_ADJUSTMENT> T_LOG_ADJUSTMENT { get; set; }
+
+        //VISTAS
         public DbQuery<H_HOUR_RATE> H_HOUR_RATE { get; set; }
+        public DbQuery<H_SUPPORT_RATE> H_SUPPORT_RATE { get; set; }
+        public DbQuery<V_HOUR_RATES> V_HOUR_RATES { get; set; }
+        public DbQuery<V_SUPPORT_RATES> V_SUPPORT_RATES { get; set; }
 
         //public static DbContextOptions options;
 

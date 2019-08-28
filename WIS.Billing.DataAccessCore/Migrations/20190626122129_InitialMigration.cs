@@ -27,7 +27,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    ClientId = table.Column<Guid>(nullable: true),
+                    ClientId = table.Column<Guid>(nullable: false),
                     Currency = table.Column<int>(nullable: false),
                     Rate = table.Column<decimal>(nullable: false),
                     AdjustmentPeriodicity = table.Column<int>(nullable: false),

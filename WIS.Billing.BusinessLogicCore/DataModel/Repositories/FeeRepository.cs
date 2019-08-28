@@ -178,7 +178,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                         RUT = fee.Project.Client.RUT,
                         Address = fee.Project.Client.Address,
                         FL_DELETED = fee.Project.Client.FL_DELETED,
-                        FL_FOREIGN = fee.Project.Client.FL_FOREIGN,
+                        FL_IVA = fee.Project.Client.FL_IVA,
                         DT_ADDROW = fee.Project.Client.DT_ADDROW,
                         DT_UPDROW = fee.Project.Client.DT_UPDROW,
                     }

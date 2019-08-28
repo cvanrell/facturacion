@@ -6,6 +6,7 @@ using System.Text;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.BusinessLogicCore.Controllers;
 using WIS.BusinessLogicCore.GridUtil.Services;
+using WIS.CommonCore.App;
 using WIS.CommonCore.Enums;
 using WIS.CommonCore.FormComponents;
 using WIS.CommonCore.GridComponents;
@@ -15,15 +16,14 @@ using WIS.CommonCore.SortComponents;
 
 namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 {
-    public class HourRateController : BaseController
+    public class RateController : BaseController
     {
-
         private readonly ISessionAccessor _session;
         private readonly IDbConnection _connection;
-        private readonly string _pageName = "CLI030";
+        private readonly string _pageName = "CLI050";
         private List<string> GridKeys { get; }
 
-        public HourRateController(ISessionAccessor session, IDbConnection connection)
+        public RateController(ISessionAccessor session, IDbConnection connection)
         {
             this._session = session;
             this._connection = connection;
@@ -75,14 +75,14 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
         //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
-            //grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-            //    //new GridItemHeader("Cosas 1"),
-            //    new GridButton("btnHistorico", "Historico Tarifa", "fas fa-wrench"),
-            //    //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
-            //    //new GridItemDivider(),
-            //    //new GridItemHeader("Cosas 2"),
-            //    //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
-            //}));
+            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+                //new GridItemHeader("Cosas 1"),
+                new GridButton("btnHistorico", "Historico Tarifa", "fas fa-wrench"),
+                //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+                //new GridItemDivider(),
+                //new GridItemHeader("Cosas 2"),
+                //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+            }));
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
@@ -92,35 +92,16 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
             {
                 using (WISDB context = new WISDB())
                 {
-                    var idTarifa = _session.GetValue<string>("Id");
-
-                    if (!string.IsNullOrEmpty(idTarifa))
+                    switch (grid.Id)
                     {
-                        //CONSULTA A LA VISTA PARA CONSEGUIR DATOS DEL LOG
-                        var query = context.H_HOUR_RATE.Where(x => x.ID_HOUR_RATE == idTarifa);
-
-                        var defaultSort = new SortCommand("DT_ADDROW", SortDirection.Descending);
-
-                        grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
-
-                        foreach (var row in grid.Rows)
-                        {
-                            DateTime date = new DateTime();
-                            foreach (var cell in row.Cells)
-                            {
-                                if (cell.Column.Name == "Fecha de registro")
-                                {
-                                    date = DateTime.Parse(cell.Value).Date;
-                                }
-
-                                if (cell.Column.Name == "Fecha")
-                                {
-                                    cell.Value = date.ToString("d");
-                                }
-                            }
-
-                        }
+                        //Obtiene grid con registros de las tarifas de horas del cliente
+                        case "CLI050_grid_T":
+                            return GridHourRateFetchRows(service, grid, gridQuery, context);
+                        //Obtiene grid con registros de las tarifas de soporte del cliente
+                        case "CLI050_grid_S":
+                            return GridSupportRatesFetchRows(service, grid, gridQuery, context);
                     }
+
                 }
             }
             catch (Exception ex)
@@ -131,9 +112,33 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
             return grid;
         }
 
+        public Grid GridHourRateFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context)
+        {
+            var query = context.V_HOUR_RATES;
+
+            var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
+
+            grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
+
+
+            return grid;
+        }
+
+
+        public Grid GridSupportRatesFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context)
+        {
+            var query = context.V_SUPPORT_RATES;
+
+            var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
+
+            grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
+
+            return grid;
+        }
+
         public override Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId)
-        {           
-            
+        {
+
 
             return grid;
         }
@@ -141,24 +146,24 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 
         public override GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId)
         {
-            //if (data.ButtonId == "btnHistorico")
-            //{
-            //    //JavaScriptSerializer JSONConverter = new JavaScriptSerializer();
+            if (data.ButtonId == "btnHistorico")
+            {
+                //JavaScriptSerializer JSONConverter = new JavaScriptSerializer();
 
-            //    data.Parameters.Add(new ComponentParameter
-            //    {
-            //        Id = "HISTORICO",
-            //        Value = "true"
-            //    });
-            //    _session.SetValue("Tarifas_HISTORICO", true);
+                data.Parameters.Add(new ComponentParameter
+                {
+                    Id = "HISTORICO",
+                    Value = "true"
+                });
+                _session.SetValue("Tarifas_HISTORICO", true);
 
-            //    data.Redirect = "/Clients/CLI_030";
+                data.Redirect = "/Clients/CLI030";
 
-            //    this._session.SetValue("Id", data.Row.GetCell("Id").Value);
+                this._session.SetValue("Id", data.Row.GetCell("Id").Value);
+                this._session.SetValue("Description", data.Row.GetCell("Description").Value);
 
-            //}
+            }
             return data;
         }
-                
     }
 }

@@ -49,6 +49,11 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 table: "T_LOG_ADJUSTMENT",
                 newName: "ID_USER");
 
+            migrationBuilder.RenameColumn(
+                name: "FL_FOREIGN",
+                table: "Clients",
+                newName: "FL_IVA");
+
             migrationBuilder.RenameIndex(
                 name: "IX_Fee_ProjectId",
                 table: "Fees",
@@ -127,6 +132,11 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 name: "ID_USER",
                 table: "T_LOG_ADJUSTMENT",
                 newName: "USER");
+
+            migrationBuilder.RenameColumn(
+                name: "FL_IVA",
+                table: "Clients",
+                newName: "FL_FOREIGN");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Fees_ProjectId",

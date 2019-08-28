@@ -31,6 +31,11 @@ export class NavMenu extends Component {
                             </Link>                        
                         </NavItem>
                         <NavItem>
+                            <Link to={'/Clients/CLI050'} className="nav-link" exact>
+                                <i className='fas fa-user' /> Tarifas totales
+                            </Link>
+                        </NavItem>
+                        <NavItem>
                             <Link to={'/fetchmaintenance'} className="nav-link" exact>
                                 <i className='fas fa-wrench' /> Mantenimientos
                             </Link>

@@ -85,7 +85,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
         {
             grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
                 new GridItemHeader("Opciones"),
-                new GridButton("btnEditar", "Tarifas de horas", "fas fa-wrench"),
+                new GridButton("btnEditar", "Tarifas", "fas fa-wrench"),
                 //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
                 new GridItemDivider(),
                 //new GridItemHeader("Cosas 2"),

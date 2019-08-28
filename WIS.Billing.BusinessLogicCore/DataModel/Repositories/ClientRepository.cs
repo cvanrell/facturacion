@@ -63,7 +63,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     Description = c.Description,
                     RUT = c.RUT,
                     FL_DELETED = "N",
-                    FL_FOREIGN = c.FL_FOREIGN,
+                    FL_IVA = c.FL_IVA,
                     DT_ADDROW = DateTime.Now,
                     DT_UPDROW = DateTime.Now,
                 };
@@ -154,6 +154,32 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
             if (client != null)
             {
+                //Convierto los valores de moneda y periodicidad del row de la grilla para comparar despues en la base
+                if (int.Parse(hRate.Currency) == 0)
+                {
+                    hRate.Currency = "Dólares";
+                }
+                else if (int.Parse(hRate.Currency) == 1)
+                {
+                    hRate.Currency = "Pesos";
+                }
+
+                switch (int.Parse(hRate.AdjustmentPeriodicity))
+                {
+                    case 0:
+                        hRate.AdjustmentPeriodicity = "Mensual";
+                        break;
+                    case 1:
+                        hRate.AdjustmentPeriodicity = "Trimestral";
+                        break;
+                    case 2:
+                        hRate.AdjustmentPeriodicity = "Semestral";
+                        break;
+                    case 3:
+                        hRate.AdjustmentPeriodicity = "Anual";
+                        break;
+                }
+
                 //Verificar que no existe una tarifa de hora con los mismos datos
                 HourRate hr = CheckIfHourRateExists(hRate, client);
 
@@ -573,7 +599,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     RUT = hRate.Client.RUT,
                     Address = hRate.Client.Address,
                     FL_DELETED = hRate.Client.FL_DELETED,
-                    FL_FOREIGN = hRate.Client.FL_FOREIGN,
+                    FL_IVA = hRate.Client.FL_IVA,
                     DT_ADDROW = hRate.Client.DT_ADDROW,
                     DT_UPDROW = hRate.Client.DT_UPDROW,                    
                 }
@@ -619,7 +645,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     RUT = sRate.Client.RUT,
                     Address = sRate.Client.Address,
                     FL_DELETED = sRate.Client.FL_DELETED,
-                    FL_FOREIGN = sRate.Client.FL_FOREIGN,
+                    FL_IVA = sRate.Client.FL_IVA,
                     DT_ADDROW = sRate.Client.DT_ADDROW,
                     DT_UPDROW = sRate.Client.DT_UPDROW,                    
                 }

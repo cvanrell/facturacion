@@ -36,7 +36,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.Property<string>("FL_DELETED")
                         .HasMaxLength(1);
 
-                    b.Property<string>("FL_FOREIGN")
+                    b.Property<string>("FL_IVA")
                         .HasMaxLength(1);
 
                     b.Property<string>("RUT");

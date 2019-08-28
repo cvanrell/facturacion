@@ -289,11 +289,10 @@ namespace WIS.Billing.BusinessLogicCore
                     InitialDate = p.InitialDate,
                     TotalAmount = p.Total,
                     FL_DELETED = "N",
-                };
-                //Pregunto si el cliente para ese proyecto es extranjero y seteo el IVA en 0
-                if (client.FL_FOREIGN == "S")
+                };                
+                if (client.FL_IVA == "S")
                 {
-                    project.IVA = 0;
+                    project.IVA = 22;
                 }
                 context.Projects.Add(project);
                 context.SaveChanges();

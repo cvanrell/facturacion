@@ -4,10 +4,10 @@ using System.Text;
 
 namespace WIS.Billing.EntitiesCore.QueryTypes
 {
-    public class H_HOUR_RATE
+    public class H_SUPPORT_RATE
     {
         public int NU_LOG { get; set; }
-        public string ID_HOUR_RATE { get; set; }
+        public string ID_SUPPORT_RATE { get; set; }
         public string Client { get; set; }
         public string Description { get; set; }
         public string Currency { get; set; }

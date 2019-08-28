@@ -10,7 +10,7 @@ using WIS.Billing.DataAccessCore.Database;
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    [Migration("20190827171139_Migration21")]
+    [Migration("20190828131040_Migration21")]
     partial class Migration21
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.Property<string>("FL_DELETED")
                         .HasMaxLength(1);
 
-                    b.Property<string>("FL_FOREIGN")
+                    b.Property<string>("FL_IVA")
                         .HasMaxLength(1);
 
                     b.Property<string>("RUT");
