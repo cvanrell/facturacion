@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button'
 import { Form, Field, SubmitButton, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
-export class CLI030 extends Component {
+export class CLI040 extends Component {
 
 
 
@@ -64,7 +64,7 @@ export class CLI030 extends Component {
                 {...this.props}
             >
                 <Form
-                    id="CLI030_form_1"
+                    id="CLI040_form_1"
                 //initialValues={initialValues}
                 //validationSchema={validationSchema}
                 >
@@ -78,7 +78,7 @@ export class CLI030 extends Component {
                                         <Field name="Description" readOnly />
                                         <StatusMessage for="Description" />
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                         </fieldset>
                     </div>
@@ -86,16 +86,16 @@ export class CLI030 extends Component {
 
                 </Form>
 
-                <h3 className="form-title">{("Tarifas de horas")}</h3>
+                <h3 className="form-title">{("Tarifas de soporte")}</h3>
                 <div className="row mb-4">
                     <div className="col-12">
-                        <Grid id="CLI030_grid" rowsToFetch={30} rowsToDisplay={15}
+                        <Grid id="CLI040_grid" rowsToFetch={30} rowsToDisplay={15}
                         //onAfterApplyFilter={onAfterApplyFilter}
                         //onAfterInitialize={onAfterInitialize}
                         //enableExcelExport
                         />
                     </div>
-                </div>                
+                </div>
             </Page>
         );
     }

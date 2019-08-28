@@ -19,12 +19,7 @@ export class NavMenu extends Component {
                     <Nav>
                         <Navbar.Text>
                             ADMINISTRACIÓN
-                        </Navbar.Text>
-                        <NavItem>
-                            <Link to={'/fetchclient'} className="nav-link" exact>
-                                <i className='fas fa-user' /> Clientes
-                            </Link>
-                        </NavItem>
+                        </Navbar.Text>                        
                         <NavItem>
                             <Link to={'/Clients/CLI010'} className="nav-link" exact>
                                 <i className='fas fa-user' /> Clientes
@@ -32,7 +27,7 @@ export class NavMenu extends Component {
                         </NavItem>
                         <NavItem>
                             <Link to={'/Clients/CLI050'} className="nav-link" exact>
-                                <i className='fas fa-user' /> Tarifas totales
+                                <i className='fas fa-clipboard-list' /> Tarifas totales
                             </Link>
                         </NavItem>
                         <NavItem>

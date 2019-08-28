@@ -75,14 +75,28 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
         //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
-            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+            if (grid.Id == "CLI050_grid_T")
+            {
+                grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
                 //new GridItemHeader("Cosas 1"),
-                new GridButton("btnHistorico", "Historico Tarifa", "fas fa-wrench"),
+                new GridButton("btnHistoricoH", "Historico Tarifa", "fas fa-wrench"),
                 //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
                 //new GridItemDivider(),
                 //new GridItemHeader("Cosas 2"),
                 //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
             }));
+            }
+            else if (grid.Id == "CLI050_grid_S")
+            {
+                grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+                //new GridItemHeader("Cosas 1"),
+                new GridButton("btnHistoricoS", "Historico Tarifa", "fas fa-wrench"),
+                //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+                //new GridItemDivider(),
+                //new GridItemHeader("Cosas 2"),
+                //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+            }));
+            }
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
@@ -116,7 +130,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
         {
             var query = context.V_HOUR_RATES;
 
-            var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
+            var defaultSort = new SortCommand("Client", SortDirection.Ascending);
 
             grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
 
@@ -129,7 +143,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
         {
             var query = context.V_SUPPORT_RATES;
 
-            var defaultSort = new SortCommand("Amount", SortDirection.Ascending);
+            var defaultSort = new SortCommand("Client", SortDirection.Ascending);
 
             grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
 
@@ -146,7 +160,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 
         public override GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId)
         {
-            if (data.ButtonId == "btnHistorico")
+            if (data.ButtonId == "btnHistoricoH")
             {
                 //JavaScriptSerializer JSONConverter = new JavaScriptSerializer();
 
@@ -162,6 +176,20 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
                 this._session.SetValue("Id", data.Row.GetCell("Id").Value);
                 this._session.SetValue("Description", data.Row.GetCell("Description").Value);
 
+            }
+            else if (data.ButtonId == "btnHistoricoS")
+            {
+                data.Parameters.Add(new ComponentParameter
+                {
+                    Id = "HISTORICO",
+                    Value = "true"
+                });
+                _session.SetValue("Tarifas_HISTORICO", true);
+
+                data.Redirect = "/Clients/CLI040";
+
+                this._session.SetValue("Id", data.Row.GetCell("Id").Value);
+                this._session.SetValue("Description", data.Row.GetCell("Description").Value);
             }
             return data;
         }

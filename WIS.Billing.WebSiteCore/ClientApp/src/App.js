@@ -25,14 +25,15 @@ import { FetchHourRate } from './pages/HourRates/FetchHourRate';
 import { CLI010 } from './pages/Clients/CLI010';
 import { CLI020 } from './pages/Clients/CLI020';
 import { CLI030 } from './pages/Clients/CLI030';
-//import { CLI040 } from './pages/Clients/CLI040';
+import { CLI040 } from './pages/Clients/CLI040';
 import { CLI050 } from './pages/Clients/CLI050';
 import { FEE010 } from './pages/Fees/FEE010';
+//import { PRO010 } from './pages/Projects/PRO010';
 
 
 const PRO010 = React.lazy(() => import('./pages/Projects/PRO010'));
 const ADJ010 = React.lazy(() => import('./pages/Adjustments/ADJ010'));
-//import { PRO010 } from './pages/Projects/PRO010';
+
 
 
 //const Clients = React.lazy(() => import('./pages/Clients/Clients'));
@@ -80,6 +81,7 @@ export class App extends Component {
                         <Route path='/Clients/CLI010' component={CLI010} />
                         <Route path='/Clients/CLI020' component={CLI020} />
                         <Route path='/Clients/CLI030' component={CLI030} />
+                        <Route path='/Clients/CLI040' component={CLI040} />
                         <Route path='/Clients/CLI050' component={CLI050} />
                         <Route path='/Fees/FEE010' component={FEE010} />
 

@@ -15,15 +15,14 @@ using WIS.CommonCore.SortComponents;
 
 namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 {
-    public class HourRateController : BaseController
+    public class SupportRateController : BaseController
     {
-
         private readonly ISessionAccessor _session;
         private readonly IDbConnection _connection;
-        private readonly string _pageName = "CLI030";
+        private readonly string _pageName = "CLI040";
         private List<string> GridKeys { get; }
 
-        public HourRateController(ISessionAccessor session, IDbConnection connection)
+        public SupportRateController(ISessionAccessor session, IDbConnection connection)
         {
             this._session = session;
             this._connection = connection;
@@ -50,23 +49,6 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
             string RateDescription = _session.GetValue<string>("Description");
 
             form.GetField("Description").Value = RateDescription;
-
-            return form;
-        }
-        public override Form FormSubmit(Form form, FormSubmitQuery query, int userId)
-        {
-            form.GetField("address").Value = "Submitted and commited";
-
-            //query.Redirect = "/stock/STO110";
-
-            query.ResetForm = true;
-
-            return form;
-        }
-        public override Form FormButtonAction(Form form, FormButtonActionQuery query, int userId)
-        {
-            form.GetField("address").Value = "Button action performed";
-            form.GetField("type").Value = "3";
 
             return form;
         }
@@ -97,7 +79,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
                     if (!string.IsNullOrEmpty(idTarifa))
                     {
                         //CONSULTA A LA VISTA PARA CONSEGUIR DATOS DEL LOG
-                        var query = context.H_HOUR_RATE.Where(x => x.ID_HOUR_RATE == idTarifa);
+                        var query = context.H_SUPPORT_RATE.Where(x => x.ID_SUPPORT_RATE == idTarifa);
 
                         var defaultSort = new SortCommand("DT_ADDROW", SortDirection.Descending);
 
@@ -132,8 +114,8 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
         }
 
         public override Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId)
-        {           
-            
+        {
+
 
             return grid;
         }
@@ -159,6 +141,5 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
             //}
             return data;
         }
-                
     }
 }
