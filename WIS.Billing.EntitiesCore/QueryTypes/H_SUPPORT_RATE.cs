@@ -14,6 +14,7 @@ namespace WIS.Billing.EntitiesCore.QueryTypes
         public string Amount { get; set; }
         public string SpecialDiscount { get; set; }
         public string AdjustmentPeriodicity { get; set; }
+        public string Periodicity { get; set; }
         public string Action { get; set; }
         public string FL_DELETED { get; set; }
         public int ID_USER { get; set; }

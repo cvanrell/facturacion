@@ -54,41 +54,48 @@ namespace WIS.Billing.BusinessLogicCore.Controllers
                     if (!string.IsNullOrEmpty(valor))
                         converted = (Int16?)Int16.Parse(valor);
                 }
-                // INT 32
+                // INT 32                
                 if (propertyType == typeof(Int32))
-                    converted = Int32.Parse(valor);
-                else if (propertyType == typeof(Int32?))
                 {
-                    if (!string.IsNullOrEmpty(valor))
-                        converted = (Int32?)Int32.Parse(valor);
-                }
-                // INT 64
-                else if (propertyType == typeof(Int64))
-                    converted = Int64.Parse(valor);
-                else if (propertyType == typeof(Int64?))
-                {
-                    if (!string.IsNullOrEmpty(valor))
-                        converted = (Int64?)Int64.Parse(valor);
-                }
-                // DECIMAL
-                else if (propertyType == typeof(Decimal))
-                    converted = Decimal.Parse(valor);
-                else if (propertyType == typeof(Decimal?))
-                {
-                    if (!string.IsNullOrEmpty(valor))
-                        converted = (Decimal?)Decimal.Parse(valor);
-                }
-                // DATEIME
-                //else if (propertyType == typeof(DateTime))
-                //{
-                //    var ci = new CultureInfo("es-UY");
-                //    var formatString = "yyyy-MM-dd HH:mm:ss";
+                    if (!String.IsNullOrEmpty(valor))
+                    {
+                        converted = Int32.Parse(valor);
+                    }
 
-                //    if (valor.ToString().Length == 10)
-                //        formatString = "yyyy-MM-dd";
+                    else if (propertyType == typeof(Int32?))
+                    {
+                        if (!string.IsNullOrEmpty(valor))
+                            converted = (Int32?)Int32.Parse(valor);
+                    }
+                    //// INT 64
+                    //else if (propertyType == typeof(Int64))
+                    //    converted = Int64.Parse(valor);
+                    //else if (propertyType == typeof(Int64?))
+                    //{
+                    //    if (!string.IsNullOrEmpty(valor))
+                    //        converted = (Int64?)Int64.Parse(valor);
+                    //}
+                    //// DECIMAL
+                    //else if (propertyType == typeof(Decimal))
+                    //    converted = Decimal.Parse(valor);
+                    //else if (propertyType == typeof(Decimal?))
+                    //{
+                    //    if (!string.IsNullOrEmpty(valor))
+                    //        converted = (Decimal?)Decimal.Parse(valor);
+                    //}
+                    
+                }
+                //DATEIME
+                else if (propertyType == typeof(DateTime))
+                {
+                    var ci = new CultureInfo("es-UY");
+                    var formatString = "yyyy-MM-dd HH:mm:ss";
 
-                //    converted = DateTime.ParseExact(valor, formatString, ci);
-                //}
+                    if (valor.ToString().Length == 10)
+                        formatString = "yyyy-MM-dd";
+
+                    converted = DateTime.ParseExact(valor, formatString, ci);
+                }
                 else if (propertyType == typeof(DateTime?))
                 {
                     if (!string.IsNullOrEmpty(valor))
@@ -131,14 +138,34 @@ namespace WIS.Billing.BusinessLogicCore.Controllers
 
                     }
                 }
+                    
+                
+
                 // GUID
-                else if (propertyType == typeof(Guid))
+                if (propertyType == typeof(Guid))
                 {
-                    if(!String.IsNullOrEmpty(valor))
+                    if (!String.IsNullOrEmpty(valor))
                     {
                         converted = Guid.Parse(valor);
                     }
-                    
+
+                }
+
+                // INT 64
+                if (propertyType == typeof(Int64))
+                    converted = Int64.Parse(valor);
+                else if (propertyType == typeof(Int64?))
+                {
+                    if (!string.IsNullOrEmpty(valor))
+                        converted = (Int64?)Int64.Parse(valor);
+                }
+                // DECIMAL
+                if (propertyType == typeof(Decimal))
+                    converted = Decimal.Parse(valor);
+                else if (propertyType == typeof(Decimal?))
+                {
+                    if (!string.IsNullOrEmpty(valor))
+                        converted = (Decimal?)Decimal.Parse(valor);
                 }
                 return converted;
             }

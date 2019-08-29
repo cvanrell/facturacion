@@ -116,6 +116,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
                                 if (cell.Column.Id == "DT_ONLY")
                                 {
                                     cell.Value = date.ToString("d");
+                                    //cell.Value = date.ToString();
                                 }
                             }
 

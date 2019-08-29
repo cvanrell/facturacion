@@ -258,6 +258,39 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         public void UpdateHourRate(HourRate hRate, string rutCliente)
         {
             HourRate hr = _context.HourRates.Include(x => x.Client).FirstOrDefault(x => x.Id == hRate.Id);
+
+            #region IF TEMPORAL PARA PERIODICIDAD Y MONEDA 
+            if (hr.Currency != hRate.Currency)
+            {
+                if (int.Parse(hRate.Currency) == 0)
+                {
+                    hr.Currency = "Dólares";
+                }
+                else if (int.Parse(hRate.Currency) == 1)
+                {
+                    hr.Currency = "Pesos";
+                }
+            }
+
+            if (hr.AdjustmentPeriodicity != hRate.AdjustmentPeriodicity)
+            {
+                switch (int.Parse(hRate.AdjustmentPeriodicity))
+                {
+                    case 0:
+                        hr.AdjustmentPeriodicity = "Mensual";
+                        break;
+                    case 1:
+                        hr.AdjustmentPeriodicity = "Trimestral";
+                        break;
+                    case 2:
+                        hr.AdjustmentPeriodicity = "Semestral";
+                        break;
+                    case 3:
+                        hr.AdjustmentPeriodicity = "Anual";
+                        break;
+                }
+            }
+
             Client client;
 
             if (hr == null)
@@ -267,44 +300,14 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             else
             {
                 hr.Description = hRate.Description;
-                hr.Currency = hRate.Currency;
-                hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
+                //hr.Currency = hRate.Currency;
+                //hr.AdjustmentPeriodicity = hRate.AdjustmentPeriodicity;
                 hr.Amount = hRate.Amount;
                 hr.SpecialDiscount = hRate.SpecialDiscount;
                 hr.DT_UPDROW = DateTime.Now;
 
 
-                #region IF TEMPORAL PARA PERIODICIDAD Y MONEDA 
-                if (hr.Currency != hRate.Currency)
-                {
-                    if (int.Parse(hRate.Currency) == 0)
-                    {
-                        hr.Currency = "Dólares";
-                    }
-                    else if (int.Parse(hRate.Currency) == 1)
-                    {
-                        hr.Currency = "Pesos";
-                    }
-                }
                 
-                if(hr.AdjustmentPeriodicity != hRate.AdjustmentPeriodicity)
-                {
-                    switch (int.Parse(hRate.AdjustmentPeriodicity))
-                    {
-                        case 0:
-                            hr.AdjustmentPeriodicity = "Mensual";
-                            break;
-                        case 1:
-                            hr.AdjustmentPeriodicity = "Trimestral";
-                            break;
-                        case 2:
-                            hr.AdjustmentPeriodicity = "Semestral";
-                            break;
-                        case 3:
-                            hr.AdjustmentPeriodicity = "Anual";
-                            break;
-                    }
-                }
 
                 #endregion
                 _context.SaveChanges();
@@ -468,7 +471,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             {
                 sr.Description = sRate.Description;
                 //sr.Currency = sRate.Currency;
-                sr.Periodicity = sRate.Periodicity;
+                //sr.Periodicity = sRate.Periodicity;
                 //sr.AdjustmentPeriodicity = sRate.AdjustmentPeriodicity;
                 sr.Amount = sRate.Amount;
                 sr.IVA = sRate.IVA;
