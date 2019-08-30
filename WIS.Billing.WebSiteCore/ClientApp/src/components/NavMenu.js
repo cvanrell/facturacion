@@ -31,7 +31,7 @@ export class NavMenu extends Component {
                             </Link>
                         </NavItem>
                         <NavItem>
-                            <Link to={'/fetchmaintenance'} className="nav-link" exact>
+                            <Link to={'/Maintenance/MAN010'} className="nav-link" exact>
                                 <i className='fas fa-wrench' /> Mantenimientos
                             </Link>
                         </NavItem>

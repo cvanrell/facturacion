@@ -25,6 +25,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
         public ProjectRepository ProjectRepository { get; set; }
         public AdjustmentRepository AdjustmentRepository { get; set; }
         public FeeRepository FeeRepository { get; set; }
+        public SupportRepository SupportRepository { get; set; }
 
 
 
@@ -38,6 +39,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
             this.ProjectRepository = new ProjectRepository(this._context, this._appplication, this._userId);
             this.AdjustmentRepository = new AdjustmentRepository(this._context, this._appplication, this._userId);
             this.FeeRepository = new FeeRepository(this._context, this._appplication, this._userId);
+            this.SupportRepository = new SupportRepository(this._context, this._appplication, this._userId);
         }
 
         public void BeginTransaction()

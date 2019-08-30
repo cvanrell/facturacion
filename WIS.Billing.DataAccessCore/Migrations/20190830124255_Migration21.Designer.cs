@@ -10,7 +10,7 @@ using WIS.Billing.DataAccessCore.Database;
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    [Migration("20190828131040_Migration21")]
+    [Migration("20190830124255_Migration21")]
     partial class Migration21
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,6 +91,35 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Adjustments");
+                });
+
+            modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.Support", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("ClientId");
+
+                    b.Property<DateTime>("DT_ADDROW");
+
+                    b.Property<DateTime>("DT_UPDROW");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("FL_DELETED")
+                        .HasMaxLength(1);
+
+                    b.Property<Guid?>("SupportRateId");
+
+                    b.Property<decimal>("Total");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("SupportRateId");
+
+                    b.ToTable("Supports");
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_ADJUSTMENT", b =>
@@ -189,6 +218,30 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.ToTable("T_LOG_PROJECT");
                 });
 
+            modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_SUPPORT", b =>
+                {
+                    b.Property<int>("NU_LOG")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ACTION");
+
+                    b.Property<string>("DATA")
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<DateTime>("DT_ADDROW");
+
+                    b.Property<string>("ID_SUPPORT");
+
+                    b.Property<int>("ID_USER");
+
+                    b.Property<string>("PAGE");
+
+                    b.HasKey("NU_LOG");
+
+                    b.ToTable("T_LOG_SUPPORT");
+                });
+
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_SUPPORT_RATE", b =>
                 {
                     b.Property<int>("NU_LOG")
@@ -271,30 +324,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("HourRates");
-                });
-
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.Maintenance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Amount");
-
-                    b.Property<Guid?>("ClientId");
-
-                    b.Property<int>("Currency");
-
-                    b.Property<string>("Description");
-
-                    b.Property<decimal>("IVA");
-
-                    b.Property<decimal>("Total");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("Maintenances");
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Project", b =>
@@ -496,6 +525,17 @@ namespace WIS.Billing.DataAccessCore.Migrations
                         .HasForeignKey("RateId");
                 });
 
+            modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.Support", b =>
+                {
+                    b.HasOne("WIS.Billing.EntitiesCore.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("WIS.Billing.EntitiesCore.SupportRate", "SupportRate")
+                        .WithMany()
+                        .HasForeignKey("SupportRateId");
+                });
+
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Fee", b =>
                 {
                     b.HasOne("WIS.Billing.EntitiesCore.Project", "Project")
@@ -507,13 +547,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 {
                     b.HasOne("WIS.Billing.EntitiesCore.Client", "Client")
                         .WithMany("HourRates")
-                        .HasForeignKey("ClientId");
-                });
-
-            modelBuilder.Entity("WIS.Billing.EntitiesCore.Maintenance", b =>
-                {
-                    b.HasOne("WIS.Billing.EntitiesCore.Client", "Client")
-                        .WithMany()
                         .HasForeignKey("ClientId");
                 });
 

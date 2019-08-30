@@ -13,8 +13,8 @@ import { Maintenances } from './components/Maintenances';
 
 
 
-import { FetchMaintenance } from './pages/Maintenances/FetchMaintenance';
-import { AddMaintenance } from './pages/Maintenances/AddMaintenance';
+//import { FetchMaintenance } from './pages/Maintenances/FetchMaintenance';
+//import { AddMaintenance } from './pages/Maintenances/AddMaintenance';
 import { FetchProject } from './pages/Projects/FetchProject';
 import { AddProject } from './pages/Projects/AddProject';
 
@@ -33,7 +33,7 @@ import { FEE010 } from './pages/Fees/FEE010';
 
 const PRO010 = React.lazy(() => import('./pages/Projects/PRO010'));
 const ADJ010 = React.lazy(() => import('./pages/Adjustments/ADJ010'));
-
+const MAN010 = React.lazy(() => import('./pages/Maintenance/MAN010'));
 
 
 //const Clients = React.lazy(() => import('./pages/Clients/Clients'));
@@ -66,9 +66,8 @@ export class App extends Component {
                         <Route exact path='/' component={Home} />
                         <Route path='/counter' component={Counter} />
                         <Route path='/fetchdata' component={FetchData} />
-                        <Route path='/fetchmaintenance' component={FetchMaintenance} />
-                        <Route path='/addMaintenance' component={AddMaintenance} />
-                        <Route path='/maintenance/edit/:maintenanceId' component={AddMaintenance} />
+                        
+                        
                         <Route path='/fetchproject' component={FetchProject} />
                         <Route path='/addproject' component={AddProject} />
                         <Route path='/project/edit/:projectId' component={AddProject} />
@@ -87,7 +86,7 @@ export class App extends Component {
 
                         <Route path='/Projects/PRO010' render={(props) => <PRO010 {...props} />} />
                         <Route path='/Adjustments/ADJ010' render={(props) => <ADJ010 {...props} />} />                        
-
+                        <Route path='/Maintenance/MAN010' render={(props) => <MAN010 {...props} />} />
 
 
                     </Suspense>

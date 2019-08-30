@@ -11,6 +11,6 @@ namespace WIS.BusinessLogicCore.DataModel.Queries
     {
         IQueryable<T> BuildQuery(WISDB context);
 
-        IQueryable<T> GetQuery();
+        //IQueryable<T> GetQuery();
     }
 }

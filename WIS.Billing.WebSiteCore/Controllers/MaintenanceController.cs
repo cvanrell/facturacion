@@ -12,43 +12,43 @@ namespace WIS.Billing.WebSiteCore.Controllers
     [Route("api/[controller]")]
     public class MaintenanceController : Controller
     {
-        private readonly WISDB _context;
+        //private readonly WISDB _context;
 
-        public MaintenanceController(WISDB context)
-        {
-            _context = context;
-        }
+        //public MaintenanceController(WISDB context)
+        //{
+        //    _context = context;
+        //}
 
-        [HttpGet("[action]")]
-        public IEnumerable<Maintenance> GetMaintenances()
-        {
-            return MaintenanceActions.GetMaintenances(_context);
-        }
+        //[HttpGet("[action]")]
+        //public IEnumerable<Maintenance> GetMaintenances()
+        //{
+        //    return MaintenanceActions.GetMaintenances(_context);
+        //}
         
 
-        [HttpPost("[action]")]
-        public void Create(Maintenance maintenance)
-        {
-            MaintenanceActions.AddMaintenance(_context, maintenance);
-        }
+        //[HttpPost("[action]")]
+        //public void Create(Maintenance maintenance)
+        //{
+        //    MaintenanceActions.AddMaintenance(_context, maintenance);
+        //}
 
-        [HttpGet("[action]/{id}")]
-        public Maintenance Details(Guid id)
-        {
-            return MaintenanceActions.GetMaintenance(_context, id);
-        }
+        //[HttpGet("[action]/{id}")]
+        //public Maintenance Details(Guid id)
+        //{
+        //    return MaintenanceActions.GetMaintenance(_context, id);
+        //}
 
-        [HttpPut("[action]")]
-        public void Edit(Maintenance maintenance)
-        {
-            MaintenanceActions.UpdateMaintenance(_context, maintenance);
-        }
+        //[HttpPut("[action]")]
+        //public void Edit(Maintenance maintenance)
+        //{
+        //    MaintenanceActions.UpdateMaintenance(_context, maintenance);
+        //}
 
-        [HttpDelete("[action]/{id}")]
-        public void Delete(Guid id)
-        {
-            MaintenanceActions.DeleteMaintenance(_context, id);
-        }
+        //[HttpDelete("[action]/{id}")]
+        //public void Delete(Guid id)
+        //{
+        //    MaintenanceActions.DeleteMaintenance(_context, id);
+        //}
 
     }
 }

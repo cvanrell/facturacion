@@ -17,8 +17,8 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<HourRate> HourRates { get; set; }
         public DbSet<SupportRate> SupportRates { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Development> Developments { get; set; }
-        public DbSet<Maintenance> Maintenances { get; set; }
+        public DbSet<Support> Supports { get; set; }
+        public DbSet<Development> Developments { get; set; }        
         public DbSet<Adjustment> Adjustments { get; set; }
         public DbSet<T_GRID_USER_CONFIG> T_GRID_USER_CONFIG { get; set; }
         public DbSet<T_GRID_DEFAULT_CONFIG> T_GRID_DEFAULT_CONFIG { get; set; }
@@ -27,6 +27,7 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<T_LOG_HOUR_RATE> T_LOG_HOUR_RATE { get; set; }
         public DbSet<T_LOG_SUPPORT_RATE> T_LOG_SUPPORT_RATE { get; set; }
         public DbSet<T_LOG_PROJECT> T_LOG_PROJECT { get; set; }
+        public DbSet<T_LOG_SUPPORT> T_LOG_SUPPORT { get; set; }
         public DbSet<T_LOG_ADJUSTMENT> T_LOG_ADJUSTMENT { get; set; }
 
         //VISTAS

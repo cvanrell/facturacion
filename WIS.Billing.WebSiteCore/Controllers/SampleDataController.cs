@@ -24,12 +24,12 @@ namespace WIS.Billing.WebSiteCore.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        [HttpGet("[action]")]
-        public IEnumerable<Maintenance> GetMaintenances()
-        {
-            List<Maintenance> result = MaintenanceActions.GetMaintenances(_context);
-            return result;
-        }
+        //[HttpGet("[action]")]
+        //public IEnumerable<Maintenance> GetMaintenances()
+        //{
+        //    List<Maintenance> result = MaintenanceActions.GetMaintenances(_context);
+        //    return result;
+        //}
 
         [HttpGet("[action]")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
