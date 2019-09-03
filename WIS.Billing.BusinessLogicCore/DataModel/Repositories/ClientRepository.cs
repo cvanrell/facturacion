@@ -627,7 +627,51 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 };
 
                 this._context.T_LOG_HOUR_RATE.Add(l);
-                HourRateLogObject jsonDeserialized = JsonConvert.DeserializeObject<HourRateLogObject>(l.DATA);
+                //HourRateLogObject jsonDeserialized = JsonConvert.DeserializeObject<HourRateLogObject>(l.DATA);
+            }
+        }
+
+        public static void LogHourRate(HourRate hr, string action, string page, int userId, WISDB context)
+        {
+            //HourRate hRate = CheckIfHourRateExists(hr, c);
+
+            HourRateLogObject hrLog = new HourRateLogObject()
+            {
+                Id = hr.Id.ToString(),
+                Description = hr.Description,
+                Currency = hr.Currency,
+                AdjustmentPeriodicity = hr.AdjustmentPeriodicity,
+                Amount = hr.Amount,
+                SpecialDiscount = hr.SpecialDiscount,
+                FL_DELETED = hr.FL_DELETED,
+                DT_ADDROW = hr.DT_ADDROW,
+                DT_UPDROW = hr.DT_UPDROW,
+                ClientLogObject = new ClientLogObject
+                {
+                    Id = hr.Client.Id.ToString(),
+                    Description = hr.Client.Description,
+                    RUT = hr.Client.RUT,
+                    Address = hr.Client.Address,
+                    FL_DELETED = hr.Client.FL_DELETED,
+                    FL_IVA = hr.Client.FL_IVA,
+                    DT_ADDROW = hr.Client.DT_ADDROW,
+                    DT_UPDROW = hr.Client.DT_UPDROW,
+                }
+            };
+            string json = JsonConvert.SerializeObject(hrLog);
+            {
+                T_LOG_HOUR_RATE l = new T_LOG_HOUR_RATE()
+                {
+                    ID_USER = userId,
+                    ACTION = action,
+                    DT_ADDROW = DateTime.Now,
+                    DATA = json,
+                    PAGE = page,
+                    ID_HOUR_RATE = hr.Id.ToString()
+                };
+
+                context.T_LOG_HOUR_RATE.Add(l);
+                //HourRateLogObject jsonDeserialized = JsonConvert.DeserializeObject<HourRateLogObject>(l.DATA);
             }
         }
 
@@ -673,7 +717,49 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 };
                 this._context.T_LOG_SUPPORT_RATE.Add(l);
             }
-        }        
+        }
+
+        public static void LogSupportRate(SupportRate sr, string action, string page, int userId, WISDB context)
+        {   
+            SupportRateObjectLog srLog = new SupportRateObjectLog()
+            {
+                Id = sr.Id.ToString(),
+                Description = sr.Description,
+                Currency = sr.Currency,
+                IVA = sr.IVA,
+                AdjustmentPeriodicity = sr.AdjustmentPeriodicity,
+                Periodicity = sr.Periodicity,
+                Amount = sr.Amount,
+                SpecialDiscount = sr.SpecialDiscount,
+                FL_DELETED = sr.FL_DELETED,
+                DT_ADDROW = sr.DT_ADDROW,
+                DT_UPDROW = sr.DT_UPDROW,
+                ClientLogObject = new ClientLogObject
+                {
+                    Id = sr.Client.Id.ToString(),
+                    Description = sr.Client.Description,
+                    RUT = sr.Client.RUT,
+                    Address = sr.Client.Address,
+                    FL_DELETED = sr.Client.FL_DELETED,
+                    FL_IVA = sr.Client.FL_IVA,
+                    DT_ADDROW = sr.Client.DT_ADDROW,
+                    DT_UPDROW = sr.Client.DT_UPDROW,
+                }
+            };
+            string json = JsonConvert.SerializeObject(srLog);
+            {
+                T_LOG_SUPPORT_RATE l = new T_LOG_SUPPORT_RATE()
+                {
+                    ID_USER = userId,
+                    ACTION = action,
+                    DT_ADDROW = DateTime.Now,
+                    DATA = json,
+                    PAGE = page,
+                    ID_SUPPORT_RATE = sr.Id.ToString()
+                };
+                context.T_LOG_SUPPORT_RATE.Add(l);
+            }
+        }
 
         #endregion
 

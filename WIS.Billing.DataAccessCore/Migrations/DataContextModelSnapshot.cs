@@ -80,6 +80,8 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<DateTime>("DT_UPDROW");
 
+                    b.Property<DateTime>("DateIPC");
+
                     b.Property<decimal>("IPCValue");
 
                     b.Property<string>("Month");
@@ -300,7 +302,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("AdjustmentPeriodicity");
 
-                    b.Property<int>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<Guid?>("ClientId");
 
@@ -366,7 +368,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("AdjustmentPeriodicity");
 
-                    b.Property<int>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<Guid?>("ClientId");
 

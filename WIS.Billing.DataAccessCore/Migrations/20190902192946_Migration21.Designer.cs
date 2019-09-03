@@ -10,7 +10,7 @@ using WIS.Billing.DataAccessCore.Database;
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    [Migration("20190830124255_Migration21")]
+    [Migration("20190902192946_Migration21")]
     partial class Migration21
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,6 +81,8 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.Property<DateTime>("DT_ADDROW");
 
                     b.Property<DateTime>("DT_UPDROW");
+
+                    b.Property<DateTime>("DateIPC");
 
                     b.Property<decimal>("IPCValue");
 
@@ -302,7 +304,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("AdjustmentPeriodicity");
 
-                    b.Property<int>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<Guid?>("ClientId");
 
@@ -368,7 +370,7 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<string>("AdjustmentPeriodicity");
 
-                    b.Property<int>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<Guid?>("ClientId");
 

@@ -62,6 +62,24 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 table: "Fees",
                 newName: "IX_Fees_ProjectId");
 
+            migrationBuilder.AlterColumn<decimal>(
+                name: "Amount",
+                table: "SupportRates",
+                nullable: false,
+                oldClrType: typeof(int));
+
+            migrationBuilder.AlterColumn<decimal>(
+                name: "Amount",
+                table: "HourRates",
+                nullable: false,
+                oldClrType: typeof(int));
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "DateIPC",
+                table: "Adjustments",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Fees",
                 table: "Fees",
@@ -171,6 +189,10 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 name: "PK_Fees",
                 table: "Fees");
 
+            migrationBuilder.DropColumn(
+                name: "DateIPC",
+                table: "Adjustments");
+
             migrationBuilder.RenameTable(
                 name: "Fees",
                 newName: "Fee");
@@ -209,6 +231,18 @@ namespace WIS.Billing.DataAccessCore.Migrations
                 name: "IX_Fees_ProjectId",
                 table: "Fee",
                 newName: "IX_Fee_ProjectId");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Amount",
+                table: "SupportRates",
+                nullable: false,
+                oldClrType: typeof(decimal));
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Amount",
+                table: "HourRates",
+                nullable: false,
+                oldClrType: typeof(decimal));
 
             migrationBuilder.AddColumn<int>(
                 name: "Month",

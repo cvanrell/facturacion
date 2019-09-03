@@ -10,6 +10,7 @@ namespace WIS.Billing.EntitiesCore.Entities
         public int Year { get; set; }
         public string Month { get; set; }
         public decimal IPCValue { get; set; }
+        public DateTime DateIPC { get; set; }
         public DateTime DT_ADDROW { get; set; }
         public DateTime DT_UPDROW { get; set; }
     }

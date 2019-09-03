@@ -41,7 +41,7 @@ function FieldSelectInternal(props) {
             }).then(d => {
                 props.formProps.updateOptions(props.name, [option]);
 
-                props.formik.setAllProperties(values, errors, touched);               
+                props.formik.setAllProperties(values, errors, touched);
             });
         }, 100); //Tengo que ejecutarlo despues del setState de formik, pero setFieldValue no retorna una promesa
     };

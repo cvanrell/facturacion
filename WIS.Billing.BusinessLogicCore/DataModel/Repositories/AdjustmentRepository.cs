@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WIS.Billing.BusinessLogicCore.DataModel.Mappers;
 using WIS.Billing.DataAccessCore.Database;
+using WIS.Billing.EntitiesCore;
 using WIS.Billing.EntitiesCore.Entities;
 using WIS.Billing.EntitiesCore.LogsEntities;
 
@@ -28,7 +30,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         #region AJUSTES
 
         public void AddAdjustment(Adjustment a)
-        {            
+        {
             Adjustment adjustment = CheckIfAdjustmentExists(a);
             if (adjustment != null)
             {
@@ -55,7 +57,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     IPCValue = a.IPCValue,
                     DT_ADDROW = DateTime.Now,
                     DT_UPDROW = DateTime.Now,
-                };                
+                };
 
                 this._context.Adjustments.Add(adjustment);
                 this._context.SaveChanges();
@@ -72,7 +74,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             }
             else
             {
-                adjustment.IPCValue = a.IPCValue;   
+                adjustment.IPCValue = a.IPCValue;
                 adjustment.DT_UPDROW = DateTime.Now;
 
                 _context.SaveChanges();
@@ -98,6 +100,167 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         //    }
         //}
 
+
+        public void ExecuteAdjustments()
+        {
+            DateTime actualDate = DateTime.Now;
+
+            List<HourRate> hourRates = GetHourRates(actualDate);
+
+            List<SupportRate> supportRates = GetSupportRates(actualDate);
+
+            string periodicity;
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var hr in hourRates)
+                    {
+                        //periodicity = hr.AdjustmentPeriodicity;
+
+                        //switch (hr.AdjustmentPeriodicity)
+                        //{
+                        //case "Mensual":
+                        ExecuteAjuste(hr);
+                        //break;
+                        //case "Trimestral":
+                        //    ExecuteTrimestral();
+                        //    break;
+                        //case "Semestral":
+                        //    ExecuteSemestral();
+                        //    break;
+                        //case "Anual":
+                        //    ExecuteAnual();
+                        //    break;
+                        //}
+
+                        //LOGUEAR CAMBIO
+                        ClientRepository.LogHourRate(hr, "ADJUSTMENT", "ADJ010", this._userId, this._context);
+
+                    }
+
+                    foreach (var sr in supportRates)
+                    {
+                        ExecuteAjuste(sr);
+                        ClientRepository.LogSupportRate(sr, "ADJUSTMENT", "ADJ010", this._userId, this._context);
+                    }
+
+                    //LOG de la ejecucion
+
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Dispose();
+                }
+            }
+
+            
+        }
+
+        public List<HourRate> GetHourRates(DateTime actualDate)
+        {
+            List<HourRate> hourRates = new List<HourRate>();
+            //Pregunto si el mes es Dicimebre, por lo que se van a ajustar todas las tarifas, ya que incluye Mensual, Trimestral, Semestral y Anual
+            if (actualDate.Month.Equals(12))
+            {
+                hourRates = _context.HourRates.Include(x => x.Client).Where(x => x.Currency == "Pesos").ToList();
+            }
+
+
+            //Si es Junio, se ajustan las tarifas Mensual, Trimestral y Semestral, por lo tanto son todas menos las Anuales
+            else if (actualDate.Month.Equals(6))
+            {
+                hourRates = _context.HourRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity != "Anual" && x.Currency == "Pesos").ToList();
+            }
+
+
+            //Si es Marzo o Septiembre (Junio y Diciembre ya estan contemplados en los if anteriores
+            else if (actualDate.Month.Equals(3) || actualDate.Month.Equals(9))
+            {
+                hourRates = _context.HourRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity == "Mensual" && x.AdjustmentPeriodicity == "Trimestral" && x.Currency == "Pesos").ToList();
+            }
+
+            //Si es cualquier otro mes distinto a los casos anteriores solo va a ser Mensual
+            else
+            {
+                hourRates = _context.HourRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity != "Mensual" && x.Currency == "Pesos").ToList();
+            }
+            return hourRates;
+        }
+
+        public List<SupportRate> GetSupportRates(DateTime actualDate)
+        {
+            List<SupportRate> supportRates = new List<SupportRate>();
+            //Pregunto si el mes es Dicimebre, por lo que se van a ajustar todas las tarifas, ya que incluye Mensual, Trimestral, Semestral y Anual
+            if (actualDate.Month.Equals(12))
+            {
+                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => x.Currency == "Pesos").ToList();
+            }
+
+
+            //Si es Junio, se ajustan las tarifas Mensual, Trimestral y Semestral, por lo tanto son todas menos las Anuales
+            else if (actualDate.Month.Equals(6))
+            {
+                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity != "Anual" && x.Currency == "Pesos").ToList();
+            }
+
+
+            //Si es Marzo o Septiembre (Junio y Diciembre ya estan contemplados en los if anteriores
+            else if (actualDate.Month.Equals(3) || actualDate.Month.Equals(9))
+            {
+                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity == "Mensual" && x.AdjustmentPeriodicity == "Trimestral" && x.Currency == "Pesos").ToList();
+            }
+
+            //Si es cualquier otro mes distinto a los casos anteriores solo va a ser Mensual
+            else
+            {
+                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity != "Mensual" && x.Currency == "Pesos").ToList();
+            }
+            return supportRates;
+        }
+
+
+        public void ExecuteAjuste(Rate rate)
+        {
+            decimal oldIPC = GetPeriodicityIPC(rate.AdjustmentPeriodicity);
+            decimal lastIPC = GetLastIPC();
+
+            decimal newAmount = rate.Amount * oldIPC / lastIPC;
+
+            rate.Amount = newAmount;
+        }
+
+        public decimal GetPeriodicityIPC(string periodicity)
+        {
+            DateTime IPCDate = DateTime.Now;
+
+            switch (periodicity)
+            {
+                case "Mensual":
+                    IPCDate = DateTime.Now.AddMonths(-1);
+                    break;
+                case "Trimestral":
+                    IPCDate = DateTime.Now.AddMonths(-3);
+                    break;
+                case "Semestral":
+                    IPCDate = DateTime.Now.AddMonths(-6);
+                    break;
+                case "Anual":
+                    IPCDate = DateTime.Now.AddYears(-1);
+                    break;
+            }
+            return _context.Adjustments.FirstOrDefault(x => x.DateIPC == IPCDate).IPCValue;
+        }
+
+        public decimal GetLastIPC()
+        {
+            DateTime actualDate = DateTime.Now.AddMonths(-1);
+            return _context.Adjustments.FirstOrDefault(x => x.DateIPC == actualDate).IPCValue;
+        }
+
         #endregion
 
         public Adjustment CheckIfAdjustmentExists(Adjustment a)
@@ -110,14 +273,14 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public void LogAdjustment(Adjustment a, string action)
         {
-            Adjustment adjustment = CheckIfAdjustmentExists(a);            
+            Adjustment adjustment = CheckIfAdjustmentExists(a);
             AdjustmentLogObject aLog = new AdjustmentLogObject()
             {
                 Year = a.Year,
                 Month = a.Month,
                 IPCValue = a.IPCValue,
                 DT_ADDROW = a.DT_ADDROW,
-                DT_UPDROW = a.DT_UPDROW,                
+                DT_UPDROW = a.DT_UPDROW,
             };
 
             string json = JsonConvert.SerializeObject(aLog);

@@ -91,6 +91,10 @@ export default function ADJ010(props) {
                     <Button id="showFormButton" value={("Agregar nuevo ajuste")} className="btn btn-success" style={{ margin: "15px" }} isLoading={isFormEnabled} />
                 </div>
 
+                <div  style={{ textAlign: "center" }}>
+                    <Button id="adjustment" value={("Realizar ajuste de IPC")} className="btn btn-primary" style={{ margin: "15px" }} isLoading={isFormEnabled} />
+                </div>
+
                 <div className={formClassName}>
                     <div className="col">
                         <div className="col-12">

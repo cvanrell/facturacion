@@ -113,7 +113,7 @@ export default function MAN010(props) {
                                     <div className="col-4">
                                         <div className="form-group">
                                             <label htmlFor="Client">{("Cliente")}</label>
-                                            <FieldSelect name="Client" onChange={onSelectChange} />
+                                            <FieldSelectAsync name="Client" onChange={onSelectChange} />
                                             <StatusMessage for="Client" />
                                         </div>
                                     </div>

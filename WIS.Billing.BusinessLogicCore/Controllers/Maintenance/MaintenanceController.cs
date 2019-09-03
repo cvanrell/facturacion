@@ -26,7 +26,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Maintenance
     {
         private readonly ISessionAccessor _session;
         private readonly IDbConnection _connection;
-        private readonly string _pageName = "PRO010";
+        private readonly string _pageName = "MAN010";
         private List<string> GridKeys { get; }
 
         public MaintenanceController(ISessionAccessor session, IDbConnection connection)

@@ -182,5 +182,18 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
             }
             return grid;
         }
+
+
+        public void ExecuteAdjustment(int userId)
+        {
+
+            using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
+            {
+
+
+            }
+
+                //REDIRECT A TODAS LAS TARIFAS
+            }
     }
 }

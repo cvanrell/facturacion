@@ -332,6 +332,58 @@ class InternalFormCore extends Component {
         return false;
     }
 
+    searchSelectValue = async (fieldId, value) => {
+        try {
+            const data = {
+                form: {
+                    id: this.props.id,
+                    fields: this.getFields()
+                },
+                query: {
+                    fieldId: fieldId,
+                    searchValue: value,
+                    parameters: []
+                }
+            };
+
+            const context = {
+                abortServerCall: false
+            };
+
+            if (this.props.onBeforeSelectSearch)
+                this.props.onBeforeSelectSearch(context, data.form, data.query, this.props.nexus);
+
+            if (!this.mounted)
+                return false;
+
+            if (context.abortServerCall)
+                return false;
+
+            const result = await this.props.formSelectSearch(data).then((res) => JSON.parse(res.Data));
+
+            if (result.Status === "ERROR")
+                throw new Error(result.Message);
+
+            const responseContext = {
+                abortFieldUpdate: false
+            };
+
+            if (this.props.onAfterSelectSearch)
+                this.props.onAfterSelectSearch(responseContext, result.options, result.query, this.props.nexus);
+
+            if (!this.mounted)
+                return true;
+
+            this.props.nexus.toastNotifications(result.notifications);
+
+            return result.options;
+        }
+        catch (ex) {
+            this.props.nexus.toastException(ex);
+        }
+    }
+
+
     updateFields = (fields, forceTouch, forceValue) => {
         this.fields = fields;
         let values = {};
@@ -436,6 +488,14 @@ class InternalFormCore extends Component {
 
         return [];
     }
+
+    updateOptions = (fieldId, options) => {
+        const field = this.fields.find(d => d.id === fieldId);
+
+        if (field) {
+            field.options = options;
+        }
+    }
     
     parseError = (error, name) => {
         error.path = name;
@@ -477,7 +537,8 @@ class InternalFormCore extends Component {
             registerField: this.registerField,
             unregisterField: this.unregisterField,
             getFieldProps: this.getFieldProps,
-            performButtonAction: this.performButtonAction
+            performButtonAction: this.performButtonAction,
+            updateOptions: this.updateOptions
         };
     }
 

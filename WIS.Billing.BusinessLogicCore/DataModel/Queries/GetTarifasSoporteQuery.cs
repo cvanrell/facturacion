@@ -22,6 +22,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Queries
         public IQueryable<SupportRate> BuildQuery(WISDB context)
         {
             return context.SupportRates.Where(x => x.Client.Id.ToString()  == this._filtro);
-        }        
+        }
+
+        public IQueryable<SupportRate> GetQuery()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
