@@ -9,7 +9,7 @@ namespace WIS.Billing.EntitiesCore.QueryTypes
         public string Client { get; set; }
         public Guid Id { get; set; }
         public string Description { get; set; }
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
         public decimal SpecialDiscount { get; set; }
         public string AdjustmentPeriodicity { get; set; }
         public string Currency { get; set; }
