@@ -68,11 +68,12 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
                     //Year = DateTime.Now.Year,
                     Month = form.GetField("Month").Value,
                     //Month = DateTime.Now.Month,
-                    IPCValue = Decimal.Parse(form.GetField("IPCValue").Value),                                   
+                    IPCValue = Decimal.Parse(form.GetField("IPCValue").Value),
+                    DateIPC = DateTime.Parse(form.GetField("DateIPC").Value),
                 };
 
                 using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
-                {                    
+                {
                     context.AdjustmentRepository.AddAdjustment(adjustment);
                     context.SaveChanges();
                 }
@@ -127,13 +128,13 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
             selectMonth.Options.Add(new SelectOption(Meses.Septiembre.ToString(), Meses.Septiembre.ToString()));
             selectMonth.Options.Add(new SelectOption(Meses.Octubre.ToString(), Meses.Octubre.ToString()));
             selectMonth.Options.Add(new SelectOption(Meses.Noviembre.ToString(), Meses.Noviembre.ToString()));
-            selectMonth.Options.Add(new SelectOption(Meses.Diciembre.ToString(), Meses.Diciembre.ToString()));                       
+            selectMonth.Options.Add(new SelectOption(Meses.Diciembre.ToString(), Meses.Diciembre.ToString()));
         }
 
 
         //GRILLA
         public override Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
-        {   
+        {
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
         public override Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
@@ -142,7 +143,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
             {
                 var query = context.Adjustments;
 
-                var defaultSort = new SortCommand("DT_ADDROW", SortDirection.Descending);
+                var defaultSort = new SortCommand("DateIPC", SortDirection.Descending);
 
                 grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
             }
@@ -184,16 +185,23 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
         }
 
 
-        public void ExecuteAdjustment(int userId)
+        public override Form ExecuteAdjustments(Form form, FormButtonActionQuery query, int userId)
         {
-
-            using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
+            try
             {
-
+                using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
+                {
+                    context.AdjustmentRepository.ExecuteAdjustments();
+                    context.SaveChanges();
+                }
 
             }
-
-                //REDIRECT A TODAS LAS TARIFAS
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
+
+            return form;
+        }
     }
 }

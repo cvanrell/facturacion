@@ -130,5 +130,25 @@ namespace WIS.BusinessLogicCore.FormUtil.Coordinators
 
             return response;
         }
+
+        public IFormWrapper ExecuteAdjustments(IFormWrapper wrapper)
+        {
+            var data = wrapper.GetData<FormButtonActionData>();
+
+            IFormWrapper response = new FormWrapper(wrapper);
+
+            try
+            {
+                data.Form = this._controller.ExecuteAdjustments(data.Form, data.Query, wrapper.User);
+
+                response.SetData(data);
+            }
+            catch (WISException ex)
+            {
+                response.SetError(ex.Message);
+            }
+
+            return response;
+        }
     }
 }

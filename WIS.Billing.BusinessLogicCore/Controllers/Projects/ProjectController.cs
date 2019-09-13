@@ -81,7 +81,7 @@ namespace WIS.Billing.BusinessLogicCore
                     Currency = form.GetField("Currency").Value,                    
                     Total = Decimal.Parse(form.GetField("Total").Value),
                     InitialDate = form.GetField("InitialDate").Value,
-                    TotalAmount = Decimal.Parse(form.GetField("TotalAmount").Value),
+                    //TotalAmount = Decimal.Parse(form.GetField("TotalAmount").Value),
 
                 };
 

@@ -57,6 +57,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     IPCValue = a.IPCValue,
                     DT_ADDROW = DateTime.Now,
                     DT_UPDROW = DateTime.Now,
+                    DateIPC = a.DateIPC
                 };
 
                 this._context.Adjustments.Add(adjustment);
@@ -104,60 +105,75 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         public void ExecuteAdjustments()
         {
             DateTime actualDate = DateTime.Now;
+            
+            //ACA TIENE QUE IR LA VISTA DE LAST_LOG
+            T_LOG_IPC lstAdjLog = _context.T_LOG_IPC.OrderByDescending(x => x.DATEIPC).FirstOrDefault();
 
-            List<HourRate> hourRates = GetHourRates(actualDate);
+            //lstAdjLog = _context.Adjustments.Include(X => X.).OrderByDescending(X => X.DateIPC)
 
-            List<SupportRate> supportRates = GetSupportRates(actualDate);
-
-            string periodicity;
-
-            using (var transaction = _context.Database.BeginTransaction())
+            if (lstAdjLog == null)
             {
-                try
+                throw new Exception("Debe ingresar un registro de IPC antes de realizar un ajuste de tarifas");
+            }
+            //Chequeo que no se haya hecho un ajuste de tarifas en el mes actual
+            else if(_context.T_LOG_RATE_ADJUSTMENTS.FirstOrDefault(x => x.DT_ADDROW.Date == actualDate.Date) != null)
+            {
+                throw new Exception("Ya se realizo un ajuste de tarifas en el mes actual");
+            }
+            else
+            {
+                List<HourRate> hourRates = GetHourRates(actualDate);
+
+                List<SupportRate> supportRates = GetSupportRates(actualDate);
+
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    foreach (var hr in hourRates)
+                    try
                     {
-                        //periodicity = hr.AdjustmentPeriodicity;
+                        //Creo el log de la ejecucion de ajustes
+                        T_LOG_RATE_ADJUSTMENTS logAjustes = new T_LOG_RATE_ADJUSTMENTS()
+                        {
+                            ID_USER = _userId,
+                            DT_ADDROW = actualDate,
+                            ACTION = "ADJUSTMENT",
+                            PAGE = "ADJ010",
 
-                        //switch (hr.AdjustmentPeriodicity)
-                        //{
-                        //case "Mensual":
-                        ExecuteAjuste(hr);
-                        //break;
-                        //case "Trimestral":
-                        //    ExecuteTrimestral();
-                        //    break;
-                        //case "Semestral":
-                        //    ExecuteSemestral();
-                        //    break;
-                        //case "Anual":
-                        //    ExecuteAnual();
-                        //    break;
-                        //}
+                            LogIPC = lstAdjLog                            
+                        };
 
-                        //LOGUEAR CAMBIO
-                        ClientRepository.LogHourRate(hr, "ADJUSTMENT", "ADJ010", this._userId, this._context);
+                        this._context.T_LOG_RATE_ADJUSTMENTS.Add(logAjustes);
+                        this._context.SaveChanges();
 
+
+                        foreach (var hr in hourRates)
+                        {                            
+                            ExecuteAjuste(hr);
+                            hr.DT_UPDROW = DateTime.Now;                         
+
+                            //LOGUEAR CAMBIO
+                            ClientRepository.LogHourRate(hr, "ADJUSTMENT", "ADJ010", this._userId, this._context, logAjustes);
+
+                        }
+
+                        foreach (var sr in supportRates)
+                        {
+                            ExecuteAjuste(sr);
+                            sr.DT_UPDROW = DateTime.Now;
+                            ClientRepository.LogSupportRate(sr, "ADJUSTMENT", "ADJ010", this._userId, this._context, logAjustes);
+                        }
+
+                        transaction.Commit();
+                        this._context.SaveChanges();
                     }
-
-                    foreach (var sr in supportRates)
+                    catch (Exception ex)
                     {
-                        ExecuteAjuste(sr);
-                        ClientRepository.LogSupportRate(sr, "ADJUSTMENT", "ADJ010", this._userId, this._context);
+                        transaction.Dispose();
+                        throw new Exception(ex.Message);
                     }
-
-                    //LOG de la ejecucion
-
-
-                    transaction.Commit();
-                }
-                catch
-                {
-                    transaction.Dispose();
                 }
             }
 
-            
+
         }
 
         public List<HourRate> GetHourRates(DateTime actualDate)
@@ -180,13 +196,13 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             //Si es Marzo o Septiembre (Junio y Diciembre ya estan contemplados en los if anteriores
             else if (actualDate.Month.Equals(3) || actualDate.Month.Equals(9))
             {
-                hourRates = _context.HourRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity == "Mensual" && x.AdjustmentPeriodicity == "Trimestral" && x.Currency == "Pesos").ToList();
+                hourRates = _context.HourRates.Include(x => x.Client).Where(x => (x.AdjustmentPeriodicity == "Mensual" || x.AdjustmentPeriodicity == "Trimestral") && x.Currency == "Pesos").ToList();
             }
 
             //Si es cualquier otro mes distinto a los casos anteriores solo va a ser Mensual
             else
             {
-                hourRates = _context.HourRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity != "Mensual" && x.Currency == "Pesos").ToList();
+                hourRates = _context.HourRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity == "Mensual" && x.Currency == "Pesos").ToList();
             }
             return hourRates;
         }
@@ -211,13 +227,13 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             //Si es Marzo o Septiembre (Junio y Diciembre ya estan contemplados en los if anteriores
             else if (actualDate.Month.Equals(3) || actualDate.Month.Equals(9))
             {
-                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity == "Mensual" && x.AdjustmentPeriodicity == "Trimestral" && x.Currency == "Pesos").ToList();
+                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => (x.AdjustmentPeriodicity == "Mensual" || x.AdjustmentPeriodicity == "Trimestral") && x.Currency == "Pesos").ToList();
             }
 
             //Si es cualquier otro mes distinto a los casos anteriores solo va a ser Mensual
             else
             {
-                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity != "Mensual" && x.Currency == "Pesos").ToList();
+                supportRates = _context.SupportRates.Include(x => x.Client).Where(x => x.AdjustmentPeriodicity == "Mensual" && x.Currency == "Pesos").ToList();
             }
             return supportRates;
         }
@@ -228,7 +244,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             decimal oldIPC = GetPeriodicityIPC(rate.AdjustmentPeriodicity);
             decimal lastIPC = GetLastIPC();
 
-            decimal newAmount = rate.Amount * oldIPC / lastIPC;
+            decimal newAmount = rate.Amount * lastIPC / oldIPC;
 
             rate.Amount = newAmount;
         }
@@ -240,25 +256,27 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             switch (periodicity)
             {
                 case "Mensual":
-                    IPCDate = DateTime.Now.AddMonths(-1);
+                    IPCDate = DateTime.Now.AddMonths(-2);
                     break;
                 case "Trimestral":
-                    IPCDate = DateTime.Now.AddMonths(-3);
+                    IPCDate = DateTime.Now.AddMonths(-4);
                     break;
                 case "Semestral":
-                    IPCDate = DateTime.Now.AddMonths(-6);
+                    IPCDate = DateTime.Now.AddMonths(-7);
                     break;
                 case "Anual":
                     IPCDate = DateTime.Now.AddYears(-1);
+                    IPCDate = DateTime.Now.AddMonths(-1);
                     break;
             }
-            return _context.Adjustments.FirstOrDefault(x => x.DateIPC == IPCDate).IPCValue;
+            return _context.Adjustments.FirstOrDefault(x => x.DateIPC.Month == IPCDate.Month).IPCValue;
         }
 
         public decimal GetLastIPC()
         {
             DateTime actualDate = DateTime.Now.AddMonths(-1);
-            return _context.Adjustments.FirstOrDefault(x => x.DateIPC == actualDate).IPCValue;
+            //return _context.Adjustments.FirstOrDefault(x => x.DateIPC.Month == actualDate.Month).IPCValue;
+            return _context.Adjustments.OrderByDescending(x => x.DateIPC).FirstOrDefault().IPCValue;
         }
 
         #endregion
@@ -276,26 +294,29 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             Adjustment adjustment = CheckIfAdjustmentExists(a);
             AdjustmentLogObject aLog = new AdjustmentLogObject()
             {
+                Id = a.Id,
                 Year = a.Year,
                 Month = a.Month,
                 IPCValue = a.IPCValue,
                 DT_ADDROW = a.DT_ADDROW,
                 DT_UPDROW = a.DT_UPDROW,
+                DateIPC = a.DateIPC
             };
 
             string json = JsonConvert.SerializeObject(aLog);
 
-            T_LOG_ADJUSTMENT l = new T_LOG_ADJUSTMENT()
+            T_LOG_IPC l = new T_LOG_IPC()
             {
                 ID_ADJUSTMENT = a.Id.ToString(),
                 ID_USER = _userId,
                 DT_ADDROW = DateTime.Now,
                 ACTION = action,
                 DATA = json,
-                PAGE = "ADJ010"
+                PAGE = "ADJ010",
+                DATEIPC = a.DateIPC
             };
 
-            this._context.T_LOG_ADJUSTMENT.Add(l);
+            this._context.T_LOG_IPC.Add(l);
         }
 
         #endregion

@@ -40,9 +40,12 @@ namespace WIS.BusinessLogicCore.Controllers
                         case FormAction.SelectSearch:
                             response = coordinator.SelectSearch(wrapper);
                             break;
+                        case FormAction.ExecuteAdjustment:
+                            response = coordinator.ExecuteAdjustments(wrapper);
+                            break;
                     }
                 }
-                catch (Exception ex)
+                 catch (Exception ex)
                 {
                     response.SetError(ex.Message);
                 }

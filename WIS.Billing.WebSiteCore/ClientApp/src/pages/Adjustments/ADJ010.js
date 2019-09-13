@@ -22,13 +22,17 @@ export default function ADJ010(props) {
         //type: 2
         Year: "",
         Mes: "",
-        IPCValue: ""
+        Month:"",
+        IPCValue: "",
+        DateIPC: "",
     };
 
     const validationSchema = {
         Year: Yup.string().required(),
         //Mes: Yup.string().required(),
+        Month: "",
         IPCValue: Yup.string().required(),
+        DateIPC: Yup.string().nullable(),
     };
 
 
@@ -69,6 +73,38 @@ export default function ADJ010(props) {
 
     };
 
+    const executeAdjustment = () => {
+
+        console.log("Ejecutar ajuste");
+    };
+
+    const handleClick = () => {
+
+        console.log("llama");
+        const request = {
+            method: "POST",
+            cache: "no-cache",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                prueba: "prueba ajustes",
+                Application: "ADJ010",
+                ComponentId: "ADJ010_form_1",
+                //Data: "data"
+                Data: JSON.stringify({
+                    form: {
+                        id: "ADJ010_form_1"
+                    }
+                })
+            })
+        };
+
+        fetch("api/Form/ExecuteAdjustments", request).then((response) => response.json()).
+            then((response) => console.log(response));
+        console.log("termina");
+    };
+
 
 
     const formShowButtonClassName = isShowForm ? "hidden" : "";
@@ -91,8 +127,8 @@ export default function ADJ010(props) {
                     <Button id="showFormButton" value={("Agregar nuevo ajuste")} className="btn btn-success" style={{ margin: "15px" }} isLoading={isFormEnabled} />
                 </div>
 
-                <div  style={{ textAlign: "center" }}>
-                    <Button id="adjustment" value={("Realizar ajuste de IPC")} className="btn btn-primary" style={{ margin: "15px" }} isLoading={isFormEnabled} />
+                <div style={{ textAlign: "right" }}>
+                    <Button id="adjustment" value={("Realizar ajuste de IPC")} className="btn btn-primary" style={{ margin: "15px" }} isLoading={isFormEnabled} onClick={handleClick} />
                 </div>
 
                 <div className={formClassName}>
@@ -124,6 +160,14 @@ export default function ADJ010(props) {
                                             <StatusMessage for="IPCValue" />
                                         </div>
                                     </div>                                    
+
+                                    <div className="col-4">
+                                    <div className="form-group">
+                                        <label htmlFor="DateIPC">{("Fecha")}</label>
+                                        <FieldDate name="DateIPC" />
+                                        <StatusMessage for="DateIPC" />
+                                        </div>
+                                    </div>
 
                                 </div>
                             </fieldset>

@@ -93,8 +93,11 @@ namespace WIS.Billing.BusinessLogicCore.Controllers
 
                     if (valor.ToString().Length == 10)
                         formatString = "yyyy-MM-dd";
-
-                    converted = DateTime.ParseExact(valor, formatString, ci);
+                    if(!string.IsNullOrEmpty(valor))
+                    {
+                        //converted = DateTime.ParseExact(valor, formatString, ci);
+                    }
+                    
                 }
                 else if (propertyType == typeof(DateTime?))
                 {

@@ -50,6 +50,10 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 
             form.GetField("Description").Value = RateDescription;
 
+            string clientDescription = _session.GetValue<string>("Client");
+
+            form.GetField("Client").Value = clientDescription;
+
             return form;
         }
 

@@ -48,7 +48,14 @@ namespace WIS.Billing.WebSiteCore.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult> FetchRows([FromBody]ServerRequest serverRequest, CancellationToken cancelToken)
+        public ActionResult Initialize2(string prueba)
+        {
+            //TODO: Comprobar permisos de usuario antes de realizar llamada, para comprobar que puede acceder a la aplicación provista
+            return Content(JsonConvert.SerializeObject(new ServerResponse()), "application/json");
+        }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult> FetchRows(ServerRequest serverRequest, CancellationToken cancelToken)
         {
             //TODO: Comprobar permisos de usuario antes de realizar llamada, para comprobar que puede acceder a la aplicación provista
             var responseData = await this.CallGridServiceAsync(serverRequest, GridAction.FetchRows, cancelToken);
@@ -169,6 +176,7 @@ namespace WIS.Billing.WebSiteCore.Controllers
                 var client = _httpClientFactory.CreateClient();
 
                 result = await _apiClient.PostAsync(client, "https://localhost:44340/", controller, application + "_Grid", transferData, cancelToken);
+                //result = await _apiClient.PostAsync(client, "http://localhost:8070/", controller, application + "_Grid", transferData, cancelToken); //--------Para testeo
 
                 if (!string.IsNullOrEmpty(result.SessionData))
                     _sessionManager.SetValue("WIS_SESSION", result.SessionData);

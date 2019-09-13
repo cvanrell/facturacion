@@ -12,5 +12,6 @@ namespace WIS.Billing.EntitiesCore.LogsEntities
         public decimal IPCValue { get; set; }
         public DateTime DT_ADDROW { get; set; }
         public DateTime DT_UPDROW { get; set; }
+        public DateTime DateIPC { get; set; }
     }
 }

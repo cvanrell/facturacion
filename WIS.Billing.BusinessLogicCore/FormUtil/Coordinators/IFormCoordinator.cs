@@ -14,5 +14,6 @@ namespace WIS.BusinessLogicCore.FormUtil.Coordinators
         IFormWrapper ButtonAction(IFormWrapper wrapper);
         IFormWrapper Submit(IFormWrapper wrapper);
         IFormWrapper SelectSearch(IFormWrapper wrapper);
+        IFormWrapper ExecuteAdjustments(IFormWrapper wrapper);
     }
 }

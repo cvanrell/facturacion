@@ -14,5 +14,6 @@ namespace WIS.Billing.EntitiesCore.QueryTypes
         public string AdjustmentPeriodicity { get; set; }
         public string Currency { get; set; }
         public DateTime DT_ADDROW { get; set; }
+        public string FL_DELETED { get; set; }
     }
 }

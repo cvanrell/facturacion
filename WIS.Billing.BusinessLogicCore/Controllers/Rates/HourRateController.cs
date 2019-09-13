@@ -47,9 +47,13 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
         public override Form FormInitialize(Form form, FormQuery query, int userId)
         {
 
-            string RateDescription = _session.GetValue<string>("Description");
+            string HourRateDescription = _session.GetValue<string>("Description");
 
-            form.GetField("Description").Value = RateDescription;
+            form.GetField("Description").Value = HourRateDescription;
+
+            string clientDescription = _session.GetValue<string>("Client");
+
+            form.GetField("Client").Value = clientDescription;
 
             return form;
         }

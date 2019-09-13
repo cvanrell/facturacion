@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WIS.Billing.EntitiesCore.Entities;
 using WIS.Billing.EntitiesCore.QueryTypes;
+using System.Data.SqlClient;
+using System.IO;
 
 namespace WIS.Billing.DataAccessCore.Database
 {    
@@ -28,17 +30,19 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<T_LOG_SUPPORT_RATE> T_LOG_SUPPORT_RATE { get; set; }
         public DbSet<T_LOG_PROJECT> T_LOG_PROJECT { get; set; }
         public DbSet<T_LOG_SUPPORT> T_LOG_SUPPORT { get; set; }
-        public DbSet<T_LOG_ADJUSTMENT> T_LOG_ADJUSTMENT { get; set; }
+        public DbSet<T_LOG_IPC> T_LOG_IPC { get; set; }
+        public DbSet<T_LOG_RATE_ADJUSTMENTS> T_LOG_RATE_ADJUSTMENTS { get; set; }
 
         //VISTAS
         public DbQuery<H_HOUR_RATE> H_HOUR_RATE { get; set; }
         public DbQuery<H_SUPPORT_RATE> H_SUPPORT_RATE { get; set; }
         public DbQuery<V_HOUR_RATES> V_HOUR_RATES { get; set; }
         public DbQuery<V_SUPPORT_RATES> V_SUPPORT_RATES { get; set; }
+        public DbQuery<V_LAST_T_LOG_RATE_ADJUSTMENTS> V_LAST_T_LOG_RATE_ADJUSTMENTS { get; set; }
 
         //public static DbContextOptions options;
 
-
+        
         public WISDB() /*: base(options)*/
         {
             //Database.SetInitializer(new DataContextDbInitializer());
@@ -53,9 +57,19 @@ namespace WIS.Billing.DataAccessCore.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //con = new SqlConnection();
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLlocaldb;Database=WISBilling;Trusted_Connection=True;");
+            //optionsBuilder.UseSqlServer(@"Server=192.168.100.89;Database=WISBilling; user=wis; password= W1sTCU17");
+            //optionsBuilder.UseSqlServer(@"Server=192.168.100.105;Database=WISBilling; Trusted_Connection=True;");
             //optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["WISBillingDB"].ConnectionString);
+            //SITCUWISAPPHOST
         }
+
+        //public IConfiguration GetConfiguration()
+        //{
+        //    var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).Add("App.config", optional: true, reloadOnChange: true);
+        //    return builder.Build();
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

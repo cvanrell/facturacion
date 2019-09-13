@@ -415,7 +415,17 @@ export class Formik<Values = FormikValues> extends React.Component<
         }
       );
     }
-  };
+    };
+
+    setAllProperties = (values: any, errors: any, touched: any) => {
+        if (this.didMount) {
+            this.setState(prevState => ({
+                values: { ...prevState.values, ...values },
+                errors: { ...prevState.errors, ...errors },
+                touched: { ...prevState.touched, ...touched }
+            }));
+        }
+    }
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement> | undefined) => {
     if (e && e.preventDefault) {
@@ -655,6 +665,7 @@ export class Formik<Values = FormikValues> extends React.Component<
       setTouched: this.setTouched,
       setValues: this.setValues,
       setFormikState: this.setFormikState,
+        setAllProperties: this.setAllProperties
     };
   };
 
@@ -685,7 +696,8 @@ export class Formik<Values = FormikValues> extends React.Component<
       handleReset: this.handleReset,
       handleSubmit: this.handleSubmit,
       validateOnChange: this.props.validateOnChange,
-      validateOnBlur: this.props.validateOnBlur,
+        validateOnBlur: this.props.validateOnBlur,
+        setAllProperties: this.setAllProperties
     };
   };
 

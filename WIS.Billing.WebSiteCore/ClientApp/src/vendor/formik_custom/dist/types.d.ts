@@ -38,6 +38,7 @@ export interface FormikActions<Values> {
     resetForm(nextValues?: Values): void;
     submitForm(): void;
     setFormikState<K extends keyof FormikState<Values>>(f: (prevState: Readonly<FormikState<Values>>, props: any) => Pick<FormikState<Values>, K>, callback?: () => any): void;
+    setAllProperties(values: any, errors: any, touched: any): void;
 }
 export interface FormikActions<Values> {
     setFieldValue(field: string, value: any): void;

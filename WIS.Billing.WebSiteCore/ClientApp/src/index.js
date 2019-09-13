@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import './vendor/fontawesome/css/fontawesome.css';
 import './vendor/fontawesome/css/solid.css';
-//import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -19,4 +19,4 @@ ReactDOM.render(
   </BrowserRouter>,
   rootElement);
 
-registerServiceWorker();
+//registerServiceWorker();

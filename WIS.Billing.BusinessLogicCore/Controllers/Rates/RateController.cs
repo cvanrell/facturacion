@@ -128,7 +128,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 
         public Grid GridHourRateFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context)
         {
-            var query = context.V_HOUR_RATES;
+            var query = context.V_HOUR_RATES.Where(x => x.FL_DELETED == "N");
 
             var defaultSort = new SortCommand("Client", SortDirection.Ascending);
 
@@ -141,7 +141,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 
         public Grid GridSupportRatesFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context)
         {
-            var query = context.V_SUPPORT_RATES;
+            var query = context.V_SUPPORT_RATES.Where(x => x.FL_DELETED == "N");
 
             var defaultSort = new SortCommand("Client", SortDirection.Ascending);
 

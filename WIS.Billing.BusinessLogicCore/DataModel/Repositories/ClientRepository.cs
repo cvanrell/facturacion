@@ -27,11 +27,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             this._userId = userId;
             this._mapper = new ClientMapper();
         }
-
-        public string GetDescription(string desc)
-        {
-            return this._context.Clients.Where(d => d.Description == desc).Select(d => d.Description).FirstOrDefault();
-        }
+        
 
         #region CLIENT
 
@@ -43,8 +39,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 if (client.FL_DELETED == "S")
                 {
                     client.FL_DELETED = "N";
-                    client.DT_UPDROW = DateTime.Now;
-                    //en log poner que la accion fue un insert pero en json de data, poner client.FL_DELETED = "N";
+                    client.DT_UPDROW = DateTime.Now;                    
                     this._context.SaveChanges();
 
                     LogClient(client, "UPDATE");
@@ -73,8 +68,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
                 this._context.Clients.Add(client);
                 this._context.SaveChanges();
-
-                //Hacer ingreso de log aca
+                
                 LogClient(client, "INSERT");
             }
         }
@@ -291,6 +285,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 }
             }
 
+            #endregion
+
             Client client;
 
             if (hr == null)
@@ -305,11 +301,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                 hr.Amount = hRate.Amount;
                 hr.SpecialDiscount = hRate.SpecialDiscount;
                 hr.DT_UPDROW = DateTime.Now;
-
-
                 
-
-                #endregion
                 _context.SaveChanges();
 
                 client = CheckIfClientExists(hr.Client);
@@ -328,12 +320,9 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             }
             else
             {
-
-
                 hr.FL_DELETED = "S";
                 hr.DT_UPDROW = DateTime.Now;
-
-                //Insertar en log 
+                
                 _context.SaveChanges();
                 client = CheckIfClientExists(hr.Client);
 
@@ -447,10 +436,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     this._context.SupportRates.Add(newSR);                    
                     this._context.SaveChanges();
 
-                    LogSupportRate(newSR, client, "INSERT");
-
-                    //context.SaveChanges();
-
+                    LogSupportRate(newSR, client, "INSERT");                                    
                 }
             }
             else
@@ -535,8 +521,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
                 client = CheckIfClientExists(sr.Client);
 
-                LogSupportRate(sr, client, "UPDATE");
-                //context.SaveChanges();
+                LogSupportRate(sr, client, "UPDATE");                
             }
         }
 
@@ -552,13 +537,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             {
                 sr.FL_DELETED = "S";
                 sr.DT_UPDROW = DateTime.Now;
-
-                //Insertar en log 
+                
                 _context.SaveChanges();
                 client = CheckIfClientExists(sr.Client);
 
-                LogSupportRate(sr, client, "DELETE");
-                //context.SaveChanges();
+                LogSupportRate(sr, client, "DELETE");                
             }
         }
 
@@ -631,10 +614,12 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             }
         }
 
-        public static void LogHourRate(HourRate hr, string action, string page, int userId, WISDB context)
+        public static void LogHourRate(HourRate hr, string action, string page, int userId, WISDB context, T_LOG_RATE_ADJUSTMENTS logAdj = null)
         {
             //HourRate hRate = CheckIfHourRateExists(hr, c);
 
+            //Creo un objeto LogObject debido a que si parseo un objeto HourRate directo; 
+            //al tener un cliente, y este mismo tener una coleccion de HourRate y SupportRate tira error al hacer la conversion
             HourRateLogObject hrLog = new HourRateLogObject()
             {
                 Id = hr.Id.ToString(),
@@ -656,7 +641,9 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_IVA = hr.Client.FL_IVA,
                     DT_ADDROW = hr.Client.DT_ADDROW,
                     DT_UPDROW = hr.Client.DT_UPDROW,
-                }
+                },
+                logAdjustment = logAdj
+
             };
             string json = JsonConvert.SerializeObject(hrLog);
             {
@@ -667,11 +654,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     DT_ADDROW = DateTime.Now,
                     DATA = json,
                     PAGE = page,
-                    ID_HOUR_RATE = hr.Id.ToString()
+                    ID_HOUR_RATE = hr.Id.ToString(),
+                    LogAdjustment = logAdj
                 };
 
-                context.T_LOG_HOUR_RATE.Add(l);
-                //HourRateLogObject jsonDeserialized = JsonConvert.DeserializeObject<HourRateLogObject>(l.DATA);
+                context.T_LOG_HOUR_RATE.Add(l);                
             }
         }
 
@@ -679,6 +666,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         {
             SupportRate sRate = CheckIfSupportRateExists(sr, c);
 
+            //Creo un objeto LogObject debido a que si parseo un objeto HourRate directo; 
+            //al tener un cliente, y este mismo tener una coleccion de HourRate y SupportRate tira error al hacer la conversion
             SupportRateObjectLog srLog = new SupportRateObjectLog()
             {
                 Id = sRate.Id.ToString(),
@@ -702,7 +691,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_IVA = sRate.Client.FL_IVA,
                     DT_ADDROW = sRate.Client.DT_ADDROW,
                     DT_UPDROW = sRate.Client.DT_UPDROW,                    
-                }
+                }                
             };
             string json = JsonConvert.SerializeObject(srLog);
             {
@@ -719,8 +708,10 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             }
         }
 
-        public static void LogSupportRate(SupportRate sr, string action, string page, int userId, WISDB context)
-        {   
+        public static void LogSupportRate(SupportRate sr, string action, string page, int userId, WISDB context, T_LOG_RATE_ADJUSTMENTS logAdj = null)
+        {
+            //Creo un objeto LogObject debido a que si parseo un objeto HourRate directo; 
+            //al tener un cliente, y este mismo tener una coleccion de HourRate y SupportRate tira error al hacer la conversion
             SupportRateObjectLog srLog = new SupportRateObjectLog()
             {
                 Id = sr.Id.ToString(),
@@ -744,7 +735,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_IVA = sr.Client.FL_IVA,
                     DT_ADDROW = sr.Client.DT_ADDROW,
                     DT_UPDROW = sr.Client.DT_UPDROW,
-                }
+                },
+                logAdjustment = logAdj
             };
             string json = JsonConvert.SerializeObject(srLog);
             {
@@ -755,7 +747,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     DT_ADDROW = DateTime.Now,
                     DATA = json,
                     PAGE = page,
-                    ID_SUPPORT_RATE = sr.Id.ToString()
+                    ID_SUPPORT_RATE = sr.Id.ToString(),
+                    LogAdjustment = logAdj
                 };
                 context.T_LOG_SUPPORT_RATE.Add(l);
             }

@@ -16,5 +16,6 @@ namespace WIS.BusinessLogicCore.Controllers
         Form FormButtonAction(Form form, FormButtonActionQuery query, int userId);
         Form FormSubmit(Form form, FormSubmitQuery query, int userId);
         List<SelectOption> FormSelectSearch(Form form, FormSelectSearchQuery query, int userId);
+        Form ExecuteAdjustments(Form form, FormButtonActionQuery query, int userId); 
     }
 }

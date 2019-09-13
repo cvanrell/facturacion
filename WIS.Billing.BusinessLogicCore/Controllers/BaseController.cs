@@ -142,6 +142,12 @@ namespace WIS.BusinessLogicCore.Controllers
         {
             return new GridValidationSchema();
         }
+
+        public virtual Form ExecuteAdjustments(Form form, FormButtonActionQuery query, int userId)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         //private static T RowToEntity<T>(GridRow row, List<string> colPropeExclude, bool IsOlds = false)

@@ -91,6 +91,22 @@ namespace WIS.Billing.WebSiteCore.Controllers
             return Content(response.Serialize(), "application/json");
         }
 
+        [HttpPost("[action]")]
+        public async Task<ActionResult> ExecuteAdjustments([FromBody]ServerRequest serverRequest, CancellationToken cancelToken)
+        {
+            //TODO: Comprobar permisos de usuario antes de realizar llamada, para comprobar que puede acceder a la aplicación provista
+            IFormWrapper responseData = await this.CallFormServiceAsync(serverRequest, FormAction.ExecuteAdjustment, cancelToken);
+
+            var content = responseData.GetResolvedData<FormData>();
+
+            var response = new ServerResponse(content);
+
+            if (responseData.Status == CommonCore.Enums.TransferWrapperStatus.Error)
+                response.SetError(responseData.Message);
+
+            return Content(response.Serialize(), "application/json");
+        }
+
         private async Task<IFormWrapper> CallFormServiceAsync(ServerRequest request, FormAction action, CancellationToken cancelToken)
             {
             string controller = request.GetBaseApplication();
@@ -116,6 +132,7 @@ namespace WIS.Billing.WebSiteCore.Controllers
             var client = this._httpClientFactory.CreateClient();
 
             var result = await _apiClient.PostAsync(client, "https://localhost:44340/", controller, application + "_Form", transferData, cancelToken);
+            //var result = await _apiClient.PostAsync(client, "http://localhost:8070/", controller, application + "_Form", transferData, cancelToken);  // --------Para testeo
 
             if (!string.IsNullOrEmpty(result.SessionData))
                 _sessionManager.SetValue("WIS_SESSION", result.SessionData);

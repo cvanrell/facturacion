@@ -17,5 +17,7 @@ namespace WIS.Billing.EntitiesCore.Entities
         [Column(TypeName = "nvarchar(4000)")]
         public string DATA { get; set; }
         public string PAGE { get; set; }
+
+        public T_LOG_RATE_ADJUSTMENTS LogAdjustment { get; set; }
     }
 }

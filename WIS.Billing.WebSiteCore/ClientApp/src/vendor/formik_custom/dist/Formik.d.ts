@@ -39,6 +39,7 @@ export declare class Formik<Values = FormikValues> extends React.Component<Formi
     runValidations: (values?: FormikValues, fieldId?: string | undefined) => Promise<FormikErrors<Values>>;
     handleChange: (eventOrPath: string | React.ChangeEvent<any>) => void | ((eventOrValue: unknown) => void);
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+    setAllProperties: (values: any, errors: any, touched: any) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement> | undefined) => void;
     submitForm: () => void;
     submitFormWithoutValidation: () => Promise<{}>;
@@ -67,6 +68,7 @@ export declare class Formik<Values = FormikValues> extends React.Component<Formi
         handleSubmit: (e: React.FormEvent<HTMLFormElement> | undefined) => void;
         validateOnChange: boolean | undefined;
         validateOnBlur: boolean | undefined;
+        setAllProperties: (values: any, errors: any, touched: any) => void;
         dirty: boolean;
         isValid: boolean;
         initialValues: Values;
@@ -109,6 +111,7 @@ export declare class Formik<Values = FormikValues> extends React.Component<Formi
         handleSubmit: (e: React.FormEvent<HTMLFormElement> | undefined) => void;
         validateOnChange: boolean | undefined;
         validateOnBlur: boolean | undefined;
+        setAllProperties: (values: any, errors: any, touched: any) => void;
         dirty: boolean;
         isValid: boolean;
         setStatus(status?: any): void;

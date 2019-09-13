@@ -71,13 +71,19 @@ export class CLI040 extends Component {
                     <div className="row col-12">
                         <fieldset className="row" >
 
-                            <div className="row col-12">
-                                <div className="col-12">
-                                    <div className="form-group">
-                                        <label htmlFor="Description">{("Descripción")}</label>
-                                        <Field name="Description" readOnly />
-                                        <StatusMessage for="Description" />
-                                    </div>
+
+                            <div className="col-12">
+                                <div className="form-group">
+                                    <label htmlFor="Description">{("Descripción")}</label>
+                                    <Field name="Description" readOnly />
+                                    <StatusMessage for="Description" />
+                                </div>
+                            </div>
+                            <div className="col-12">
+                                <div className="form-group">
+                                    <label htmlFor="Client">{("Cliente")}</label>
+                                    <Field name="Client" readOnly />
+                                    <StatusMessage for="Client" />
                                 </div>
                             </div>
                         </fieldset>

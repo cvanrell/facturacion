@@ -233,8 +233,14 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
                 data.Redirect = "/Clients/CLI030";
 
+                string clientDescription = _session.GetValue<string>("Description");
+                this._session.SetValue("Client", clientDescription);
+                
+
                 this._session.SetValue("Id", data.Row.GetCell("Id").Value);
                 this._session.SetValue("Description", data.Row.GetCell("Description").Value);
+
+                
 
             }
             else if(data.ButtonId == "btnHistoricoS")
@@ -248,8 +254,11 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
                 data.Redirect = "/Clients/CLI040";
 
+                string clientDescription = _session.GetValue<string>("Description");
+                this._session.SetValue("Client", clientDescription);
+
                 this._session.SetValue("Id", data.Row.GetCell("Id").Value);
-                this._session.SetValue("Description", data.Row.GetCell("Description").Value);
+                this._session.SetValue("Description", data.Row.GetCell("Description").Value);                
             }
             return data;
         }

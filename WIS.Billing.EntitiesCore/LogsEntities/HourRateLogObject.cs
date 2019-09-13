@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WIS.Billing.EntitiesCore.Entities;
 
 namespace WIS.Billing.EntitiesCore.LogsEntities
 {
@@ -16,5 +17,7 @@ namespace WIS.Billing.EntitiesCore.LogsEntities
         public string Currency { get; set; }        
         public string FL_DELETED { get; set; }
         public ClientLogObject ClientLogObject { get; set; }
+
+        public T_LOG_RATE_ADJUSTMENTS logAdjustment { get; set; }
     }    
 }

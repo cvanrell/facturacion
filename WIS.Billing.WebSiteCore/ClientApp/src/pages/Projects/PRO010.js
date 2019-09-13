@@ -69,13 +69,29 @@ export default function PRO010(props) {
 
     };
 
+    const handleClick = () => {
+        const request = {
+            method: "POST",
+            cache: "no-cache",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                prueba: "prueba ajustes"
+            })
+        };
+
+        fetch("api/Form/ExecuteAdjustment", request).then((response) => response.json()).
+            then((response) => console.log(response));
+    };
+
 
 
     const formShowButtonClassName = isShowForm ? "hidden" : "";
     const formClassName = isShowForm ? "row mb-5" : "row mb-5 hidden";
     const confirmButtonClassName = isEditing ? "btn btn-warning" : "btn btn-warning hidden";
 
-    return (
+    return (        
         <Page {...props}
         title="Proyectos">
 
@@ -128,11 +144,7 @@ export default function PRO010(props) {
                                         </div>
                                     </div>
 
-                                    <div className="form-group">
-                                        <label htmlFor="Date">{("Fecha")}</label>
-                                        <FieldDate name="Date" />
-                                        <StatusMessage for="Date" />
-                                    </div> 
+                                    
                                     
                                     <div className="col-4">
                                         <div className="form-group">
