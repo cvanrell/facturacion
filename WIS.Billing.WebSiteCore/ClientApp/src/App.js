@@ -34,11 +34,10 @@ import { FEE010 } from './pages/Fees/FEE010';
 const PRO010 = React.lazy(() => import('./pages/Projects/PRO010'));
 const ADJ010 = React.lazy(() => import('./pages/Adjustments/ADJ010'));
 const MAN010 = React.lazy(() => import('./pages/Maintenance/MAN010'));
-
+const BIL010 = React.lazy(() => import('./pages/Billing/BIL010'));
 
 //const Clients = React.lazy(() => import('./pages/Clients/Clients'));
 
-//const Home = React.lazy(() => import('./components/Home'));
 
 export class App extends Component {
     displayName = App.name
@@ -85,8 +84,9 @@ export class App extends Component {
                         <Route path='/Fees/FEE010' component={FEE010} />
 
                         <Route path='/Projects/PRO010' render={(props) => <PRO010 {...props} />} />
-                        <Route path='/Adjustments/ADJ010' render={(props) => <ADJ010 {...props} />} />                        
+                        <Route path='/Adjustments/ADJ010' render={(props) => <ADJ010 {...props} />} />
                         <Route path='/Maintenance/MAN010' render={(props) => <MAN010 {...props} />} />
+                        <Route path='/Billing/BIL010' render={(props) => <BIL010 {...props} />} />
 
 
                     </Suspense>

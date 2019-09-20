@@ -14,5 +14,6 @@ namespace WIS.Billing.EntitiesCore.LogsEntities
         public DateTime DT_UPDROW { get; set; }
         public string FL_DELETED { get; set; }
         public ClientLogObject ClientLogObject { get; set; }
+        public SupportRateLogObject SupportRateLogObject { get; set; }
     }
 }

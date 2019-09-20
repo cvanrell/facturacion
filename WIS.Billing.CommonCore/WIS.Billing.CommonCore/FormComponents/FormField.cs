@@ -30,6 +30,7 @@ namespace WIS.CommonCore.FormComponents
             this.Status = FormStatus.Ok;
             this.IsValidated = false;
             this.Dependencies = new List<string>();
+            this.Options = new List<SelectOption>();
         }
 
         public bool IsValid()

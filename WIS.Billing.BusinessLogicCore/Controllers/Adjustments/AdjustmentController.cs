@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using WIS.Billing.BusinessLogicCore.DataModel;
@@ -62,12 +63,12 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
             //query.Redirect = "/stock/STO110";
             try
             {
+                System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("es-UY");
+
                 Adjustment adjustment = new Adjustment()
                 {
-                    Year = int.Parse(form.GetField("Year").Value),
-                    //Year = DateTime.Now.Year,
-                    Month = form.GetField("Month").Value,
-                    //Month = DateTime.Now.Month,
+                    Year = DateTime.Parse(form.GetField("DateIPC").Value).Year,
+                    Month = DateTime.Parse(form.GetField("DateIPC").Value).ToString("MMMM", culture),
                     IPCValue = Decimal.Parse(form.GetField("IPCValue").Value),
                     DateIPC = DateTime.Parse(form.GetField("DateIPC").Value),
                 };
@@ -88,13 +89,13 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
 
             return form;
         }
-        public override Form FormButtonAction(Form form, FormButtonActionQuery query, int userId)
-        {
-            form.GetField("address").Value = "Button action performed";
-            form.GetField("type").Value = "3";
+        //public override Form FormButtonAction(Form form, FormButtonActionQuery query, int userId)
+        //{
+        //    form.GetField("address").Value = "Button action performed";
+        //    form.GetField("type").Value = "3";
 
-            return form;
-        }
+        //    return form;
+        //}
 
         protected override FormValidationSchema GetValidationSchema(Form form, List<ComponentParameter> parameters, int userId, WISDB context)
         {
@@ -155,8 +156,6 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
         {
             using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
             {
-                //using (WISDB context = new WISDB())
-                //{
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
@@ -174,12 +173,8 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
                     {
                         context.AdjustmentRepository.UpdateAdjustment(currentAdjustment);
                     }
-
-
                     context.SaveChanges();
                 }
-
-                //}
             }
             return grid;
         }
@@ -194,6 +189,8 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
                     context.AdjustmentRepository.ExecuteAdjustments();
                     context.SaveChanges();
                 }
+
+                //query.Redirect = "/Clients/CLI050";
 
             }
             catch (Exception ex)

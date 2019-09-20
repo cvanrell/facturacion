@@ -5,7 +5,7 @@ using WIS.Billing.EntitiesCore.Entities;
 
 namespace WIS.Billing.EntitiesCore.LogsEntities
 {
-    public class SupportRateObjectLog
+    public class SupportRateLogObject
     {
         public string Id { get; set; }
         public string Description { get; set; }

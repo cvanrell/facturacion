@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WIS.Billing.DataAccessCore.Database;
 
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190903195815_Migration22")]
+    partial class Migration22
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,8 +187,6 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.Property<string>("DATA")
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<DateTime>("DATEIPC");
-
                     b.Property<DateTime>("DT_ADDROW");
 
                     b.Property<string>("ID_ADJUSTMENT");
@@ -236,13 +236,13 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
                     b.Property<int>("ID_USER");
 
-                    b.Property<int?>("LogIPCNU_LOG");
+                    b.Property<int?>("LogAdjustmentNU_LOG");
 
                     b.Property<string>("PAGE");
 
                     b.HasKey("NU_LOG");
 
-                    b.HasIndex("LogIPCNU_LOG");
+                    b.HasIndex("LogAdjustmentNU_LOG");
 
                     b.ToTable("T_LOG_RATE_ADJUSTMENTS");
                 });
@@ -578,9 +578,9 @@ namespace WIS.Billing.DataAccessCore.Migrations
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_RATE_ADJUSTMENTS", b =>
                 {
-                    b.HasOne("WIS.Billing.EntitiesCore.Entities.T_LOG_IPC", "LogIPC")
+                    b.HasOne("WIS.Billing.EntitiesCore.Entities.T_LOG_IPC", "LogAdjustment")
                         .WithMany()
-                        .HasForeignKey("LogIPCNU_LOG");
+                        .HasForeignKey("LogAdjustmentNU_LOG");
                 });
 
             modelBuilder.Entity("WIS.Billing.EntitiesCore.Entities.T_LOG_SUPPORT_RATE", b =>

@@ -407,6 +407,18 @@ function (_super) {
       }
     };
 
+    _this.setAllProperties = function (values, errors, touched) {
+      if (_this.didMount) {
+        _this.setState(function (prevState) {
+          return {
+            values: __assign({}, prevState.values, values),
+            errors: __assign({}, prevState.errors, errors),
+            touched: __assign({}, prevState.touched, touched)
+          };
+        });
+      }
+    };
+
     _this.handleSubmit = function (e) {
       if (e && e.preventDefault) {
         e.preventDefault();
@@ -634,7 +646,8 @@ function (_super) {
         setSubmitting: _this.setSubmitting,
         setTouched: _this.setTouched,
         setValues: _this.setValues,
-        setFormikState: _this.setFormikState
+        setFormikState: _this.setFormikState,
+        setAllProperties: _this.setAllProperties
       };
     };
 
@@ -657,7 +670,8 @@ function (_super) {
         handleReset: _this.handleReset,
         handleSubmit: _this.handleSubmit,
         validateOnChange: _this.props.validateOnChange,
-        validateOnBlur: _this.props.validateOnBlur
+        validateOnBlur: _this.props.validateOnBlur,
+        setAllProperties: _this.setAllProperties
       });
     };
 

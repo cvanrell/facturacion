@@ -172,6 +172,8 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
                 _session.SetValue("Tarifas_HISTORICO", true);
 
                 data.Redirect = "/Clients/CLI030";
+                
+                this._session.SetValue("Client", data.Row.GetCell("Client").Value);
 
                 this._session.SetValue("Id", data.Row.GetCell("Id").Value);
                 this._session.SetValue("Description", data.Row.GetCell("Description").Value);
@@ -187,6 +189,8 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
                 _session.SetValue("Tarifas_HISTORICO", true);
 
                 data.Redirect = "/Clients/CLI040";
+                
+                this._session.SetValue("Client", data.Row.GetCell("Client").Value);
 
                 this._session.SetValue("Id", data.Row.GetCell("Id").Value);
                 this._session.SetValue("Description", data.Row.GetCell("Description").Value);

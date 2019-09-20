@@ -36,7 +36,9 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public void AddFee(Fee f, string idProject)
         {
-            Project project = _context.Projects.FirstOrDefault(x => x.Id.ToString() == idProject);
+            Project project = _context.Projects.Include(x => x.Fees).FirstOrDefault(x => x.Id.ToString() == idProject);
+            decimal projectAmount = project.Amount;
+            decimal totalFeeSum = project.Fees.Where(x => x.FL_DELETED == "N").Sum(x => x.Amount);
 
             if (project != null)
             {
@@ -47,7 +49,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     if (fee.FL_DELETED == "S")
                     {
                         fee.FL_DELETED = "N";
-                        fee.DT_UPDROW = DateTime.Now;                        
+                        fee.DT_UPDROW = DateTime.Now;
                         this._context.SaveChanges();
 
                         LogFee(fee, "UPDATE");
@@ -59,28 +61,35 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     }
                 }
                 else
-                {
-                    fee = new Fee()
+                {                    
+                    if (f.Amount > project.Amount)
                     {
-                        Description = f.Description,
-                        //Month = f.Month,
-                        MonthYear = f.MonthYear,
-                        Amount = f.Amount,
-                        Discount = f.Discount,
-                        Project = project,
-                        FL_DELETED = "N",
-                        DT_ADDROW = DateTime.Now,
-                        DT_UPDROW = DateTime.Now,
-                    };
+                        throw new Exception("La cuota ingresada sobrepasa el monto total del proyecto");
+                    }
+                    else if(f.Amount + totalFeeSum > projectAmount)
+                    {
+                        throw new Exception("La suma de la nueva cuota con las ya existentes sobrepasa el monto total del proyecto");
+                    }
+                    else
+                    {
+                        fee = new Fee()
+                        {
+                            Description = f.Description,
+                            MonthYear = f.MonthYear,
+                            Amount = f.Amount,
+                            Discount = f.Discount,
+                            Project = project,
+                            FL_DELETED = "N",
+                            DT_ADDROW = DateTime.Now,
+                            DT_UPDROW = DateTime.Now,
+                        };
 
+                        this._context.Fees.Add(fee);
+                        this._context.SaveChanges();
 
-
-
-                    this._context.Fees.Add(fee);
-                    this._context.SaveChanges();
-
-                    //Hacer ingreso de log aca
-                    LogFee(fee, "INSERT");
+                        //Hacer ingreso de log aca
+                        LogFee(fee, "INSERT");
+                    }
                 }
             }
             else
@@ -130,7 +139,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public Fee CheckIfFeeExists(Fee fee)
         {
-            return this._context.Fees.Include(x => x.Project).Include(x => x.Project.Client).FirstOrDefault(x => x.Description == fee.Description && x.MonthYear == fee.MonthYear && x.Id == fee.Id);            
+            return this._context.Fees.Include(x => x.Project).Include(x => x.Project.Client).FirstOrDefault(x => x.Description == fee.Description && x.MonthYear == fee.MonthYear && x.Id == fee.Id);
         }
 
         public Fee CheckIfFeeExists(Fee fee, Project p)
@@ -152,8 +161,9 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             FeeLogObject fLog = new FeeLogObject()
             {
                 Id = fee.Id.ToString(),
-                Description = fee.Description,                
+                Description = fee.Description,
                 Amount = fee.Amount,
+                MonthYear = fee.MonthYear,
                 Discount = fee.Discount,
                 FL_DELETED = fee.FL_DELETED,
                 DT_ADDROW = fee.DT_ADDROW,
@@ -168,7 +178,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     Total = fee.Project.Total,
                     InitialDate = fee.Project.InitialDate,
                     TotalAmount = fee.Project.TotalAmount,
-                    FL_DELETED = fee.Project.FL_DELETED,                    
+                    FL_DELETED = fee.Project.FL_DELETED,
                     DT_ADDROW = fee.Project.DT_ADDROW,
                     DT_UPDROW = fee.Project.DT_UPDROW,
                     ClientLogObject = new ClientLogObject

@@ -668,7 +668,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
             //Creo un objeto LogObject debido a que si parseo un objeto HourRate directo; 
             //al tener un cliente, y este mismo tener una coleccion de HourRate y SupportRate tira error al hacer la conversion
-            SupportRateObjectLog srLog = new SupportRateObjectLog()
+            SupportRateLogObject srLog = new SupportRateLogObject()
             {
                 Id = sRate.Id.ToString(),
                 Description = sRate.Description,
@@ -712,7 +712,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         {
             //Creo un objeto LogObject debido a que si parseo un objeto HourRate directo; 
             //al tener un cliente, y este mismo tener una coleccion de HourRate y SupportRate tira error al hacer la conversion
-            SupportRateObjectLog srLog = new SupportRateObjectLog()
+            SupportRateLogObject srLog = new SupportRateLogObject()
             {
                 Id = sr.Id.ToString(),
                 Description = sr.Description,
@@ -762,6 +762,13 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                                 x.Currency == sRate.Currency && x.AdjustmentPeriodicity == sRate.AdjustmentPeriodicity &&
                                 x.Amount == sRate.Amount && x.SpecialDiscount == sRate.SpecialDiscount &&
                                 x.IVA == sRate.IVA && x.Periodicity == sRate.Periodicity);
+            return sr;
+        }
+
+        public SupportRate CheckIfSupportRateExists(string sRateId)
+        {
+            SupportRate sr = this._context.SupportRates.FirstOrDefault(x => x.Id.ToString() == sRateId);
+
             return sr;
         }
     }

@@ -15,20 +15,22 @@ export default function PRO010(props) {
     //const secondarySubmitStyle = { width: "300px !important" };
     const fieldSetStyle = { border: "1px solid #ddd", margin: "10px", width: "100%" };
 
-    const initialValues = {
-        //name: "Exito",
-        //lastname: "",
-        //password: "Pass",
-        //type: 2
+    const initialValues = {        
         Client: "",
         Currency: "",
-        Descrption: ""
+        Description: "",
+        InitialDate: "",
+        Amount: "",
+        Total: ""
     };
 
     const validationSchema = {
         Client: Yup.string().required(),
         Currency: Yup.string().required(),
         Description: Yup.string().required(),
+        InitialDate: Yup.string().nullable(),
+        Amount: Yup.number().required(),
+        Total: Yup.number().required()
     };
 
 
@@ -143,16 +145,16 @@ export default function PRO010(props) {
                                             <StatusMessage for="Currency" />
                                         </div>
                                     </div>
+                                                                                                           
 
-                                    
-                                    
                                     <div className="col-4">
                                         <div className="form-group">
-                                            <label htmlFor="InitialDate">{("Fecha de inicio")}</label>
-                                            <Field name="InitialDate" />
+                                            <label htmlFor="InitialDate">{("Fecha de Inicio")}</label>
+                                            <FieldDate name="InitialDate" />
                                             <StatusMessage for="InitialDate" />
                                         </div>
-                                    </div>                                    
+                                    </div>
+
                                     <div className="col-4">
                                         <div className="form-group">
                                             <label htmlFor="Total">{("Total")}</label>

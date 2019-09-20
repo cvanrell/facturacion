@@ -385,51 +385,36 @@ class InternalFormCore extends Component {
 
 
     updateFields = (fields, forceTouch, forceValue) => {
+
         this.fields = fields;
         let values = {};
         let errors = {};
-        let touched = {};
+        let touched = {};        
 
-        this.fields.forEach(field => {
-            this.props.formik.setFieldValue(field.id, field.value, false);
+
+        fields.forEach(field => {
+            if (this.fields && this.fields.some(d => d.id === field.id && (forceValue || d.value !== field.value))) {
+                values[field.id] = field.value || "";
+            }
 
             if (field.status === formStatus.error) {
-                this.props.formik.setFieldError(field.id, field.errorMessage);
+                errors[field.id] = field.errorMessage;
             }
 
             if (forceTouch === formTouchValue.touch) {
                 if (!field.readOnly && !field.disabled)
-                    this.props.formik.setFieldTouched(field.id, true, false);
+                    touched[field.id] = true;
             }
             else if (forceTouch === formTouchValue.clean) {
-                this.props.formik.setFieldTouched(field.id, false, false);
+                touched[field.id] = false;
             }
-        }, this);
+        });
 
-        //this.fields = fields;
+        this.fields = fields;
 
+        console.log(this.fields);
 
-        //fields.forEach(field => {
-        //    if (this.fields && this.fields.some(d => d.id === field.id && (forceValue || d.value !== field.value))) {
-        //        values[field.id] = field.value || "";
-        //    }
-
-        //    if (field.status === formStatus.error) {
-        //        errors[field.id] = field.errorMessage;
-        //    }
-
-        //    if (forceTouch === formTouchValue.touch) {
-        //        if (!field.readOnly && !field.disabled)
-        //            touched[field.id] = true;
-        //    }
-        //    else if (forceTouch === formTouchValue.clean) {
-        //        touched[field.id] = false;
-        //    }
-        //});
-
-        //this.fields = fields;
-
-        //this.props.formik.setAllProperties(values, errors, touched);
+        this.props.formik.setAllProperties(values, errors, touched);
     }
     registerField = (field) => {
         const data = {
@@ -538,6 +523,7 @@ class InternalFormCore extends Component {
             unregisterField: this.unregisterField,
             getFieldProps: this.getFieldProps,
             performButtonAction: this.performButtonAction,
+            searchSelectValue: this.searchSelectValue,
             updateOptions: this.updateOptions
         };
     }

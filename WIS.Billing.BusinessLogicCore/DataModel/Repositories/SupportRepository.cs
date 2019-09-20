@@ -29,7 +29,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         #region SOPORTES
 
         public void AddSupport(Support s)
-        {            
+        {
             Support support = CheckIfSupportExists(s);
             if (support != null)
             {
@@ -51,13 +51,14 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             {
                 support = new Support()
                 {
-                    Description = s.Description,                   
+                    Description = s.Description,
                     Client = s.Client,
-                    Total = s.Total,                    
+                    SupportRate = s.SupportRate,
+                    Total = s.Total,
                     FL_DELETED = "N",
                     DT_ADDROW = DateTime.Now,
                     DT_UPDROW = DateTime.Now,
-                };                
+                };
 
                 this._context.Supports.Add(support);
                 this._context.SaveChanges();
@@ -136,7 +137,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             {
                 Id = support.Id.ToString(),
                 Description = support.Description,
-                Total = support.Total,                                
+                Total = support.Total,
                 FL_DELETED = support.FL_DELETED,
                 DT_ADDROW = support.DT_ADDROW,
                 DT_UPDROW = support.DT_UPDROW,
@@ -150,6 +151,20 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     FL_IVA = support.Client.FL_IVA,
                     DT_ADDROW = support.Client.DT_ADDROW,
                     DT_UPDROW = support.Client.DT_UPDROW,
+                },
+                SupportRateLogObject = new SupportRateLogObject()
+                {
+                    Id = s.SupportRate.Id.ToString(),
+                    Description = s.SupportRate.Description,
+                    Amount = s.SupportRate.Amount,
+                    IVA = s.SupportRate.IVA,
+                    Currency = s.SupportRate.Currency,
+                    Periodicity = s.SupportRate.Periodicity,
+                    AdjustmentPeriodicity = s.SupportRate.AdjustmentPeriodicity,
+                    SpecialDiscount = s.SupportRate.SpecialDiscount,
+                    DT_ADDROW = s.SupportRate.DT_ADDROW,
+                    DT_UPDROW = s.SupportRate.DT_UPDROW,
+                    FL_DELETED = s.SupportRate.FL_DELETED
                 }
             };
 

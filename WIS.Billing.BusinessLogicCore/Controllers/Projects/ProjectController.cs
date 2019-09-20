@@ -191,27 +191,32 @@ namespace WIS.Billing.BusinessLogicCore
                 grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
             }
 
+            foreach (var row in grid.Rows)
+            {                
+                foreach (var cell in row.Cells)
+                {                    
+                    if (cell.Column.Id == "InitialDate")
+                    {                        
+                        cell.Value = DateTime.Parse(cell.Value).Date.ToString("d");
+                    }
+                }
+
+            }
+
             return grid;
         }
 
         public override Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId)
         {
             using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
-            {
-                //using (WISDB context = new WISDB())
-                //{
+            {                
                 foreach (GridRow row in grid.Rows)
                 {
                     string[] dataList = new string[] { "" };
-                    Project currentProject = GridHelper.RowToEntity<Project>(row, dataList.ToList());
-                    //Chequeo s |i el cliente existe buscando por RUT                    
-
-
-
+                    Project currentProject = GridHelper.RowToEntity<Project>(row, dataList.ToList());                                       
                     if (row.IsNew)
                     {
                         context.ProjectRepository.AddProject(currentProject);
-                        //AddProject(context, currentProject);
                     }
                     else if (row.IsDeleted)
                     {

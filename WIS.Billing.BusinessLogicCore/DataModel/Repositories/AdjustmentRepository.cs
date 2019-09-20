@@ -68,10 +68,25 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
 
         public void UpdateAdjustment(Adjustment a)
         {
+
+
             Adjustment adjustment = _context.Adjustments.FirstOrDefault(x => x.Id == a.Id);
+
+            int ipcYear = adjustment.DateIPC.Year;
+            int ipcMonth = adjustment.DateIPC.Month;
+
+            DateTime actualDate = DateTime.Now;
+
+            int previousMonth = actualDate.AddMonths(-1).Month;
+
             if (adjustment == null)
             {
                 throw new Exception("No se encuentra el ajuste especificado");
+            }
+            //Si la fecha del valor de IPC no corresponde al mes actual o al anterior, no va a dejar modificar el mismo.
+            else if ((ipcYear != actualDate.Year && ipcMonth != actualDate.Month) || (ipcYear != actualDate.Year && ipcMonth != previousMonth)) //Falta agregar conficion que si se facturo con este valor de ipc, tampoco deje modificar el registro
+            {
+                throw new Exception("Solo se pueden modificar valores de IPC si no corresponden al mes actual o al anterior");
             }
             else
             {
@@ -106,17 +121,15 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         {
             DateTime actualDate = DateTime.Now;
             
-            //ACA TIENE QUE IR LA VISTA DE LAST_LOG
             T_LOG_IPC lstAdjLog = _context.T_LOG_IPC.OrderByDescending(x => x.DATEIPC).FirstOrDefault();
-
-            //lstAdjLog = _context.Adjustments.Include(X => X.).OrderByDescending(X => X.DateIPC)
+            
 
             if (lstAdjLog == null)
             {
                 throw new Exception("Debe ingresar un registro de IPC antes de realizar un ajuste de tarifas");
             }
             //Chequeo que no se haya hecho un ajuste de tarifas en el mes actual
-            else if(_context.T_LOG_RATE_ADJUSTMENTS.FirstOrDefault(x => x.DT_ADDROW.Date == actualDate.Date) != null)
+            else if (_context.T_LOG_RATE_ADJUSTMENTS.FirstOrDefault(x => x.DT_ADDROW.Date == actualDate.Date) != null)
             {
                 throw new Exception("Ya se realizo un ajuste de tarifas en el mes actual");
             }
@@ -138,28 +151,41 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                             ACTION = "ADJUSTMENT",
                             PAGE = "ADJ010",
 
-                            LogIPC = lstAdjLog                            
+                            LogIPC = lstAdjLog
                         };
 
                         this._context.T_LOG_RATE_ADJUSTMENTS.Add(logAjustes);
-                        this._context.SaveChanges();
 
 
                         foreach (var hr in hourRates)
-                        {                            
-                            ExecuteAjuste(hr);
-                            hr.DT_UPDROW = DateTime.Now;                         
+                        {
+                            try
+                            {
+                                ExecuteAjuste(hr);
+                                hr.DT_UPDROW = DateTime.Now;
 
-                            //LOGUEAR CAMBIO
-                            ClientRepository.LogHourRate(hr, "ADJUSTMENT", "ADJ010", this._userId, this._context, logAjustes);
-
+                                //LOGUEAR CAMBIO
+                                ClientRepository.LogHourRate(hr, "ADJUSTMENT", "ADJ010", this._userId, this._context, logAjustes);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
                         }
 
                         foreach (var sr in supportRates)
                         {
-                            ExecuteAjuste(sr);
-                            sr.DT_UPDROW = DateTime.Now;
-                            ClientRepository.LogSupportRate(sr, "ADJUSTMENT", "ADJ010", this._userId, this._context, logAjustes);
+                            try
+                            {
+                                ExecuteAjuste(sr);
+                                sr.DT_UPDROW = DateTime.Now;
+                                ClientRepository.LogSupportRate(sr, "ADJUSTMENT", "ADJ010", this._userId, this._context, logAjustes);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(ex.Message);
+                            }
+
                         }
 
                         transaction.Commit();
@@ -253,6 +279,8 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
         {
             DateTime IPCDate = DateTime.Now;
 
+            decimal ipcValue = 0;
+
             switch (periodicity)
             {
                 case "Mensual":
@@ -266,17 +294,27 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
                     break;
                 case "Anual":
                     IPCDate = DateTime.Now.AddYears(-1);
-                    IPCDate = DateTime.Now.AddMonths(-1);
+                    IPCDate = IPCDate.AddMonths(-1);
                     break;
             }
-            return _context.Adjustments.FirstOrDefault(x => x.DateIPC.Month == IPCDate.Month).IPCValue;
+
+            Adjustment ipc = _context.Adjustments.FirstOrDefault(x => x.DateIPC.Year == IPCDate.Year && x.DateIPC.Month == IPCDate.Month);
+            if (ipc == null)
+            {
+                //Tomar ipc mas viejo?????
+            }
+            else
+            {
+                ipcValue = ipc.IPCValue;
+            }
+            //return _context.Adjustments.FirstOrDefault(x => x.DateIPC.Year == IPCDate.Year && x.DateIPC.Month == IPCDate.Month).IPCValue;
+            return ipcValue;
         }
 
         public decimal GetLastIPC()
         {
             DateTime actualDate = DateTime.Now.AddMonths(-1);
-            //return _context.Adjustments.FirstOrDefault(x => x.DateIPC.Month == actualDate.Month).IPCValue;
-            return _context.Adjustments.OrderByDescending(x => x.DateIPC).FirstOrDefault().IPCValue;
+            return _context.Adjustments.OrderByDescending(x => x.DateIPC).FirstOrDefault(x => x.DateIPC.Year == actualDate.Year && x.DateIPC.Month == actualDate.Month).IPCValue;
         }
 
         #endregion

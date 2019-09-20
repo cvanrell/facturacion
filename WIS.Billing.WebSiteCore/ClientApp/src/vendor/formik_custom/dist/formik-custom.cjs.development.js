@@ -311,6 +311,15 @@ var Formik = (function (_super) {
                 });
             }
         };
+        _this.setAllProperties = function (values, errors, touched) {
+            if (_this.didMount) {
+                _this.setState(function (prevState) { return ({
+                    values: tslib_1.__assign({}, prevState.values, values),
+                    errors: tslib_1.__assign({}, prevState.errors, errors),
+                    touched: tslib_1.__assign({}, prevState.touched, touched)
+                }); });
+            }
+        };
         _this.handleSubmit = function (e) {
             if (e && e.preventDefault) {
                 e.preventDefault();
@@ -478,6 +487,7 @@ var Formik = (function (_super) {
                 setTouched: _this.setTouched,
                 setValues: _this.setValues,
                 setFormikState: _this.setFormikState,
+                setAllProperties: _this.setAllProperties
             };
         };
         _this.getFormikComputedProps = function () {
@@ -494,7 +504,7 @@ var Formik = (function (_super) {
             };
         };
         _this.getFormikBag = function () {
-            return tslib_1.__assign({}, _this.state, _this.getFormikActions(), _this.getFormikComputedProps(), { registerField: _this.registerField, unregisterField: _this.unregisterField, handleBlur: _this.handleBlur, handleChange: _this.handleChange, handleReset: _this.handleReset, handleSubmit: _this.handleSubmit, validateOnChange: _this.props.validateOnChange, validateOnBlur: _this.props.validateOnBlur });
+            return tslib_1.__assign({}, _this.state, _this.getFormikActions(), _this.getFormikComputedProps(), { registerField: _this.registerField, unregisterField: _this.unregisterField, handleBlur: _this.handleBlur, handleChange: _this.handleChange, handleReset: _this.handleReset, handleSubmit: _this.handleSubmit, validateOnChange: _this.props.validateOnChange, validateOnBlur: _this.props.validateOnBlur, setAllProperties: _this.setAllProperties });
         };
         _this.getFormikContext = function () {
             return tslib_1.__assign({}, _this.getFormikBag(), { validationSchema: _this.props.validationSchema, validate: _this.props.validate, initialValues: _this.initialValues });

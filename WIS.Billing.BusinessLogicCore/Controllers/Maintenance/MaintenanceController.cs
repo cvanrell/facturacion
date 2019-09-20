@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using WIS.Billing.BusinessLogicCore.DataModel;
 using WIS.Billing.BusinessLogicCore.DataModel.Queries;
 using WIS.Billing.BusinessLogicCore.Enums;
+using WIS.Billing.BusinessLogicCore.Validation.Rules;
 using WIS.Billing.DataAccessCore.Database;
 using WIS.Billing.EntitiesCore;
 using WIS.Billing.EntitiesCore.Entities;
@@ -42,10 +44,6 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Maintenance
 
         public override PageQueryData PageLoad(PageQueryData data, int userId)
         {
-            decimal pruebaDecimal = 2.4m;
-
-            this._session.SetValue("PRUEBA", pruebaDecimal);
-
             return data;
         }
 
@@ -54,53 +52,37 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Maintenance
         {
             //Inicializar selects
             this.InicializarSelects(ref form, userId); //TODO: No hace falta hacer un ref, los objetos se pasan por referencia
-
-            //var fieldDescription = form.GetField("description");
-
-            //fieldDescription.Value = "Exito";
-
-            //var fieldAddress = form.GetField("address");
-
-            //fieldAddress.Value = "Staccato";
-
-            //var fieldRut = form.GetField("rut");
-
-            //fieldRut.Value = "Staccato";
+            
             return form;
         }
 
-        public override List<SelectOption> FormSelectSearch(Form form, FormSelectSearchQuery query, int userId)
-        {
-            switch (query.FieldId)
-            {                
-                case "cdCliente":
-                    return this.SearchTarifa(form, query, userId);
-                default:
-                    return new List<SelectOption>();
-            }
-        }
+        //public override List<SelectOption> FormSelectSearch(Form form, FormSelectSearchQuery query, int userId)
+        //{
+        //    switch (query.FieldId)
+        //    {
+        //        case "Cliente":
+        //            return this.SearchTarifa(form, query, userId);
+        //        default:
+        //            return new List<SelectOption>();
+        //    }
+        //}
 
         public override Form FormSubmit(Form form, FormSubmitQuery query, int userId)
         {
-            //form.GetField("address").Value = "Submitted and commited";
-
-            //query.Redirect = "/stock/STO110";
             try
             {
                 Support support = new Support()
                 {
-                    Description = form.GetField("Description").Value,
-                    //Amount = Decimal.Parse(form.GetField("Amount").Value),                    
-                    Total = Decimal.Parse(form.GetField("Total").Value),
-                    //InitialDate = form.GetField("InitialDate").Value,
-                    //TotalAmount = Decimal.Parse(form.GetField("TotalAmount").Value),
+                    Description = form.GetField("Description").Value,                    
 
                 };
 
                 using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
                 {
                     Client c = context.ClientRepository.CheckIfClientExists(form.GetField("Client").Value);
+                    SupportRate sr = context.ClientRepository.CheckIfSupportRateExists(form.GetField("SupportRate").Value);
                     support.Client = c;
+                    support.SupportRate = sr;
                     context.SupportRepository.AddSupport(support);
                     context.SaveChanges();
                 }
@@ -123,29 +105,23 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Maintenance
             return form;
         }
 
+
         protected override FormValidationSchema GetValidationSchema(Form form, List<ComponentParameter> parameters, int userId, WISDB context)
         {
             var schema = new FormValidationSchema
             {
                 //["Description"] = this.ValidateDescription,
-                //["Client"] = this.ValidateClient,
-                //["Amount"] = this.ValidateAmount,
-                //["Currency"] = this.ValidateCurrency
+                ["Client"] = this.ValidateClient,
+                
             };
             return schema;
         }
 
         private void InicializarSelects(ref Form form, int userId)
         {
-            //Inicializar selects
-
             FormField selectClient = form.GetField("Client");
 
             selectClient.Options = new List<SelectOption>();
-
-            //FormField selectPeriodicity = form.GetField("Periodicity");
-
-            //selectPeriodicity.Options = new List<SelectOption>();
 
 
             //Cargar selects
@@ -163,7 +139,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Maintenance
                 {
                     selectClient.Options.Add(new SelectOption(c.Id.ToString(), c.Description));
                 }
-                
+
             }
             //using (UnitOfWork uow = new UnitOfWork(this._pageName, userId))
             //{            
@@ -202,8 +178,19 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Maintenance
                 var defaultSort = new SortCommand("Description", SortDirection.Ascending);
 
                 grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
-            }
 
+                foreach (var r in grid.Rows)
+                {
+                    Support s = context.Supports.Include(x => x.Client).FirstOrDefault(x => x.Id.ToString() == r.Id.ToString());
+                    foreach (var c in r.Cells)
+                    {
+                        if (c.Column.Id == "Client")
+                        {
+                            c.Value = s.Client.Description;
+                        }
+                    }
+                }
+            }
             return grid;
         }
 
@@ -243,61 +230,83 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Maintenance
             //}
             return grid;
         }
-
-
-        public override GridButtonActionQuery GridButtonAction(IGridService service, GridButtonActionQuery data, int userId)
-        {
-            //if (data.ButtonId == "btnCuotas")
-            //{
-            //    data.Redirect = "/Fees/FEE010";
-
-            //    this._session.SetValue("Id", data.Row.GetCell("Id").Value);
-            //    this._session.SetValue("Description", data.Row.GetCell("Description").Value);
-
-            //}
-            return data;
-        }
+        
 
         #region VALIDACIONES
 
-        private FormValidationGroup ValidateDescription(FormField field, Form form, List<ComponentParameter> parameters, int userId, WISDB context)
+        //private FormValidationGroup ValidateDescription(FormField field, Form form, List<ComponentParameter> parameters, int userId, WISDB context)
+        //{
+        //    return new FormValidationGroup
+        //    {
+        //        BreakValidationChain = true,
+        //        Rules = new List<WIS.BusinessLogicCore.Validation.IValidationRule>
+        //        {
+
+        //        }//,
+        //        //OnSuccess = this.ValidateTP_INGRESO_OnSuccess
+        //    };
+        //}
+
+        private FormValidationGroup ValidateClient(FormField field, Form form, List<ComponentParameter> parameters, int userId, WISDB context)
         {
             return new FormValidationGroup
             {
+                Field = field,
                 BreakValidationChain = true,
                 Rules = new List<WIS.BusinessLogicCore.Validation.IValidationRule>
                 {
-
-                }//,
-                //OnSuccess = this.ValidateTP_INGRESO_OnSuccess
+                    new ExisteClienteValidationRule(field.Value, context)
+                },
+                OnSuccess = this.ValidateCliente_OnSuccess
             };
         }
         #endregion
 
-        #region SELECTS
-        private List<SelectOption> SearchTarifa(Form form, FormSelectSearchQuery FormQuery, int userId)
+        public void ValidateCliente_OnSuccess(FormField field, Form form, List<ComponentParameter> parameters, int userId, WISDB context)
         {
-            List<SelectOption> opciones = new List<SelectOption>();
+            var cliente = form.GetField("Client").Value;
 
-            var idCliente = form.GetField("Cliente").Value;
+            FormField selectTarifa = form.GetField("SupportRate");
 
-            using (UnitOfWork uow = new UnitOfWork(this._pageName, userId))
+            List<SupportRate> supportRates = context.SupportRates.Where(x => x.Client.Id.ToString() == cliente && x.FL_DELETED != "S").ToList();
+
+            //selectTarifa.Value = string.Empty;
+
+            selectTarifa.Options.Clear();
+
+            supportRates.ForEach(sRates =>
             {
-                //if (int.TryParse(form.GetField("cdEmpresa").Value, out int cdEmpresa))                    
-                //{
-                var query = uow.BuildQuery(new GetTarifasSoporteQuery(FormQuery.SearchValue, idCliente));
+                selectTarifa.Options.Add(new SelectOption(sRates.Id.ToString(), sRates.Description));
+            });
 
-                var data = query.Select(e => e).ToList();
 
-                foreach (var cliente in data)
-                {
-                    opciones.Add(new SelectOption(cliente.Id.ToString(), cliente.Description.ToString()));
-                }
-                //}
-            }
 
-            return opciones;
         }
+
+        #region SELECTS
+        //private List<SelectOption> SearchTarifa(Form form, FormSelectSearchQuery FormQuery, int userId)
+        //{
+        //    List<SelectOption> opciones = new List<SelectOption>();
+
+        //    var idCliente = form.GetField("Cliente").Value;
+
+        //    using (UnitOfWork uow = new UnitOfWork(this._pageName, userId))
+        //    {
+        //        //if (int.TryParse(form.GetField("cdEmpresa").Value, out int cdEmpresa))                    
+        //        //{
+        //        var query = uow.BuildQuery(new GetTarifasSoporteQuery(FormQuery.SearchValue, idCliente));
+
+        //        var data = query.Select(e => e).ToList();
+
+        //        foreach (var cliente in data)
+        //        {
+        //            opciones.Add(new SelectOption(cliente.Id.ToString(), cliente.Description.ToString()));
+        //        }
+        //        //}
+        //    }
+
+        //    return opciones;
+        //}
         #endregion
     }
 }

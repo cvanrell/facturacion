@@ -5,30 +5,24 @@ import { Page } from '../../components/Page';
 import { Form, Field, FieldSelect, FieldSelectAsync, FieldDate, SubmitButton, Button, StatusMessage } from '../../components/FormComponents/Form';
 import * as Yup from 'yup';
 
-export default function MAN010(props) {
-    //const { t } = useTranslation();
+export default function MAN010(props) {    
     const [isFormEnabled, setFormEnabled] = useState(false);
     const [isShowForm, setShowForm] = useState(false);
     const [isEditing, setEditing] = useState(false);
     const [rows, setRows] = useState({});
-
-    //const secondarySubmitStyle = { width: "300px !important" };
+    
     const fieldSetStyle = { border: "1px solid #ddd", margin: "10px", width: "100%" };
 
-    const initialValues = {
-        //name: "Exito",
-        //lastname: "",
-        //password: "Pass",
-        //type: 2
-        //Client: "",
-        //Currency: "",
-        //Descrption: ""
+    const initialValues = {        
+        Client: "",        
+        Description: "",
+        SupportRate: ""
     };
 
     const validationSchema = {
-        //Client: Yup.string().required(),
-        //Currency: Yup.string().required(),
-        //Description: Yup.string().required(),
+        Client: Yup.string().required(),        
+        Description: Yup.string().required(),
+        SupportRate: Yup.string().required()
     };
 
 
@@ -42,12 +36,7 @@ export default function MAN010(props) {
         nexus.getGrid("MAN010_grid_1").refresh();
     };
 
-    const onBeforeButtonAction = (context, form, query, nexus) => {
-        //context.abortServerCall = true;
-
-        ////nexus.redirect("/stock/STO110");
-
-        //nexus.getForm("form_1").reset();
+    const onBeforeButtonAction = (context, form, query, nexus) => {        
 
         query.abortServerCall = true;
 
@@ -70,8 +59,10 @@ export default function MAN010(props) {
     };
 
     
-    const onSelectChange = () => {
-        console.log("Llama");
+    const onSelectChange = (contexto, form, query, nexus) => {
+        if (query.FieldId === "Cliente") {
+
+        }
     };
 
 
@@ -90,9 +81,10 @@ export default function MAN010(props) {
                 validationSchema={validationSchema}
                 onAfterSubmit={onAfterSubmit}
                 onBeforeButtonAction={onBeforeButtonAction}
+                //onAfterValidateField = {onSelectChange}
             >
 
-                <div className={formShowButtonClassName} style={{ textAlign: "center" }}>
+                <div className={formShowButtonClassName} style={{ textAlign: "center" }}> 
                     <Button id="showFormButton" value={("Agregar nuevo mantenimiento")} className="btn btn-success" style={{ margin: "15px" }} isLoading={isFormEnabled} />
                 </div>
 
@@ -113,7 +105,7 @@ export default function MAN010(props) {
                                     <div className="col-4">
                                         <div className="form-group">
                                             <label htmlFor="Client">{("Cliente")}</label>
-                                            <FieldSelectAsync name="Client" onChange={onSelectChange} />
+                                            <FieldSelect name="Client" />
                                             <StatusMessage for="Client" />
                                         </div>
                                     </div>

@@ -110,7 +110,7 @@ export interface FormikActions<Values> {
       props: any
     ) => Pick<FormikState<Values>, K>,
     callback?: () => any
-    ): void;
+  ): void;
     setAllProperties(values: any, errors: any, touched: any): void;
 }
 

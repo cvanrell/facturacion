@@ -107,25 +107,27 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Rates
 
                         grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
 
-                        foreach (var row in grid.Rows)
+                        
+                    }
+                }
+
+                foreach (var row in grid.Rows)
+                {
+                    DateTime date = new DateTime();
+                    foreach (var cell in row.Cells)
+                    {
+                        if (cell.Column.Id == "DT_ADDROW")
                         {
-                            DateTime date = new DateTime();
-                            foreach (var cell in row.Cells)
-                            {
-                                if (cell.Column.Id == "DT_ADDROW")
-                                {
-                                    date = DateTime.Parse(cell.Value).Date;
-                                }
+                            date = DateTime.Parse(cell.Value).Date;
+                        }
 
-                                if (cell.Column.Id == "DT_ONLY")
-                                {
-                                    cell.Value = date.ToString("d");
-                                    //cell.Value = date.ToString();
-                                }
-                            }
-
+                        if (cell.Column.Id == "DT_ONLY")
+                        {
+                            cell.Value = date.ToString("d");
+                            //cell.Value = date.ToString();
                         }
                     }
+
                 }
             }
             catch (Exception ex)
