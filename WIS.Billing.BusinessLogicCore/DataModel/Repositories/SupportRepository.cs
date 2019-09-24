@@ -127,6 +127,11 @@ namespace WIS.Billing.BusinessLogicCore.DataModel.Repositories
             return sup;
         }
 
+        public Support CheckIfSupportExists(string supportId)
+        {
+            return this._context.Supports.Include(x => x.Client).Include(x => x.SupportRate).FirstOrDefault(x => x.Id.ToString() == supportId);
+        }
+
         #region LOGS
 
         public void LogSupport(Support s, string action)

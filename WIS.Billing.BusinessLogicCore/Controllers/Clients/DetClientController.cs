@@ -47,18 +47,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
 
         //FORMULARIO
         public override Form FormInitialize(Form form, FormQuery query, int userId)
-        {
-            //var fieldDescription = form.GetField("description");
-
-            //fieldDescription.Value = "Exito";
-
-            //var fieldAddress = form.GetField("address");
-
-            //fieldAddress.Value = "Staccato";
-
-            //var fieldRut = form.GetField("rut");
-
-            //fieldRut.Value = "Staccato";
+        {            
 
             //string cliente = _session.GetValue<string>("Id");
 
@@ -149,7 +138,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Clients
             }
             catch (Exception ex)
             {
-                throw new System.Exception("Erro al cargar la grilla:" + grid.Id);
+                throw new System.Exception("Error al cargar la grilla:" + grid.Id);
             }
 
             return grid;

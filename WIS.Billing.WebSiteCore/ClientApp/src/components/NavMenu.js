@@ -21,17 +21,17 @@ export class NavMenu extends Component {
                             ADMINISTRACIÓN
                         </Navbar.Text>                        
                         <NavItem>
-                            <Link to={'/Clients/CLI010'} className="nav-link" exact>
+                            <Link to={'/Clients/CLI010'} className="nav-link" >
                                 <i className='fas fa-user' /> Clientes
                             </Link>                        
                         </NavItem>
                         <NavItem>
-                            <Link to={'/Clients/CLI050'} className="nav-link" exact>
+                            <Link to={'/Clients/CLI050'} className="nav-link" >
                                 <i className='fas fa-clipboard-list' /> Tarifas totales
                             </Link>
                         </NavItem>
                         <NavItem>
-                            <Link to={'/Maintenance/MAN010'} className="nav-link" exact>
+                            <Link to={'/Maintenance/MAN010'} className="nav-link" >
                                 <i className='fas fa-wrench' /> Mantenimientos
                             </Link>
                         </NavItem>
@@ -44,15 +44,16 @@ export class NavMenu extends Component {
                             FACTURACIÓN
                         </Navbar.Text>
                         <NavItem>
-                            <Link to={'/Adjustments/ADJ010'} className="nav-link" exact>
+                            <Link to={'/Adjustments/ADJ010'} className="nav-link" >
                                 <i className='fas fa-wrench' /> Ajustes de IPC
                             </Link>
-                        </NavItem>                        
+                        </NavItem>
+
                         <NavItem>
-                            <Link to={'/counter'} className="nav-link">
-                                <i className='fas fa-cog' /> Desarrollos
+                            <Link to={'/Billing/BIL010'} className="nav-link" >
+                                <i className='fas fa-wrench' /> Mantenimientos a facturar
                             </Link>
-                        </NavItem>                        
+                        </NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

@@ -9,7 +9,7 @@ namespace WIS.Billing.EntitiesCore.LogsEntities
         public string Id { get; set; }
         public string Description { get; set; }        
         public decimal Total { get; set; }
-        public decimal TotalAmount { get; set; }        
+        //public decimal TotalAmount { get; set; }        
         public DateTime DT_ADDROW { get; set; }
         public DateTime DT_UPDROW { get; set; }
         public string FL_DELETED { get; set; }

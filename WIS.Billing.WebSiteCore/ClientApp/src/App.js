@@ -35,6 +35,7 @@ const PRO010 = React.lazy(() => import('./pages/Projects/PRO010'));
 const ADJ010 = React.lazy(() => import('./pages/Adjustments/ADJ010'));
 const MAN010 = React.lazy(() => import('./pages/Maintenance/MAN010'));
 const BIL010 = React.lazy(() => import('./pages/Billing/BIL010'));
+const BIL020 = React.lazy(() => import('./pages/Billing/BIL020'));
 
 //const Clients = React.lazy(() => import('./pages/Clients/Clients'));
 
@@ -87,6 +88,7 @@ export class App extends Component {
                         <Route path='/Adjustments/ADJ010' render={(props) => <ADJ010 {...props} />} />
                         <Route path='/Maintenance/MAN010' render={(props) => <MAN010 {...props} />} />
                         <Route path='/Billing/BIL010' render={(props) => <BIL010 {...props} />} />
+                        <Route path='/Billing/BIL020' render={(props) => <BIL020 {...props} />} />
 
 
                     </Suspense>

@@ -33,13 +33,13 @@ function FieldSelectInternal(props) {
 
         props.formik.setFieldValue(props.name, option.value, false);
 
-        //setTimeout(() => {
-        //    props.formProps.validateField(props.name, option.value).catch(error => {
-        //        errors[props.name] = error;
-        //    }).then(d => {
-        //        props.formik.setAllProperties(values, errors, touched);
-        //    });
-        //}, 100); //Tengo que ejecutarlo despues del setState de formik, pero setFieldValue no retorna una promesa
+        setTimeout(() => {
+            props.formProps.validateField(props.name, option.value).catch(error => {
+                errors[props.name] = error;
+            }).then(d => {
+                props.formik.setAllProperties(values, errors, touched);
+            });
+        }, 100); //Tengo que ejecutarlo despues del setState de formik, pero setFieldValue no retorna una promesa
     };
 
     const getNoOptionMessage = () => {
@@ -61,7 +61,9 @@ function FieldSelectInternal(props) {
 
     const selectedOption = options ? options.find(d => d.value === value) : null;
 
-    valueRef.current = selectedOption;
+    valueRef.current = selectedOption ? selectedOption: null;
+
+    console.log(selectedOption);
 
     if (fieldProps.readOnly) {
         return (
