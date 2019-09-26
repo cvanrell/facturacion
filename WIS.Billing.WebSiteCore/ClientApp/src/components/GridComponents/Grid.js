@@ -1180,11 +1180,14 @@ export class InternalGrid extends Component {
         const offsetTopBody = this.bodyRef.current.getBoundingClientRect().top;
         const offsetLeftBody = this.bodyRef.current.getBoundingClientRect().left;
 
+        const disabledButtons = this.state.rows.find(d => d.id === rowId).disabledButtons;
+
         this.setState({
             dropdownShow: true,
             dropdownColumnId: columnId,
             dropdownRowId: rowId,
-            dropdownItems: column.items,
+            //dropdownItems: column.items,
+            dropdownItems: column.items.filter(i => disabledButtons.indexOf(i.id) === -1),
             dropdownLeft: left - offsetLeftBody,
             dropdownTop: top - offsetTopBody
         });

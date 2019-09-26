@@ -24,6 +24,7 @@ export class Row extends Component {
                     rowIsDeleted={this.props.isDeleted}
                     rowId={this.props.id}
                     rowIndex={this.props.index}
+                    disabledButtons={this.props.disabledButtons}
                     column={col}
                     content={this.props.cells.find(cell => cell.column === col.id)}
                     highlight={highlight}

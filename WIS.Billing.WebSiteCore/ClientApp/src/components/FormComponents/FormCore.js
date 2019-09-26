@@ -396,6 +396,7 @@ class InternalFormCore extends Component {
             if (this.fields && this.fields.some(d => d.id === field.id && (forceValue || d.value !== field.value))) {
                 values[field.id] = field.value || "";
             }
+            this.props.formik.setFieldValue(field.id, field.value, false);
 
             if (field.status === formStatus.error) {
                 errors[field.id] = field.errorMessage;

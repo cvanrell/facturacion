@@ -113,23 +113,24 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
                 case "BIL010_grid_1":
                     grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
                         //new GridItemHeader("Cosas 1"),
-                        new GridButton("btnFacturas", "Facturas de mantenimiento", "fas fa-wrench"),
-                        //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
+                        new GridButton("btnFacturas", "Facturas de mantenimiento", "fas fa-wrench"),                        
                         //new GridItemDivider(),
                         //new GridItemHeader("Cosas 2"),
                         //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
                     }));
                     break;
                 case "BIL020_grid_1":
-                    //grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-                    //    //new GridItemHeader("Cosas 1"),
-                    //    new GridButton("btnAprobar", "Aprobar factura", "fas fa-wrench"),
-                    //    new GridButton("btnRechazar", "Aprobar factura", "fas fa-wrench"),
-                    //    //new GridButton("btnAcceder", "Acceder", "fas fa-arrow-right"),
-                    //    //new GridItemDivider(),
-                    //    //new GridItemHeader("Cosas 2"),
-                    //    //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
-                    //}));
+                    grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+                        //new GridItemHeader("Cosas 1"),
+                        new GridButton("btnAprobar", "Aprobar factura", "fas fa-wrench"),
+                        new GridButton("btnRechazar", "Rechazar factura", "fas fa-wrench"),
+                        new GridButton("btnFacturar", "Facturar", "fas fa-wrench"),
+                        new GridButton("btnCancelar", "Cancelar factura", "fas fa-wrench"),
+                        new GridButton("btnPagar", "Pagar factura", "fas fa-wrench"),                                                
+                        //new GridItemDivider(),
+                        //new GridItemHeader("Cosas 2"),
+                        //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+                    }));
                     break;
             }
 
@@ -184,7 +185,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
 
             var query = context.Bills.Where(x => x.Support.Id.ToString() == supportId && x.FL_DELETED == "N");
 
-            var defaultSort = new SortCommand("BillDate", SortDirection.Ascending);
+            var defaultSort = new SortCommand("BillDate", SortDirection.Descending);
 
             grid.Rows = service.GetRows(query, grid.Columns, gridQuery, defaultSort, this.GridKeys);
 
@@ -200,25 +201,23 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
                     {
                         switch (cell.Value)
                         {
-                            case Estado.PENDIENTE_APROBACION:
-                                grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-                                    new GridButton("btnAprobar", "Aprobar factura", "fas fa-wrench"),
-                                    new GridButton("btnRechazar", "Rechazar factura", "fas fa-wrench"),
-                                    }));
+                            case Estado.PENDIENTE_APROBACION:                                
+                                row.DisabledButtons.Add("btnFacturar");
+                                row.DisabledButtons.Add("btnCancelar");
+                                row.DisabledButtons.Add("btnPagar");                                
                                 break;
 
                             case Estado.PENDIENTE_FACTURACION:
-                                grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-                                    new GridButton("btnFacturar", "Facturar", "fas fa-wrench"),
-                                    new GridButton("btnCancelar", "Cancelar factura", "fas fa-wrench"),
-                                }));
+                                row.DisabledButtons.Add("btnAprobar");
+                                row.DisabledButtons.Add("btnPagar");
+                                row.DisabledButtons.Add("btnRechazar");
                                 break;
 
                             case Estado.FACTURADA:
-                                grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
-                                    new GridButton("btnPagar", "Pagar factura", "fas fa-wrench"),
-                                    new GridButton("btnCancelar", "Cancelar factura", "fas fa-wrench"),
-                                }));
+                                //grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+                                //    new GridButton("btnPagar", "Pagar factura", "fas fa-wrench"),
+                                //    new GridButton("btnCancelar", "Cancelar factura", "fas fa-wrench"),
+                                //}));
                                 break;
                         }
                     }
@@ -260,9 +259,9 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
                     UpdateBillStatus(idBill, Estado.CANCELADA, userId);
                     break;
 
-                
+
             }
-            
+
             return data;
         }
 

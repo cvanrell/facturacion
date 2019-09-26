@@ -28,11 +28,34 @@ export class CellButton extends Component {
             return null;
         }
 
-        return this.props.column.buttons.map(btn => (
-            <button key={btn.id} className="gr-btn" value={btn.id} onClick={this.handleClick} tooltip={btn.label}>
-                {this.getButtonContent(btn)}
-            </button>
-        ));
+        return this.props.column.buttons.map(btn => {
+            if (this.props.disabledButtons.indexOf(btn.id) > -1) {
+                return (
+                    <button
+                        key={btn.id}
+                        className="gr-btn disabled"
+                        value={btn.id}
+                        tooltip={btn.label}
+                        onFocus={this.addHighlight}
+                    >
+                        {this.getButtonContent(btn)}
+                    </button>
+                );
+            }
+
+            return (
+                <button
+                    key={btn.id}
+                    className="gr-btn"
+                    value={btn.id}
+                    onClick={this.handleClick}
+                    tooltip={btn.label}
+                    onFocus={this.addHighlight}
+                >
+                    {this.getButtonContent(btn)}
+                </button>
+            );
+        });
     }
     
     render() {

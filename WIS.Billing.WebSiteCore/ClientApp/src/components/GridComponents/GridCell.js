@@ -113,6 +113,7 @@ export class Cell extends Component {
                 type={this.props.column.type}
                 rowId={this.props.rowId}
                 column={this.props.column}
+                disabledButtons={this.props.disabledButtons}
                 rowIsNew={this.props.rowIsNew}
                 rowIsDeleted={this.props.rowIsDeleted}
                 content={this.props.content}

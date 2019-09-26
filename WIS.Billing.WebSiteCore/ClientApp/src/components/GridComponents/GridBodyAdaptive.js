@@ -66,6 +66,7 @@ class InternalBodyAdaptive extends Component {
                 index={row.index}
                 cells={row.cells}
                 columns={this.props.columns}
+                disabledButtons={row.disabledButtons}
                 highlight={this.props.highlight}
                 addCellHighlight={this.props.addCellHighlight}
                 addCellHighlightGroup={this.props.addCellHighlightGroup}

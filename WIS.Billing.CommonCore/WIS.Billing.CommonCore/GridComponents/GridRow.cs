@@ -11,12 +11,14 @@ namespace WIS.CommonCore.GridComponents
         public string Id { get; set; }
         public string CssClass { get; set; }
         public List<GridCell> Cells { get; set; }
+        public List<string> DisabledButtons { get; set; }
         public bool IsNew { get; set; }
         public bool IsDeleted { get; set; }
 
         public GridRow()
         {
             this.Cells = new List<GridCell>();
+            this.DisabledButtons = new List<string>();
             this.IsNew = false;
             this.IsDeleted = false;
         }
@@ -34,6 +36,13 @@ namespace WIS.CommonCore.GridComponents
             foreach (var cell in this.Cells)
             {
                 cell.Column = columns.Where(d => d.Id == cell.Column.Id).FirstOrDefault();
+            }
+        }
+        public void SetEditableCells(List<string> editableColumns)
+        {
+            foreach (var cell in this.Cells)
+            {
+                cell.Editable = editableColumns.Any(d => d == cell.Column.Id);
             }
         }
         public bool IsValid()
