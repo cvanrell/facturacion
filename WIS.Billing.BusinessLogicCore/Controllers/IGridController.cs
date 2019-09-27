@@ -15,6 +15,7 @@ namespace WIS.BusinessLogicCore.Controllers
     public interface IGridController
     {
         Grid GridInitialize(IGridService service, Grid grid, GridFetchRequest query, int userId);
+        //Grid GridInitialize(IGridService service, Grid grid, GridInitializeQuery query);
         Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest query, int userId);
         Grid GridValidateRow(IGridService service, GridRow row, Grid grid, List<ComponentParameter> parameters, int userId);
         Grid GridCommit(IGridService service, Grid grid, GridFetchRequest query, int userId);

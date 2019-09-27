@@ -9,7 +9,7 @@ using WIS.CommonCore.SortComponents;
 
 namespace WIS.CommonCore.GridComponents
 {
-    public class GridFetchRequest
+    public class GridFetchRequest : ComponentQuery
     {
         public string GridId { get; set; }
         public string ExplicitFilter { get; set; }
@@ -17,18 +17,18 @@ namespace WIS.CommonCore.GridComponents
         public int RowsToSkip { get; set; }
         public List<FilterCommand> Filters { get; set; }
         public List<SortCommand> Sorts { get; set; }
-        public List<ComponentParameter> Parameters { get; set; }
+        //public List<ComponentParameter> Parameters { get; set; }
 
-        public GridFetchRequest()
+        public GridFetchRequest() : base()
         {
             this.Filters = new List<FilterCommand>();
             this.Sorts = new List<SortCommand>();
-            this.Parameters = new List<ComponentParameter>();
+            //this.Parameters = new List<ComponentParameter>();
         }
 
-        public string GetParameter(string parameterId)
-        {
-            return this.Parameters.Where(d => d.Id == parameterId).FirstOrDefault()?.Value;
-        }
+        //public string GetParameter(string parameterId)
+        //{
+        //    return this.Parameters.Where(d => d.Id == parameterId).FirstOrDefault()?.Value;
+        //}
     }
 }

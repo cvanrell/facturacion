@@ -7,12 +7,14 @@ using WIS.BusinessLogicCore.DataModel.Queries;
 using WIS.CommonCore.GridComponents;
 using WIS.CommonCore.SortComponents;
 using WIS.Billing.DataAccessCore.Database;
+using WIS.Billing.BusinessLogicCore.DataModel;
 
 namespace WIS.BusinessLogicCore.GridUtil.Services
 {
     public interface IGridService
     {
         List<IGridColumn> GetColumns(WISDB context, string application, string gridId, int userId);
+        //List<IGridColumn> GetColumns(UnitOfWork context, string gridId);
         List<IGridColumn> GetColumnsFromEntity<T>();
         List<GridRow> GetRows<T>(IQueryable<T> query, List<IGridColumn> columns, GridFetchRequest queryParameters, SortCommand defaultSorting, List<string> keys);
         List<GridRow> GetRows<T>(IQueryable<T> query, List<IGridColumn> columns, GridFetchRequest queryParameters, List<SortCommand> defaultSorting, List<string> keys);

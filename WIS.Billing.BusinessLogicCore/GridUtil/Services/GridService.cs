@@ -14,6 +14,7 @@ using WIS.CommonCore.SortComponents;
 using WIS.BusinessLogicCore.FilterUtil;
 using WIS.BusinessLogicCore.DataModel.Queries;
 using WIS.Billing.EntitiesCore;
+using WIS.Billing.BusinessLogicCore.DataModel;
 
 namespace WIS.BusinessLogicCore.GridUtil.Services
 {
@@ -36,6 +37,12 @@ namespace WIS.BusinessLogicCore.GridUtil.Services
 
             return config.GetColumns(columnFactory);
         }
+        //public List<IGridColumn> GetColumns(UnitOfWork uow, string gridId)
+        //{
+        //    var columnFactory = new GridColumnFactory();
+
+        //    return uow.GridConfigRepository.GetColumns(gridId, columnFactory);
+        //}
         public List<IGridColumn> GetColumnsFromEntity<T>()
         {
             List<IGridColumn> columns = new List<IGridColumn>();

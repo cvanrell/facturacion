@@ -10,7 +10,7 @@ using WIS.Billing.DataAccessCore.Database;
 namespace WIS.Billing.DataAccessCore.Migrations
 {
     [DbContext(typeof(WISDB))]
-    [Migration("20190923154622_Migration24")]
+    [Migration("20190927165816_Migration24")]
     partial class Migration24
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -527,6 +527,64 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.ToTable("T_GRID_DEFAULT_CONFIG");
                 });
 
+            modelBuilder.Entity("WIS.Billing.EntitiesCore.T_GRID_FILTER", b =>
+                {
+                    b.Property<long>("CD_FILTRO");
+
+                    b.Property<string>("CD_APLICACION")
+                        .IsRequired()
+                        .HasMaxLength(40);
+
+                    b.Property<string>("CD_BLOQUE")
+                        .IsRequired()
+                        .HasMaxLength(40);
+
+                    b.Property<string>("DS_FILTRO")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime?>("DT_ADDROW");
+
+                    b.Property<string>("FL_GLOBAL")
+                        .HasMaxLength(1);
+
+                    b.Property<string>("FL_INICIAL")
+                        .HasMaxLength(1);
+
+                    b.Property<string>("NM_FILTRO")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<int>("USERID");
+
+                    b.Property<string>("VL_FILTRO_AVANZADO")
+                        .HasMaxLength(2000);
+
+                    b.HasKey("CD_FILTRO");
+
+                    b.ToTable("T_GRID_FILTER");
+                });
+
+            modelBuilder.Entity("WIS.Billing.EntitiesCore.T_GRID_FILTER_DET", b =>
+                {
+                    b.Property<long>("CD_FILTRO");
+
+                    b.Property<string>("CD_COLUMNA")
+                        .HasMaxLength(40);
+
+                    b.Property<int?>("NU_ORDEN_EJECUCION");
+
+                    b.Property<string>("VL_FILTRO")
+                        .HasMaxLength(2000);
+
+                    b.Property<short?>("VL_ORDEN");
+
+                    b.HasKey("CD_FILTRO", "CD_COLUMNA");
+
+                    b.HasAlternateKey("CD_COLUMNA", "CD_FILTRO");
+
+                    b.ToTable("T_GRID_FILTER_DET");
+                });
+
             modelBuilder.Entity("WIS.Billing.EntitiesCore.T_GRID_USER_CONFIG", b =>
                 {
                     b.Property<string>("CD_APLICACION")
@@ -676,6 +734,14 @@ namespace WIS.Billing.DataAccessCore.Migrations
                     b.HasOne("WIS.Billing.EntitiesCore.Client", "Client")
                         .WithMany("SupportRates")
                         .HasForeignKey("ClientId");
+                });
+
+            modelBuilder.Entity("WIS.Billing.EntitiesCore.T_GRID_FILTER_DET", b =>
+                {
+                    b.HasOne("WIS.Billing.EntitiesCore.T_GRID_FILTER", "T_GRID_FILTER")
+                        .WithMany("T_GRID_FILTER_DET")
+                        .HasForeignKey("CD_FILTRO")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

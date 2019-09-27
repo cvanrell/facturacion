@@ -137,6 +137,36 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
 
             return this.GridFetchRows(service, grid, gridQuery, userId);
         }
+
+        //public override Grid GridInitialize(IGridService service, Grid grid, GridInitializeQuery query)
+        //{
+        //    switch (grid.Id)
+        //    {
+        //        case "BIL010_grid_1":
+        //            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+        //                //new GridItemHeader("Cosas 1"),
+        //                new GridButton("btnFacturas", "Facturas de mantenimiento", "fas fa-wrench"),                        
+        //                //new GridItemDivider(),
+        //                //new GridItemHeader("Cosas 2"),
+        //                //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+        //            }));
+        //            break;
+        //        case "BIL020_grid_1":
+        //            grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
+        //                //new GridItemHeader("Cosas 1"),
+        //                new GridButton("btnAprobar", "Aprobar factura", "fas fa-wrench"),
+        //                new GridButton("btnRechazar", "Rechazar factura", "fas fa-wrench"),
+        //                new GridButton("btnFacturar", "Facturar", "fas fa-wrench"),
+        //                new GridButton("btnCancelar", "Cancelar factura", "fas fa-wrench"),
+        //                new GridButton("btnPagar", "Pagar factura", "fas fa-wrench"),                                                
+        //                //new GridItemDivider(),
+        //                //new GridItemHeader("Cosas 2"),
+        //                //new GridButton("btnMejorar", "Conocer", "icon icon-cosa")
+        //            }));
+        //            break;
+        //    }
+        //    return this.GridFetchRows(service, grid, query.FetchQuery);
+        //}
         public override Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId)
         {
             using (WISDB context = new WISDB())
@@ -144,16 +174,32 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
                 switch (grid.Id)
                 {
                     case "BIL010_grid_1":
-                        return GridSupportsFetchRows(service, grid, gridQuery, userId, context);
+                        return GridSupportsFetchRows(service, grid, gridQuery, context);
                     case "BIL020_grid_1":
-                        return GridBillsFetchRows(service, grid, gridQuery, userId, context);
+                        return GridBillsFetchRows(service, grid, gridQuery, context);
                 }
 
             }
             return grid;
         }
 
-        public Grid GridSupportsFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId, WISDB context)
+        public virtual Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery)
+        {
+            using (WISDB context = new WISDB())
+            {
+                switch (grid.Id)
+                {
+                    case "BIL010_grid_1":
+                        return GridSupportsFetchRows(service, grid, gridQuery, context);
+                    case "BIL020_grid_1":
+                        return GridBillsFetchRows(service, grid, gridQuery, context);
+                }
+
+            }
+            return grid;
+        }
+
+        public Grid GridSupportsFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context)
         {
             //var query = context.Supports.Include("SupportRate");
 
@@ -179,7 +225,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
 
 
 
-        private Grid GridBillsFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, int userId, WISDB context)
+        private Grid GridBillsFetchRows(IGridService service, Grid grid, GridFetchRequest gridQuery, WISDB context)
         {
             string supportId = _session.GetValue<string>("SupportId");
 

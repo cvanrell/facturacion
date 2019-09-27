@@ -10,5 +10,16 @@ namespace WIS.CommonCore.FilterComponents
     {
         public string ColumnId { get; set; }
         public string Value { get; set; }
+
+        public FilterCommand()
+        {
+
+        }
+
+        public FilterCommand(string columnId, string value)
+        {
+            this.ColumnId = columnId;
+            this.Value = value;
+        }
     }
 }

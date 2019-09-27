@@ -94,10 +94,19 @@ namespace WIS.BusinessLogicCore.Controllers
         {
             return this.GridFetchRows(service, grid, query, userId);
         }
+
+        //public virtual Grid GridInitialize(IGridService service, Grid grid, GridInitializeQuery query)
+        //{
+        //    return this.GridFetchRows(service, grid, query.FetchQuery);
+        //}
         public virtual Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest query, int userId)
         {
             throw new NotImplementedException();
         }
+        //public virtual Grid GridFetchRows(IGridService service, Grid grid, GridFetchRequest query)
+        //{
+        //    throw new NotImplementedException();
+        //}
         public virtual Grid GridValidateRow(IGridService service, GridRow row, Grid grid, List<ComponentParameter> parameters, int userId)
         {
             using (WISDB context = new WISDB())
