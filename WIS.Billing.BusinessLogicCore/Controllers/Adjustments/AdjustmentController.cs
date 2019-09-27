@@ -13,6 +13,7 @@ using WIS.BusinessLogicCore.FormUtil.Validation;
 using WIS.BusinessLogicCore.GridUtil.Services;
 using WIS.CommonCore.App;
 using WIS.CommonCore.Enums;
+using WIS.CommonCore.Exceptions;
 using WIS.CommonCore.FormComponents;
 using WIS.CommonCore.GridComponents;
 using WIS.CommonCore.Page;
@@ -89,13 +90,20 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
 
             return form;
         }
-        //public override Form FormButtonAction(Form form, FormButtonActionQuery query, int userId)
-        //{
-        //    form.GetField("address").Value = "Button action performed";
-        //    form.GetField("type").Value = "3";
+        public override Form FormButtonAction(Form form, FormButtonActionQuery query, int userId)
+        {
+            try
+            {
+                ExecuteAdjustments(form, query, userId);
+            }
+            catch(WISException ex)
+            {
+                throw new WISException(ex.Message);
+            }
+            
 
-        //    return form;
-        //}
+            return form;
+        }
 
         protected override FormValidationSchema GetValidationSchema(Form form, List<ComponentParameter> parameters, int userId, WISDB context)
         {
@@ -187,14 +195,16 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Adjustments
                 using (UnitOfWork context = new UnitOfWork(this._pageName, userId))
                 {
                     context.AdjustmentRepository.ExecuteAdjustments();
-                    context.SaveChanges();
+                    context.SaveChanges();                    
                 }
 
-                //query.Redirect = "/Clients/CLI050";
+                query.Redirect = "/Clients/CLI050";
 
             }
             catch (Exception ex)
             {
+                //query.AddErrorNotification(ex.Message, new List<string> { ex.Message });
+                //query.Redirect = "/Clients/CLI050";
                 throw new Exception(ex.Message);
             }
 

@@ -24,6 +24,8 @@ namespace WIS.Billing.DataAccessCore.Database
         public DbSet<Adjustment> Adjustments { get; set; }
         public DbSet<Bill> Bills { get; set; }
         public DbSet<T_GRID_USER_CONFIG> T_GRID_USER_CONFIG { get; set; }
+        public DbSet<T_GRID_FILTER> T_GRID_FILTER { get; set; }
+        public DbSet<T_GRID_FILTER_DET> T_GRID_FILTER_DET { get; set; }        
         public DbSet<T_GRID_DEFAULT_CONFIG> T_GRID_DEFAULT_CONFIG { get; set; }
         public DbSet<T_LOG_CLIENT> T_LOG_CLIENT { get; set; }
         public DbSet<T_LOG_FEE> T_LOG_FEE { get; set; }
@@ -79,6 +81,8 @@ namespace WIS.Billing.DataAccessCore.Database
                 .HasKey(c => new { c.CD_APLICACION, c.CD_BLOQUE, c.NM_DATAFIELD });
             modelBuilder.Entity<T_GRID_USER_CONFIG>()
                 .HasKey(d => new { d.CD_APLICACION, d.CD_BLOQUE, d.NM_DATAFIELD });
+            modelBuilder.Entity<T_GRID_FILTER_DET>()
+                .HasKey(d => new { d.CD_FILTRO, d.CD_COLUMNA });
         }
 
     }

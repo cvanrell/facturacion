@@ -110,7 +110,7 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
         {
             switch (grid.Id)
             {
-                case "BIL010_grid_1":
+                case "BIL010_grid_1":                    
                     grid.AddOrUpdateColumn(new GridColumnItemList("BTN_LIST", new List<IGridItem> {
                         //new GridItemHeader("Cosas 1"),
                         new GridButton("btnFacturas", "Facturas de mantenimiento", "fas fa-wrench"),                        
@@ -184,6 +184,8 @@ namespace WIS.Billing.BusinessLogicCore.Controllers.Billing
             string supportId = _session.GetValue<string>("SupportId");
 
             var query = context.Bills.Where(x => x.Support.Id.ToString() == supportId && x.FL_DELETED == "N");
+
+            //Agregar 
 
             var defaultSort = new SortCommand("BillDate", SortDirection.Descending);
 

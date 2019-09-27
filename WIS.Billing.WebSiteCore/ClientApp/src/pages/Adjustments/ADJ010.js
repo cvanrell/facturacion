@@ -88,12 +88,13 @@ export default function ADJ010(props) {
                 Data: JSON.stringify({
                     form: {
                         id: "ADJ010_form_1"
-                    }
+                    },
+                    query: {}
                 })
             })
         };
 
-        fetch("api/Form/ExecuteAdjustments", request).then((response) => response.json()).
+        fetch("api/Form/ButtonAction", request).then((response) => response.json()).
             then((response) => console.log(response));
         console.log("termina");
     };

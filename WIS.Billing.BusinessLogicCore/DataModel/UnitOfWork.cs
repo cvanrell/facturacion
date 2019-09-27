@@ -15,7 +15,7 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
     {        
         
         private readonly WISDB _context;
-        private readonly string _appplication;
+        private readonly string _application;
         private readonly int _userId;
 
         private IDbContextTransaction Transaction;
@@ -27,21 +27,23 @@ namespace WIS.Billing.BusinessLogicCore.DataModel
         public FeeRepository FeeRepository { get; set; }
         public SupportRepository SupportRepository { get; set; }
         public BillingRepository BillingRepository { get; set; }
+        public GridConfigRepository GridConfigRepository { get; set; }
 
 
 
         public UnitOfWork(string application, int userId)
         {
             this._context = new WISDB();
-            this._appplication = application;
+            this._application = application;
             this._userId = userId;
             
-            this.ClientRepository = new ClientRepository(this._context, this._appplication, this._userId);
-            this.ProjectRepository = new ProjectRepository(this._context, this._appplication, this._userId);
-            this.AdjustmentRepository = new AdjustmentRepository(this._context, this._appplication, this._userId);
-            this.FeeRepository = new FeeRepository(this._context, this._appplication, this._userId);
-            this.SupportRepository = new SupportRepository(this._context, this._appplication, this._userId);
-            this.BillingRepository = new BillingRepository(this._context, this._appplication, this._userId);
+            this.ClientRepository = new ClientRepository(this._context, this._application, this._userId);
+            this.ProjectRepository = new ProjectRepository(this._context, this._application, this._userId);
+            this.AdjustmentRepository = new AdjustmentRepository(this._context, this._application, this._userId);
+            this.FeeRepository = new FeeRepository(this._context, this._application, this._userId);
+            this.SupportRepository = new SupportRepository(this._context, this._application, this._userId);
+            this.BillingRepository = new BillingRepository(this._context, this._application, this._userId);
+            this.GridConfigRepository = new GridConfigRepository(this._context, this._application, this._userId);
         }
 
         public void BeginTransaction()

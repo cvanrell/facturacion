@@ -12,6 +12,7 @@ namespace WIS.CommonCore.Enums
         Text,
         Checkbox,
         Select,
+        SelectAsync,
         Date,
         DateTime,
         Progress,
