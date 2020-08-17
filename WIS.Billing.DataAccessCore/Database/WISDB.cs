@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using WIS.Billing.EntitiesCore;
-using Microsoft.IdentityModel.Protocols;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WIS.Billing.EntitiesCore.Entities;
