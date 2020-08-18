@@ -61,8 +61,8 @@ namespace WIS.Billing.DataAccessCore.Database
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //con = new SqlConnection();
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLlocaldb;Database=WISBilling;Trusted_Connection=True;");
-            //optionsBuilder.UseSqlServer(@"Server=192.168.100.89;Database=WISBilling; user=wis; password= W1sTCU17");
+            //optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLlocaldb;Database=WISBilling;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=192.168.100.89;Database=WISBilling; user=wis; password= W1sTCU17");
             //optionsBuilder.UseSqlServer(@"Server=192.168.100.105;Database=WISBilling; Trusted_Connection=True;");
             //optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["WISBillingDB"].ConnectionString);
             //SITCUWISAPPHOST

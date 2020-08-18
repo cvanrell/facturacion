@@ -175,7 +175,7 @@ namespace WIS.Billing.WebSiteCore.Controllers
 
                 var client = _httpClientFactory.CreateClient();
 
-                result = await _apiClient.PostAsync(client, "https://localhost:44340/", controller, application + "_Grid", transferData, cancelToken);
+                result = await _apiClient.PostAsync(client, "http://localhost:49679/", controller, application + "_Grid", transferData, cancelToken);
                 //result = await _apiClient.PostAsync(client, "http://localhost:8070/", controller, application + "_Grid", transferData, cancelToken); //--------Para testeo
 
                 if (!string.IsNullOrEmpty(result.SessionData))
